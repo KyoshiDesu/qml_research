@@ -18,3 +18,11 @@
 2026-05-16 19:36:39,469 | WARNING | QSVM Optuna trial 36 failed: 'NoneType' object has no attribute 'items'
 2026-05-16 19:41:48,786 | INFO | Completed phase: qsvm_optuna_search
 2026-05-16 19:41:48,863 | INFO | Starting phase: qsvm_confirmation_phase
+2026-05-16 20:11:26,160 | INFO | Completed phase: qsvm_confirmation_phase
+2026-05-16 20:11:26,182 | INFO | Starting phase: qsvm_final_training
+2026-05-16 20:12:56,312 | INFO | Completed phase: qsvm_final_training
+2026-05-16 20:12:56,312 | INFO | Starting phase: final_evaluation
+2026-05-16 20:13:42,131 | INFO | Completed phase: final_evaluation
+2026-05-16 20:13:42,515 | INFO | Starting phase: decision_boundary_visualization
+2026-05-16 20:26:31,112 | INFO | Completed phase: decision_boundary_visualization
+2026-05-16 20:26:31,114 | INFO | Experiment completed successfully.

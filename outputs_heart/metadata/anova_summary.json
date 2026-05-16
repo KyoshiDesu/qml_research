@@ -1,0 +1,12 @@
+{
+  "status": "completed",
+  "row_count": 15,
+  "valid_factors": [
+    "feature_map_type",
+    "reps",
+    "entanglement",
+    "paulis"
+  ],
+  "warnings": [],
+  "interaction_formula": "macro_f1 ~ C(feature_map_type) * C(entanglement) + C(reps)"
+}
