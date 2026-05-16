@@ -1,0 +1,19 @@
+numpy
+pandas
+scikit-learn
+matplotlib
+scipy
+statsmodels
+optuna
+psutil
+openpyxl
+joblib
+qiskit
+qiskit-aer
+qiskit-machine-learning
+pynvml
+
+# Optional dependency notes:
+# - qiskit, qiskit-aer, and qiskit-machine-learning are required for the QSVM path.
+# - pynvml is only required for NVIDIA GPU monitoring.
+# - statsmodels is only required for ANOVA analysis.

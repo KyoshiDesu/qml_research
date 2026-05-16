@@ -1,0 +1,10 @@
+services:
+  qsvm-benchmark:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./results:/app/results
+      - ./configs:/app/configs
+    command: ["python", "scripts/run_experiment.py", "--config", "configs/default_experiment.json"]
+

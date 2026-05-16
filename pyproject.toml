@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "qsvm-vm-compare"
+version = "0.1.0"
+description = "Benchmark quantum kernel SVM versus traditional SVM in a VM-friendly research scaffold."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "numpy>=1.26,<2.0",
+  "psutil>=5.9,<6.0",
+  "scikit-learn>=1.4,<1.5",
+  "pennylane>=0.43,<0.45",
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+

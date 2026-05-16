@@ -1,0 +1,13 @@
+name: qsvm-vm-compare
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip
+  - numpy=1.26.*
+  - scikit-learn=1.4.*
+  - psutil=5.9.*
+  - pip:
+      - pennylane>=0.43,<0.45
+      - -e .
+

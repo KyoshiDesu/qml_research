@@ -1,0 +1,10 @@
+split,label,count
+train,setosa,30
+train,versicolor,30
+train,virginica,30
+validation,setosa,10
+validation,versicolor,10
+validation,virginica,10
+test,setosa,10
+test,versicolor,10
+test,virginica,10

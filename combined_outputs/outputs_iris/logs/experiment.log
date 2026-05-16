@@ -1,0 +1,66 @@
+2026-05-16 09:39:32,022 | INFO | Starting one-run SVM versus QSVM experiment.
+2026-05-16 09:39:32,039 | INFO | Starting phase: preprocessing
+2026-05-16 09:39:32,054 | INFO | Completed phase: preprocessing
+2026-05-16 09:39:32,054 | INFO | Starting phase: classical_svm_grid_search
+2026-05-16 09:39:32,056 | ERROR | Phase failed: classical_svm_grid_search
+Traceback (most recent call last):
+  File "/home/johnratukado/quantum_v2/qml_research/run_one_go_svm_qsvm_experiment.py", line 297, in phase
+    yield session
+  File "/home/johnratukado/quantum_v2/qml_research/run_one_go_svm_qsvm_experiment.py", line 1123, in run_classical_pipeline
+    grid_search.fit(selection_preprocessing.transformed["train"], dataset.y_train)
+  File "/home/johnratukado/quantum/venv/lib/python3.12/site-packages/sklearn/base.py", line 1474, in wrapper
+    return fit_method(estimator, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johnratukado/quantum/venv/lib/python3.12/site-packages/sklearn/model_selection/_search.py", line 970, in fit
+    self._run_search(evaluate_candidates)
+  File "/home/johnratukado/quantum/venv/lib/python3.12/site-packages/sklearn/model_selection/_search.py", line 1527, in _run_search
+    evaluate_candidates(ParameterGrid(self.param_grid))
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johnratukado/quantum/venv/lib/python3.12/site-packages/sklearn/model_selection/_search.py", line 130, in __init__
+    raise TypeError(
+TypeError: Parameter grid for parameter 'C' needs to be a list or a numpy array, but got 0.1 (of type float) instead. Single values need to be wrapped in a list with one element.
+2026-05-16 09:42:15,933 | INFO | Starting one-run SVM versus QSVM experiment.
+2026-05-16 09:42:15,940 | INFO | Starting phase: preprocessing
+2026-05-16 09:42:15,953 | INFO | Completed phase: preprocessing
+2026-05-16 09:42:15,953 | INFO | Starting phase: classical_svm_grid_search
+2026-05-16 09:42:16,799 | INFO | Completed phase: classical_svm_grid_search
+2026-05-16 09:42:16,804 | INFO | Starting phase: classical_svm_final_training
+2026-05-16 09:42:16,806 | INFO | Completed phase: classical_svm_final_training
+2026-05-16 09:42:16,807 | INFO | Starting phase: final_evaluation
+2026-05-16 09:42:16,808 | INFO | Completed phase: final_evaluation
+2026-05-16 09:42:16,818 | INFO | Classical SVM best params: {'C': 0.1, 'kernel': 'linear'}
+2026-05-16 09:42:16,994 | INFO | Starting phase: qsvm_optuna_search
+2026-05-16 09:50:35,032 | INFO | Completed phase: qsvm_optuna_search
+2026-05-16 09:50:35,042 | INFO | Starting phase: qsvm_confirmation_phase
+2026-05-16 09:53:25,362 | INFO | Completed phase: qsvm_confirmation_phase
+2026-05-16 09:53:25,378 | INFO | Starting phase: qsvm_final_training
+2026-05-16 09:53:38,066 | INFO | Completed phase: qsvm_final_training
+2026-05-16 09:53:38,067 | INFO | Starting phase: final_evaluation
+2026-05-16 09:53:41,961 | INFO | Completed phase: final_evaluation
+2026-05-16 09:56:35,267 | INFO | Starting one-run SVM versus QSVM experiment.
+2026-05-16 09:56:35,274 | INFO | Starting phase: preprocessing
+2026-05-16 09:56:35,287 | INFO | Completed phase: preprocessing
+2026-05-16 09:56:35,288 | INFO | Starting phase: classical_svm_grid_search
+2026-05-16 09:56:36,092 | INFO | Completed phase: classical_svm_grid_search
+2026-05-16 09:56:36,097 | INFO | Starting phase: classical_svm_final_training
+2026-05-16 09:56:36,099 | INFO | Completed phase: classical_svm_final_training
+2026-05-16 09:56:36,099 | INFO | Starting phase: final_evaluation
+2026-05-16 09:56:36,100 | INFO | Completed phase: final_evaluation
+2026-05-16 09:56:36,111 | INFO | Classical SVM best params: {'C': 0.1, 'kernel': 'linear'}
+2026-05-16 09:56:36,276 | INFO | Starting phase: qsvm_optuna_search
+2026-05-16 09:56:50,959 | WARNING | QSVM Optuna trial 1 failed: 'NoneType' object has no attribute 'items'
+2026-05-16 09:57:25,587 | WARNING | QSVM Optuna trial 4 failed: 'NoneType' object has no attribute 'items'
+2026-05-16 09:59:36,383 | WARNING | QSVM Optuna trial 14 failed: 'NoneType' object has no attribute 'items'
+2026-05-16 10:00:31,469 | WARNING | QSVM Optuna trial 19 failed: 'NoneType' object has no attribute 'items'
+2026-05-16 10:04:08,406 | WARNING | QSVM Optuna trial 34 failed: 'NoneType' object has no attribute 'items'
+2026-05-16 10:04:29,742 | WARNING | QSVM Optuna trial 36 failed: 'NoneType' object has no attribute 'items'
+2026-05-16 10:05:10,596 | INFO | Completed phase: qsvm_optuna_search
+2026-05-16 10:05:10,606 | INFO | Starting phase: qsvm_confirmation_phase
+2026-05-16 10:08:16,406 | INFO | Completed phase: qsvm_confirmation_phase
+2026-05-16 10:08:16,415 | INFO | Starting phase: qsvm_final_training
+2026-05-16 10:08:32,231 | INFO | Completed phase: qsvm_final_training
+2026-05-16 10:08:32,233 | INFO | Starting phase: final_evaluation
+2026-05-16 10:08:40,306 | INFO | Completed phase: final_evaluation
+2026-05-16 10:08:40,371 | INFO | Starting phase: decision_boundary_visualization
+2026-05-16 10:13:29,342 | INFO | Completed phase: decision_boundary_visualization
+2026-05-16 10:13:29,345 | INFO | Experiment completed successfully.

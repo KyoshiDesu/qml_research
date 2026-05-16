@@ -1,0 +1,98 @@
+{
+  "gpu_available": false,
+  "gpu_error_message": "NVML Shared Library Not Found",
+  "phase_summaries": {
+    "preprocessing": {
+      "duration_seconds": 0.01614769594743848,
+      "peak_cpu_percent": 125.4,
+      "average_cpu_percent": 62.7,
+      "peak_ram_mb": 186.71875,
+      "average_ram_mb": 185.8984375,
+      "peak_system_ram_percent": 40.2,
+      "average_system_ram_percent": 40.2,
+      "peak_gpu_memory_mb": null,
+      "average_gpu_utilization_percent": null,
+      "sample_count": 2
+    },
+    "classical_svm_grid_search": {
+      "duration_seconds": 0.8688525562174618,
+      "peak_cpu_percent": 100.2,
+      "average_cpu_percent": 50.1,
+      "peak_ram_mb": 187.37109375,
+      "average_ram_mb": 187.056640625,
+      "peak_system_ram_percent": 40.2,
+      "average_system_ram_percent": 40.2,
+      "peak_gpu_memory_mb": null,
+      "average_gpu_utilization_percent": null,
+      "sample_count": 2
+    },
+    "classical_svm_final_training": {
+      "duration_seconds": 0.0010715080425143242,
+      "peak_cpu_percent": 0.0,
+      "average_cpu_percent": 0.0,
+      "peak_ram_mb": 187.66015625,
+      "average_ram_mb": 187.658203125,
+      "peak_system_ram_percent": 40.2,
+      "average_system_ram_percent": 40.2,
+      "peak_gpu_memory_mb": null,
+      "average_gpu_utilization_percent": null,
+      "sample_count": 2
+    },
+    "final_evaluation": {
+      "duration_seconds": 27.383764896076173,
+      "peak_cpu_percent": 104.4,
+      "average_cpu_percent": 90.24137931034483,
+      "peak_ram_mb": 297.7890625,
+      "average_ram_mb": 290.0770474137931,
+      "peak_system_ram_percent": 42.8,
+      "average_system_ram_percent": 42.551724137931025,
+      "peak_gpu_memory_mb": null,
+      "average_gpu_utilization_percent": null,
+      "sample_count": 29
+    },
+    "qsvm_optuna_search": {
+      "duration_seconds": 986.3996901647188,
+      "peak_cpu_percent": 595.9,
+      "average_cpu_percent": 103.43495762711865,
+      "peak_ram_mb": 264.75,
+      "average_ram_mb": 263.26649397510596,
+      "peak_system_ram_percent": 42.1,
+      "average_system_ram_percent": 41.7228813559322,
+      "peak_gpu_memory_mb": null,
+      "average_gpu_utilization_percent": null,
+      "sample_count": 944
+    },
+    "qsvm_confirmation_phase": {
+      "duration_seconds": 382.3444641721435,
+      "peak_cpu_percent": 229.3,
+      "average_cpu_percent": 100.90914127423822,
+      "peak_ram_mb": 266.046875,
+      "average_ram_mb": 265.9150904605263,
+      "peak_system_ram_percent": 41.9,
+      "average_system_ram_percent": 41.73961218836565,
+      "peak_gpu_memory_mb": null,
+      "average_gpu_utilization_percent": null,
+      "sample_count": 361
+    },
+    "qsvm_final_training": {
+      "duration_seconds": 55.7003958649002,
+      "peak_cpu_percent": 104.0,
+      "average_cpu_percent": 98.67592592592592,
+      "peak_ram_mb": 297.77734375,
+      "average_ram_mb": 279.3431712962963,
+      "peak_system_ram_percent": 42.6,
+      "average_system_ram_percent": 42.1037037037037,
+      "peak_gpu_memory_mb": null,
+      "average_gpu_utilization_percent": null,
+      "sample_count": 54
+    }
+  },
+  "warnings": [
+    "preprocessing: CPU saturation likely occurred.",
+    "classical_svm_grid_search: CPU saturation likely occurred.",
+    "final_evaluation: CPU saturation likely occurred.",
+    "qsvm_optuna_search: CPU saturation likely occurred.",
+    "qsvm_confirmation_phase: CPU saturation likely occurred.",
+    "qsvm_final_training: CPU saturation likely occurred."
+  ]
+}
