@@ -1,0 +1,915 @@
+{
+  "schema": "openai.presentation.layout/v4",
+  "unit": "px",
+  "slide": {
+    "aid": "sl/bwxdhv",
+    "id": "bwxdhv",
+    "slide": 1,
+    "layoutId": "d97a25be-9924-4f4c-bb65-5f936bb12ae9",
+    "layoutName": "Title Slide",
+    "layoutType": "title",
+    "masterLayoutId": "971427de-ab25-4434-9910-806db5032084",
+    "masterLayoutName": "Master",
+    "frame": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 720
+    }
+  },
+  "theme": {
+    "colorSchemeName": "ChatGPT",
+    "colors": {
+      "accent1": "#156082",
+      "accent2": "#E97132",
+      "accent3": "#196B24",
+      "accent4": "#0F9ED5",
+      "accent5": "#A02B93",
+      "accent6": "#4EA72E",
+      "bg1": "#FFFFFF",
+      "bg2": "#000000",
+      "tx1": "#1F1F1F",
+      "tx2": "#FFFFFF",
+      "dk1": "#000000",
+      "lt1": "#FFFFFF",
+      "dk2": "#0E2841",
+      "lt2": "#E8E8E8",
+      "hlink": "#467886",
+      "folHlink": "#96607D"
+    },
+    "typefaces": [
+      "Aptos",
+      "Georgia"
+    ]
+  },
+  "inheritedLayers": [
+    {
+      "scope": "layout",
+      "id": "d97a25be-9924-4f4c-bb65-5f936bb12ae9",
+      "name": "Title Slide",
+      "type": "title",
+      "parentLayoutId": "971427de-ab25-4434-9910-806db5032084",
+      "elements": []
+    },
+    {
+      "scope": "master",
+      "id": "971427de-ab25-4434-9910-806db5032084",
+      "name": "Master",
+      "type": "master",
+      "elements": []
+    }
+  ],
+  "elements": [
+    {
+      "order": 1,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/t83itgfm",
+      "id": "1",
+      "bbox": [
+        0,
+        0,
+        1280,
+        720
+      ],
+      "geometry": "rect",
+      "fillColor": "#F6F1E8",
+      "lineColor": "#F6F1E8",
+      "lineWidth": 0
+    },
+    {
+      "order": 2,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/mhk3q5o7",
+      "id": "2",
+      "name": "kicker-marker",
+      "bbox": [
+        64,
+        56,
+        8,
+        24
+      ],
+      "geometry": "rect",
+      "fillColor": "#172033",
+      "lineColor": "#172033",
+      "lineWidth": 0
+    },
+    {
+      "order": 3,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/b2hwfyxo",
+      "id": "3",
+      "name": "kicker-label",
+      "bbox": [
+        86,
+        53,
+        220,
+        30
+      ],
+      "geometry": "rect",
+      "text": "QML Research",
+      "textPreview": "QML Research",
+      "resolvedFontSize": 13,
+      "resolvedTextStyle": {
+        "fontSize": 13,
+        "typeface": "Aptos",
+        "bold": true,
+        "alignment": "left"
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "QML Research"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "QML Research",
+          "runs": [
+            {
+              "index": 1,
+              "text": "QML Research",
+              "fontSize": 13,
+              "typeface": "Aptos",
+              "color": "#5A6476",
+              "bold": true
+            }
+          ]
+        }
+      ],
+      "fillColor": "rgba(0, 0, 0, 0)",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 4,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/4byhgn29",
+      "id": "4",
+      "bbox": [
+        86,
+        84,
+        320,
+        24
+      ],
+      "geometry": "rect",
+      "text": "Combined outputs synthesis",
+      "textPreview": "Combined outputs synthesis",
+      "resolvedFontSize": 13,
+      "resolvedTextStyle": {
+        "fontSize": 13,
+        "typeface": "Aptos",
+        "alignment": "left"
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Combined outputs synthesis"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Combined outputs synthesis",
+          "runs": [
+            {
+              "index": 1,
+              "text": "Combined outputs synthesis",
+              "fontSize": 13,
+              "typeface": "Aptos",
+              "color": "#5A6476"
+            }
+          ]
+        }
+      ],
+      "fillColor": "rgba(0, 0, 0, 0)",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 5,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/twra5gbq",
+      "id": "5",
+      "bbox": [
+        64,
+        164,
+        680,
+        146
+      ],
+      "geometry": "rect",
+      "text": "Classical SVM matched or beat QSVM on every dataset in the experiment pack.",
+      "textPreview": "Classical SVM matched or beat QSVM on every dataset in the experiment pack.",
+      "resolvedFontSize": 34,
+      "resolvedTextStyle": {
+        "fontSize": 34,
+        "typeface": "Georgia",
+        "bold": true,
+        "alignment": "left"
+      },
+      "textLayout": {
+        "lineCount": 3,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Classical SVM matched or beat QSVM"
+          },
+          {
+            "index": 2,
+            "text": "on every dataset in the experiment"
+          },
+          {
+            "index": 3,
+            "text": "pack."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Classical SVM matched or beat QSVM on every dataset in the experiment pack.",
+          "runs": [
+            {
+              "index": 1,
+              "text": "Classical SVM matched or beat QSVM on every dataset in the experiment pack.",
+              "fontSize": 34,
+              "typeface": "Georgia",
+              "color": "#172033",
+              "bold": true
+            }
+          ]
+        }
+      ],
+      "fillColor": "rgba(0, 0, 0, 0)",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 6,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/m58z25kb",
+      "id": "6",
+      "bbox": [
+        64,
+        330,
+        600,
+        86
+      ],
+      "geometry": "rect",
+      "text": "The strongest signal in the logs is not a breakthrough from QSVM, but a persistent compute tradeoff: much longer search time for equal or weaker test accuracy.",
+      "textPreview": "The strongest signal in the logs is not a breakthrough from QSVM, but a persistent compute tradeoff: much longer search time for equal or...",
+      "resolvedFontSize": 18,
+      "resolvedTextStyle": {
+        "fontSize": 18,
+        "typeface": "Aptos",
+        "alignment": "left"
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "The strongest signal in the logs is not a breakthrough from QSVM, but a persistent"
+          },
+          {
+            "index": 2,
+            "text": "compute tradeoff: much longer search time for equal or weaker test accuracy."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "The strongest signal in the logs is not a breakthrough from QSVM, but a persistent compute tradeoff: much longer search time for equal or weaker test accuracy.",
+          "runs": [
+            {
+              "index": 1,
+              "text": "The strongest signal in the logs is not a breakthrough from QSVM, but a persistent compute tradeoff: much longer search time for equal or weaker test accuracy.",
+              "fontSize": 18,
+              "typeface": "Aptos",
+              "color": "#5A6476"
+            }
+          ]
+        }
+      ],
+      "fillColor": "rgba(0, 0, 0, 0)",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 7,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/bq1oryts",
+      "id": "7",
+      "name": "hero-panel",
+      "bbox": [
+        760,
+        154,
+        450,
+        420
+      ],
+      "geometry": "roundRect",
+      "fillColor": "#FFFDF9",
+      "lineColor": "#D8CBB6",
+      "lineWidth": 1.5
+    },
+    {
+      "order": 8,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/47y1kre1",
+      "id": "8",
+      "bbox": [
+        790,
+        186,
+        390,
+        70
+      ],
+      "geometry": "roundRect",
+      "fillColor": "#F2F7FF",
+      "lineColor": "#D8CBB6",
+      "lineWidth": 1.5
+    },
+    {
+      "order": 9,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/tsvu9kni",
+      "id": "9",
+      "bbox": [
+        812,
+        208,
+        40,
+        28
+      ],
+      "geometry": "rect",
+      "text": "01",
+      "textPreview": "01",
+      "resolvedFontSize": 20,
+      "resolvedTextStyle": {
+        "fontSize": 20,
+        "typeface": "Aptos",
+        "bold": true,
+        "alignment": "left"
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "01"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "01",
+          "runs": [
+            {
+              "index": 1,
+              "text": "01",
+              "fontSize": 20,
+              "typeface": "Aptos",
+              "color": "#1F5EFF",
+              "bold": true
+            }
+          ]
+        }
+      ],
+      "fillColor": "rgba(0, 0, 0, 0)",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 10,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/90je9cvi",
+      "id": "10",
+      "bbox": [
+        860,
+        200,
+        300,
+        46
+      ],
+      "geometry": "rect",
+      "text": "Classical SVM matched or exceeded QSVM accuracy on all four datasets.",
+      "textPreview": "Classical SVM matched or exceeded QSVM accuracy on all four datasets.",
+      "resolvedFontSize": 15,
+      "resolvedTextStyle": {
+        "fontSize": 15,
+        "typeface": "Aptos",
+        "bold": true,
+        "alignment": "left"
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Classical SVM matched or exceeded QSVM"
+          },
+          {
+            "index": 2,
+            "text": "accuracy on all four datasets."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Classical SVM matched or exceeded QSVM accuracy on all four datasets.",
+          "runs": [
+            {
+              "index": 1,
+              "text": "Classical SVM matched or exceeded QSVM accuracy on all four datasets.",
+              "fontSize": 15,
+              "typeface": "Aptos",
+              "color": "#172033",
+              "bold": true
+            }
+          ]
+        }
+      ],
+      "fillColor": "rgba(0, 0, 0, 0)",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 11,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/gfmlkjm1",
+      "id": "11",
+      "bbox": [
+        790,
+        274,
+        390,
+        70
+      ],
+      "geometry": "roundRect",
+      "fillColor": "#FFFCF6",
+      "lineColor": "#D8CBB6",
+      "lineWidth": 1.5
+    },
+    {
+      "order": 12,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/rytsvu9k",
+      "id": "12",
+      "bbox": [
+        812,
+        296,
+        40,
+        28
+      ],
+      "geometry": "rect",
+      "text": "02",
+      "textPreview": "02",
+      "resolvedFontSize": 20,
+      "resolvedTextStyle": {
+        "fontSize": 20,
+        "typeface": "Aptos",
+        "bold": true,
+        "alignment": "left"
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "02"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "02",
+          "runs": [
+            {
+              "index": 1,
+              "text": "02",
+              "fontSize": 20,
+              "typeface": "Aptos",
+              "color": "#F06C3B",
+              "bold": true
+            }
+          ]
+        }
+      ],
+      "fillColor": "rgba(0, 0, 0, 0)",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 13,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/yd0z6103",
+      "id": "13",
+      "bbox": [
+        860,
+        288,
+        300,
+        46
+      ],
+      "geometry": "rect",
+      "text": "QSVM search was always the longest phase, making runtime the dominant tradeoff.",
+      "textPreview": "QSVM search was always the longest phase, making runtime the dominant tradeoff.",
+      "resolvedFontSize": 15,
+      "resolvedTextStyle": {
+        "fontSize": 15,
+        "typeface": "Aptos",
+        "alignment": "left"
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "QSVM search was always the longest phase,"
+          },
+          {
+            "index": 2,
+            "text": "making runtime the dominant tradeoff."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "QSVM search was always the longest phase, making runtime the dominant tradeoff.",
+          "runs": [
+            {
+              "index": 1,
+              "text": "QSVM search was always the longest phase, making runtime the dominant tradeoff.",
+              "fontSize": 15,
+              "typeface": "Aptos",
+              "color": "#172033"
+            }
+          ]
+        }
+      ],
+      "fillColor": "rgba(0, 0, 0, 0)",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 14,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/9s36hcrm",
+      "id": "14",
+      "bbox": [
+        790,
+        362,
+        390,
+        70
+      ],
+      "geometry": "roundRect",
+      "fillColor": "#FFFCF6",
+      "lineColor": "#D8CBB6",
+      "lineWidth": 1.5
+    },
+    {
+      "order": 15,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/g7adsji5",
+      "id": "15",
+      "bbox": [
+        812,
+        384,
+        40,
+        28
+      ],
+      "geometry": "rect",
+      "text": "03",
+      "textPreview": "03",
+      "resolvedFontSize": 20,
+      "resolvedTextStyle": {
+        "fontSize": 20,
+        "typeface": "Aptos",
+        "bold": true,
+        "alignment": "left"
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "03"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "03",
+          "runs": [
+            {
+              "index": 1,
+              "text": "03",
+              "fontSize": 20,
+              "typeface": "Aptos",
+              "color": "#1F5EFF",
+              "bold": true
+            }
+          ]
+        }
+      ],
+      "fillColor": "rgba(0, 0, 0, 0)",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 16,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/rmhk3q5o",
+      "id": "16",
+      "bbox": [
+        860,
+        376,
+        300,
+        46
+      ],
+      "geometry": "rect",
+      "text": "Heart Disease was the only run with GPU visibility, but the GPU still appeared mostly idle.",
+      "textPreview": "Heart Disease was the only run with GPU visibility, but the GPU still appeared mostly idle.",
+      "resolvedFontSize": 15,
+      "resolvedTextStyle": {
+        "fontSize": 15,
+        "typeface": "Aptos",
+        "alignment": "left"
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Heart Disease was the only run with GPU"
+          },
+          {
+            "index": 2,
+            "text": "visibility, but the GPU still appeared mostly idle."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Heart Disease was the only run with GPU visibility, but the GPU still appeared mostly idle.",
+          "runs": [
+            {
+              "index": 1,
+              "text": "Heart Disease was the only run with GPU visibility, but the GPU still appeared mostly idle.",
+              "fontSize": 15,
+              "typeface": "Aptos",
+              "color": "#172033"
+            }
+          ]
+        }
+      ],
+      "fillColor": "rgba(0, 0, 0, 0)",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 17,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/y1kre1w7",
+      "id": "17",
+      "bbox": [
+        790,
+        450,
+        390,
+        70
+      ],
+      "geometry": "roundRect",
+      "fillColor": "#FFFCF6",
+      "lineColor": "#D8CBB6",
+      "lineWidth": 1.5
+    },
+    {
+      "order": 18,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/5o7qpg3e",
+      "id": "18",
+      "bbox": [
+        812,
+        472,
+        40,
+        28
+      ],
+      "geometry": "rect",
+      "text": "04",
+      "textPreview": "04",
+      "resolvedFontSize": 20,
+      "resolvedTextStyle": {
+        "fontSize": 20,
+        "typeface": "Aptos",
+        "bold": true,
+        "alignment": "left"
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "04"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "04",
+          "runs": [
+            {
+              "index": 1,
+              "text": "04",
+              "fontSize": 20,
+              "typeface": "Aptos",
+              "color": "#F06C3B",
+              "bold": true
+            }
+          ]
+        }
+      ],
+      "fillColor": "rgba(0, 0, 0, 0)",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 19,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/g3ex0nux",
+      "id": "19",
+      "bbox": [
+        860,
+        464,
+        300,
+        46
+      ],
+      "geometry": "rect",
+      "text": "The first Iris attempt failed because the classical SVM grid passed a scalar C instead of a list.",
+      "textPreview": "The first Iris attempt failed because the classical SVM grid passed a scalar C instead of a list.",
+      "resolvedFontSize": 15,
+      "resolvedTextStyle": {
+        "fontSize": 15,
+        "typeface": "Aptos",
+        "alignment": "left"
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "The first Iris attempt failed because the classical"
+          },
+          {
+            "index": 2,
+            "text": "SVM grid passed a scalar C instead of a list."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "The first Iris attempt failed because the classical SVM grid passed a scalar C instead of a list.",
+          "runs": [
+            {
+              "index": 1,
+              "text": "The first Iris attempt failed because the classical SVM grid passed a scalar C instead of a list.",
+              "fontSize": 15,
+              "typeface": "Aptos",
+              "color": "#172033"
+            }
+          ]
+        }
+      ],
+      "fillColor": "rgba(0, 0, 0, 0)",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 20,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/cfa9w3m9",
+      "id": "20",
+      "bbox": [
+        64,
+        650,
+        620,
+        22
+      ],
+      "geometry": "rect",
+      "text": "Source base: logs, metadata, tables, and plots in `combined_outputs`.",
+      "textPreview": "Source base: logs, metadata, tables, and plots in `combined_outputs`.",
+      "resolvedFontSize": 12,
+      "resolvedTextStyle": {
+        "fontSize": 12,
+        "typeface": "Aptos",
+        "alignment": "left"
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Source base: logs, metadata, tables, and plots in `combined_outputs`."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Source base: logs, metadata, tables, and plots in `combined_outputs`.",
+          "runs": [
+            {
+              "index": 1,
+              "text": "Source base: logs, metadata, tables, and plots in `combined_outputs`.",
+              "fontSize": 12,
+              "typeface": "Aptos",
+              "color": "#5A6476"
+            }
+          ]
+        }
+      ],
+      "fillColor": "rgba(0, 0, 0, 0)",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 21,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/1032lszq",
+      "id": "21",
+      "bbox": [
+        1190,
+        650,
+        30,
+        24
+      ],
+      "geometry": "rect",
+      "text": "1",
+      "textPreview": "1",
+      "resolvedFontSize": 12,
+      "resolvedTextStyle": {
+        "fontSize": 12,
+        "typeface": "Aptos",
+        "alignment": "right"
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "1"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "1",
+          "runs": [
+            {
+              "index": 1,
+              "text": "1",
+              "fontSize": 12,
+              "typeface": "Aptos",
+              "color": "#5A6476"
+            }
+          ]
+        }
+      ],
+      "fillColor": "rgba(0, 0, 0, 0)",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    }
+  ],
+  "composeRuns": []
+}

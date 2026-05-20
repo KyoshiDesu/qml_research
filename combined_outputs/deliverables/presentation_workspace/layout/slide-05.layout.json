@@ -1,0 +1,787 @@
+{
+  "schema": "openai.presentation.layout/v4",
+  "unit": "px",
+  "slide": {
+    "aid": "sl/wyljld",
+    "id": "wyljld",
+    "slide": 5,
+    "layoutId": "d97a25be-9924-4f4c-bb65-5f936bb12ae9",
+    "layoutName": "Title Slide",
+    "layoutType": "title",
+    "masterLayoutId": "971427de-ab25-4434-9910-806db5032084",
+    "masterLayoutName": "Master",
+    "frame": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 720
+    }
+  },
+  "theme": {
+    "colorSchemeName": "ChatGPT",
+    "colors": {
+      "accent1": "#156082",
+      "accent2": "#E97132",
+      "accent3": "#196B24",
+      "accent4": "#0F9ED5",
+      "accent5": "#A02B93",
+      "accent6": "#4EA72E",
+      "bg1": "#FFFFFF",
+      "bg2": "#000000",
+      "tx1": "#1F1F1F",
+      "tx2": "#FFFFFF",
+      "dk1": "#000000",
+      "lt1": "#FFFFFF",
+      "dk2": "#0E2841",
+      "lt2": "#E8E8E8",
+      "hlink": "#467886",
+      "folHlink": "#96607D"
+    },
+    "typefaces": [
+      "Aptos",
+      "Georgia"
+    ]
+  },
+  "inheritedLayers": [
+    {
+      "scope": "layout",
+      "id": "d97a25be-9924-4f4c-bb65-5f936bb12ae9",
+      "name": "Title Slide",
+      "type": "title",
+      "parentLayoutId": "971427de-ab25-4434-9910-806db5032084",
+      "elements": []
+    },
+    {
+      "scope": "master",
+      "id": "971427de-ab25-4434-9910-806db5032084",
+      "name": "Master",
+      "type": "master",
+      "elements": []
+    }
+  ],
+  "elements": [
+    {
+      "order": 1,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/gbq1oryt",
+      "id": "1",
+      "bbox": [
+        0,
+        0,
+        1280,
+        720
+      ],
+      "geometry": "rect",
+      "fillColor": "#F6F1E8",
+      "lineColor": "#F6F1E8",
+      "lineWidth": 0
+    },
+    {
+      "order": 2,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/nuxc3ylc",
+      "id": "2",
+      "name": "kicker-marker",
+      "bbox": [
+        64,
+        52,
+        8,
+        28
+      ],
+      "geometry": "rect",
+      "fillColor": "#172033",
+      "lineColor": "#172033",
+      "lineWidth": 0
+    },
+    {
+      "order": 3,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/y90je9cv",
+      "id": "3",
+      "name": "kicker-label",
+      "bbox": [
+        84,
+        50,
+        200,
+        30
+      ],
+      "geometry": "rect",
+      "text": "Dataset drill-down",
+      "textPreview": "Dataset drill-down",
+      "resolvedFontSize": 13,
+      "resolvedTextStyle": {
+        "fontSize": 13,
+        "typeface": "Aptos",
+        "bold": true,
+        "alignment": "left"
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Dataset drill-down"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Dataset drill-down",
+          "runs": [
+            {
+              "index": 1,
+              "text": "Dataset drill-down",
+              "fontSize": 13,
+              "typeface": "Aptos",
+              "color": "#5A6476",
+              "bold": true
+            }
+          ]
+        }
+      ],
+      "fillColor": "rgba(0, 0, 0, 0)",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 4,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/58z25kb6",
+      "id": "4",
+      "bbox": [
+        64,
+        92,
+        840,
+        64
+      ],
+      "geometry": "rect",
+      "text": "The practical decision is clearest on Breast Cancer and Heart Disease: classical SVM stays ahead without the quantum tax.",
+      "textPreview": "The practical decision is clearest on Breast Cancer and Heart Disease: classical SVM stays ahead without the quantum tax.",
+      "resolvedFontSize": 28,
+      "resolvedTextStyle": {
+        "fontSize": 28,
+        "typeface": "Georgia",
+        "bold": true,
+        "alignment": "left"
+      },
+      "textLayout": {
+        "lineCount": 3,
+        "lines": [
+          {
+            "index": 1,
+            "text": "The practical decision is clearest on Breast Cancer and"
+          },
+          {
+            "index": 2,
+            "text": "Heart Disease: classical SVM stays ahead without the"
+          },
+          {
+            "index": 3,
+            "text": "quantum tax."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "The practical decision is clearest on Breast Cancer and Heart Disease: classical SVM stays ahead without the quantum tax.",
+          "runs": [
+            {
+              "index": 1,
+              "text": "The practical decision is clearest on Breast Cancer and Heart Disease: classical SVM stays ahead without the quantum tax.",
+              "fontSize": 28,
+              "typeface": "Georgia",
+              "color": "#172033",
+              "bold": true
+            }
+          ]
+        }
+      ],
+      "fillColor": "rgba(0, 0, 0, 0)",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 5,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/gn29gr2p",
+      "id": "5",
+      "name": "left-visual-panel",
+      "bbox": [
+        64,
+        182,
+        554,
+        446
+      ],
+      "geometry": "roundRect",
+      "fillColor": "#FFFDF9",
+      "lineColor": "#D8CBB6",
+      "lineWidth": 1.5
+    },
+    {
+      "order": 6,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/n29gr2p8",
+      "id": "6",
+      "name": "right-visual-panel",
+      "bbox": [
+        662,
+        182,
+        554,
+        446
+      ],
+      "geometry": "roundRect",
+      "fillColor": "#FFFDF9",
+      "lineColor": "#D8CBB6",
+      "lineWidth": 1.5
+    },
+    {
+      "order": 7,
+      "kind": "image",
+      "scope": "slide",
+      "aid": "im/z61032ls",
+      "id": "7",
+      "bbox": [
+        86,
+        208,
+        510,
+        278
+      ],
+      "contentType": "image/png",
+      "asset": {
+        "assetId": "e44cbd8c-6aa2-49cb-8b46-304270e4c390",
+        "contentType": "image/png",
+        "byteLength": 171102
+      }
+    },
+    {
+      "order": 8,
+      "kind": "image",
+      "scope": "slide",
+      "aid": "im/oza1gvy9",
+      "id": "8",
+      "bbox": [
+        684,
+        208,
+        510,
+        278
+      ],
+      "contentType": "image/png",
+      "asset": {
+        "assetId": "27efb964-c077-4211-8a60-c6f73dcc640a",
+        "contentType": "image/png",
+        "byteLength": 116020
+      }
+    },
+    {
+      "order": 9,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/czed8v6p",
+      "id": "9",
+      "bbox": [
+        92,
+        498,
+        180,
+        22
+      ],
+      "geometry": "rect",
+      "text": "Breast Cancer",
+      "textPreview": "Breast Cancer",
+      "resolvedFontSize": 16,
+      "resolvedTextStyle": {
+        "fontSize": 16,
+        "typeface": "Aptos",
+        "bold": true,
+        "alignment": "left"
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Breast Cancer"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Breast Cancer",
+          "runs": [
+            {
+              "index": 1,
+              "text": "Breast Cancer",
+              "fontSize": 16,
+              "typeface": "Aptos",
+              "color": "#172033",
+              "bold": true
+            }
+          ]
+        }
+      ],
+      "fillColor": "rgba(0, 0, 0, 0)",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 10,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/2hwfyxob",
+      "id": "10",
+      "bbox": [
+        92,
+        526,
+        320,
+        22
+      ],
+      "geometry": "rect",
+      "text": "Accuracy: 98.2% vs 95.6%",
+      "textPreview": "Accuracy: 98.2% vs 95.6%",
+      "resolvedFontSize": 13,
+      "resolvedTextStyle": {
+        "fontSize": 13,
+        "typeface": "Aptos",
+        "alignment": "left"
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Accuracy: 98.2% vs 95.6%"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Accuracy: 98.2% vs 95.6%",
+          "runs": [
+            {
+              "index": 1,
+              "text": "Accuracy: 98.2% vs 95.6%",
+              "fontSize": 13,
+              "typeface": "Aptos",
+              "color": "#172033"
+            }
+          ]
+        }
+      ],
+      "fillColor": "rgba(0, 0, 0, 0)",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 11,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/r2p8nqxs",
+      "id": "11",
+      "bbox": [
+        92,
+        552,
+        450,
+        44
+      ],
+      "geometry": "rect",
+      "text": "Type I errors: 0, Type II errors: 2 for positive class malignant.",
+      "textPreview": "Type I errors: 0, Type II errors: 2 for positive class malignant.",
+      "resolvedFontSize": 12,
+      "resolvedTextStyle": {
+        "fontSize": 12,
+        "typeface": "Aptos",
+        "alignment": "left"
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Type I errors: 0, Type II errors: 2 for positive class malignant."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Type I errors: 0, Type II errors: 2 for positive class malignant.",
+          "runs": [
+            {
+              "index": 1,
+              "text": "Type I errors: 0, Type II errors: 2 for positive class malignant.",
+              "fontSize": 12,
+              "typeface": "Aptos",
+              "color": "#5A6476"
+            }
+          ]
+        }
+      ],
+      "fillColor": "rgba(0, 0, 0, 0)",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 12,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/kjm1cfa9",
+      "id": "12",
+      "bbox": [
+        430,
+        526,
+        156,
+        22
+      ],
+      "geometry": "rect",
+      "text": "149.6 min QSVM build time",
+      "textPreview": "149.6 min QSVM build time",
+      "resolvedFontSize": 12,
+      "resolvedTextStyle": {
+        "fontSize": 12,
+        "typeface": "Aptos",
+        "bold": true,
+        "alignment": "right"
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "149.6 min QSVM build time"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "149.6 min QSVM build time",
+          "runs": [
+            {
+              "index": 1,
+              "text": "149.6 min QSVM build time",
+              "fontSize": 12,
+              "typeface": "Aptos",
+              "color": "#F06C3B",
+              "bold": true
+            }
+          ]
+        }
+      ],
+      "fillColor": "rgba(0, 0, 0, 0)",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 13,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/94fu18jq",
+      "id": "13",
+      "bbox": [
+        690,
+        498,
+        180,
+        22
+      ],
+      "geometry": "rect",
+      "text": "Heart Disease",
+      "textPreview": "Heart Disease",
+      "resolvedFontSize": 16,
+      "resolvedTextStyle": {
+        "fontSize": 16,
+        "typeface": "Aptos",
+        "bold": true,
+        "alignment": "left"
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Heart Disease"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Heart Disease",
+          "runs": [
+            {
+              "index": 1,
+              "text": "Heart Disease",
+              "fontSize": 16,
+              "typeface": "Aptos",
+              "color": "#172033",
+              "bold": true
+            }
+          ]
+        }
+      ],
+      "fillColor": "rgba(0, 0, 0, 0)",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 14,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/2p8nqxs7",
+      "id": "14",
+      "bbox": [
+        690,
+        526,
+        320,
+        22
+      ],
+      "geometry": "rect",
+      "text": "Accuracy: 82.0% vs 80.3%",
+      "textPreview": "Accuracy: 82.0% vs 80.3%",
+      "resolvedFontSize": 13,
+      "resolvedTextStyle": {
+        "fontSize": 13,
+        "typeface": "Aptos",
+        "alignment": "left"
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Accuracy: 82.0% vs 80.3%"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Accuracy: 82.0% vs 80.3%",
+          "runs": [
+            {
+              "index": 1,
+              "text": "Accuracy: 82.0% vs 80.3%",
+              "fontSize": 13,
+              "typeface": "Aptos",
+              "color": "#172033"
+            }
+          ]
+        }
+      ],
+      "fillColor": "rgba(0, 0, 0, 0)",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 15,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/ra5gbq1o",
+      "id": "15",
+      "bbox": [
+        690,
+        552,
+        450,
+        44
+      ],
+      "geometry": "rect",
+      "text": "Type I errors: 10, Type II errors: 1 for positive class 1.0.",
+      "textPreview": "Type I errors: 10, Type II errors: 1 for positive class 1.0.",
+      "resolvedFontSize": 12,
+      "resolvedTextStyle": {
+        "fontSize": 12,
+        "typeface": "Aptos",
+        "alignment": "left"
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Type I errors: 10, Type II errors: 1 for positive class 1.0."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Type I errors: 10, Type II errors: 1 for positive class 1.0.",
+          "runs": [
+            {
+              "index": 1,
+              "text": "Type I errors: 10, Type II errors: 1 for positive class 1.0.",
+              "fontSize": 12,
+              "typeface": "Aptos",
+              "color": "#5A6476"
+            }
+          ]
+        }
+      ],
+      "fillColor": "rgba(0, 0, 0, 0)",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 16,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/gvy90je9",
+      "id": "16",
+      "bbox": [
+        1028,
+        526,
+        156,
+        22
+      ],
+      "geometry": "rect",
+      "text": "107.6 min QSVM build time",
+      "textPreview": "107.6 min QSVM build time",
+      "resolvedFontSize": 12,
+      "resolvedTextStyle": {
+        "fontSize": 12,
+        "typeface": "Aptos",
+        "bold": true,
+        "alignment": "right"
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "107.6 min QSVM build time"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "107.6 min QSVM build time",
+          "runs": [
+            {
+              "index": 1,
+              "text": "107.6 min QSVM build time",
+              "fontSize": 12,
+              "typeface": "Aptos",
+              "color": "#F06C3B",
+              "bold": true
+            }
+          ]
+        }
+      ],
+      "fillColor": "rgba(0, 0, 0, 0)",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 17,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/9gr2p8nq",
+      "id": "17",
+      "bbox": [
+        64,
+        650,
+        1080,
+        28
+      ],
+      "geometry": "rect",
+      "text": "These plots are illustrative rather than decisive on their own, but they pair well with the tabular results: QSVM does not convert its extra search time into better generalization on the harder datasets.",
+      "textPreview": "These plots are illustrative rather than decisive on their own, but they pair well with the tabular results: QSVM does not convert its ex...",
+      "resolvedFontSize": 14,
+      "resolvedTextStyle": {
+        "fontSize": 14,
+        "typeface": "Aptos",
+        "alignment": "left"
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "These plots are illustrative rather than decisive on their own, but they pair well with the tabular results: QSVM does not convert its extra search time into better generalization on the harder"
+          },
+          {
+            "index": 2,
+            "text": "datasets."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "These plots are illustrative rather than decisive on their own, but they pair well with the tabular results: QSVM does not convert its extra search time into better generalization on the harder datasets.",
+          "runs": [
+            {
+              "index": 1,
+              "text": "These plots are illustrative rather than decisive on their own, but they pair well with the tabular results: QSVM does not convert its extra search time into better generalization on the harder datasets.",
+              "fontSize": 14,
+              "typeface": "Aptos",
+              "color": "#5A6476"
+            }
+          ]
+        }
+      ],
+      "fillColor": "rgba(0, 0, 0, 0)",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    },
+    {
+      "order": 18,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/2t83itgf",
+      "id": "18",
+      "bbox": [
+        1190,
+        650,
+        30,
+        24
+      ],
+      "geometry": "rect",
+      "text": "5",
+      "textPreview": "5",
+      "resolvedFontSize": 12,
+      "resolvedTextStyle": {
+        "fontSize": 12,
+        "typeface": "Aptos",
+        "alignment": "right"
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "5"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "5",
+          "runs": [
+            {
+              "index": 1,
+              "text": "5",
+              "fontSize": 12,
+              "typeface": "Aptos",
+              "color": "#5A6476"
+            }
+          ]
+        }
+      ],
+      "fillColor": "rgba(0, 0, 0, 0)",
+      "lineColor": "rgba(0, 0, 0, 0)",
+      "lineWidth": 0
+    }
+  ],
+  "composeRuns": []
+}

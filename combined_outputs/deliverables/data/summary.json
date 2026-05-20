@@ -1,0 +1,129 @@
+{
+  "datasets": [
+    {
+      "key": "iris",
+      "display_name": "Iris",
+      "rows": 150,
+      "features": 4,
+      "classes": 3,
+      "svm_accuracy": 0.9333333333333333,
+      "qsvm_accuracy": 0.9333333333333333,
+      "svm_macro_f1": 0.9333333333333332,
+      "qsvm_macro_f1": 0.9333333333333332,
+      "accuracy_gap": 0.0,
+      "total_classical_seconds": 0.8166680582799017,
+      "total_qsvm_seconds": 715.9327986622229,
+      "gpu_available": false,
+      "gpu_used": false,
+      "confusion_note": "Most frequent confusion: versicolor predicted as virginica (1 case(s)).",
+      "best_classical_params": "C=0.1, kernel=linear",
+      "best_qsvm_params": "PauliFeatureMap, reps=2, entanglement=linear, paulis=Y,Z",
+      "log_highlights": [
+        "2026-05-16 09:39:32,056 | ERROR | Phase failed: classical_svm_grid_search",
+        "2026-05-16 09:56:50,959 | WARNING | QSVM Optuna trial 1 failed: 'NoneType' object has no attribute 'items'",
+        "2026-05-16 09:57:25,587 | WARNING | QSVM Optuna trial 4 failed: 'NoneType' object has no attribute 'items'",
+        "2026-05-16 09:59:36,383 | WARNING | QSVM Optuna trial 14 failed: 'NoneType' object has no attribute 'items'",
+        "2026-05-16 10:00:31,469 | WARNING | QSVM Optuna trial 19 failed: 'NoneType' object has no attribute 'items'",
+        "2026-05-16 10:04:08,406 | WARNING | QSVM Optuna trial 34 failed: 'NoneType' object has no attribute 'items'",
+        "2026-05-16 10:04:29,742 | WARNING | QSVM Optuna trial 36 failed: 'NoneType' object has no attribute 'items'",
+        "2026-05-16 10:13:29,345 | INFO | Experiment completed successfully."
+      ]
+    },
+    {
+      "key": "wine",
+      "display_name": "Wine",
+      "rows": 178,
+      "features": 13,
+      "classes": 3,
+      "svm_accuracy": 0.9722222222222222,
+      "qsvm_accuracy": 0.9166666666666666,
+      "svm_macro_f1": 0.9709618874773139,
+      "qsvm_macro_f1": 0.916839199447895,
+      "accuracy_gap": 0.05555555555555558,
+      "total_classical_seconds": 0.8860717602074146,
+      "total_qsvm_seconds": 1424.4445502017625,
+      "gpu_available": false,
+      "gpu_used": false,
+      "confusion_note": "Most frequent confusion: class_2 predicted as class_1 (1 case(s)).",
+      "best_classical_params": "C=1, gamma=scale, kernel=rbf",
+      "best_qsvm_params": "PauliFeatureMap, reps=3, entanglement=circular, paulis=X,Y,Z",
+      "log_highlights": [
+        "2026-05-16 10:17:48,338 | WARNING | QSVM Optuna trial 1 failed: 'NoneType' object has no attribute 'items'",
+        "2026-05-16 10:18:36,830 | WARNING | QSVM Optuna trial 4 failed: 'NoneType' object has no attribute 'items'",
+        "2026-05-16 10:24:02,520 | WARNING | QSVM Optuna trial 18 failed: 'NoneType' object has no attribute 'items'",
+        "2026-05-16 10:27:29,572 | WARNING | QSVM Optuna trial 25 failed: 'NoneType' object has no attribute 'items'",
+        "2026-05-16 10:29:19,357 | WARNING | QSVM Optuna trial 29 failed: 'NoneType' object has no attribute 'items'",
+        "2026-05-16 10:32:15,875 | WARNING | QSVM Optuna trial 36 failed: 'NoneType' object has no attribute 'items'",
+        "2026-05-16 10:52:23,187 | INFO | Experiment completed successfully."
+      ]
+    },
+    {
+      "key": "heart",
+      "display_name": "Heart Disease",
+      "rows": 303,
+      "features": 13,
+      "classes": 2,
+      "svm_accuracy": 0.819672131147541,
+      "qsvm_accuracy": 0.8032786885245902,
+      "svm_macro_f1": 0.809645390070922,
+      "qsvm_macro_f1": 0.7966666666666666,
+      "accuracy_gap": 0.016393442622950838,
+      "total_classical_seconds": 2.2737713000096846,
+      "total_qsvm_seconds": 6456.130645800004,
+      "gpu_available": true,
+      "gpu_used": true,
+      "confusion_note": "Type I errors: 10, Type II errors: 1 for positive class 1.0.",
+      "best_classical_params": "C=1, gamma=0.01, kernel=rbf",
+      "best_qsvm_params": "PauliFeatureMap, reps=1, entanglement=linear, paulis=Y,Z",
+      "log_highlights": [
+        "2026-05-16 18:27:26,230 | WARNING | QSVM Optuna trial 1 failed: 'NoneType' object has no attribute 'items'",
+        "2026-05-16 18:32:35,584 | WARNING | QSVM Optuna trial 4 failed: 'NoneType' object has no attribute 'items'",
+        "2026-05-16 18:52:09,240 | WARNING | QSVM Optuna trial 14 failed: 'NoneType' object has no attribute 'items'",
+        "2026-05-16 19:00:37,885 | WARNING | QSVM Optuna trial 19 failed: 'NoneType' object has no attribute 'items'",
+        "2026-05-16 19:33:23,936 | WARNING | QSVM Optuna trial 34 failed: 'NoneType' object has no attribute 'items'",
+        "2026-05-16 19:36:39,469 | WARNING | QSVM Optuna trial 36 failed: 'NoneType' object has no attribute 'items'",
+        "2026-05-16 20:26:31,114 | INFO | Experiment completed successfully."
+      ]
+    },
+    {
+      "key": "breast",
+      "display_name": "Breast Cancer",
+      "rows": 569,
+      "features": 30,
+      "classes": 2,
+      "svm_accuracy": 0.9824561403508771,
+      "qsvm_accuracy": 0.956140350877193,
+      "svm_macro_f1": 0.9809555629802873,
+      "qsvm_macro_f1": 0.9521289997480473,
+      "accuracy_gap": 0.02631578947368418,
+      "total_classical_seconds": 1.8641500733792782,
+      "total_qsvm_seconds": 8978.314971369226,
+      "gpu_available": false,
+      "gpu_used": false,
+      "confusion_note": "Type I errors: 0, Type II errors: 2 for positive class malignant.",
+      "best_classical_params": "C=10, gamma=0.01, kernel=rbf",
+      "best_qsvm_params": "PauliFeatureMap, reps=1, entanglement=linear, paulis=Z",
+      "log_highlights": [
+        "2026-05-16 11:00:48,147 | WARNING | QSVM Optuna trial 1 failed: 'NoneType' object has no attribute 'items'",
+        "2026-05-16 11:09:19,328 | WARNING | QSVM Optuna trial 4 failed: 'NoneType' object has no attribute 'items'",
+        "2026-05-16 11:59:15,141 | WARNING | QSVM Optuna trial 18 failed: 'NoneType' object has no attribute 'items'",
+        "2026-05-16 12:13:27,263 | WARNING | QSVM Optuna trial 25 failed: 'NoneType' object has no attribute 'items'",
+        "2026-05-16 12:23:56,924 | WARNING | QSVM Optuna trial 29 failed: 'NoneType' object has no attribute 'items'",
+        "2026-05-16 12:40:56,290 | WARNING | QSVM Optuna trial 36 failed: 'NoneType' object has no attribute 'items'",
+        "2026-05-16 13:37:13,403 | INFO | Experiment completed successfully."
+      ]
+    }
+  ],
+  "portfolio_findings": [
+    "Classical SVM matched or exceeded QSVM accuracy on all four datasets.",
+    "QSVM search was always the longest phase, making runtime the dominant tradeoff.",
+    "Heart Disease was the only run with GPU visibility, but the GPU still appeared mostly idle.",
+    "The first Iris attempt failed because the classical SVM grid passed a scalar C instead of a list."
+  ],
+  "ranking_by_gap": [
+    "Wine",
+    "Breast Cancer",
+    "Heart Disease",
+    "Iris"
+  ]
+}
