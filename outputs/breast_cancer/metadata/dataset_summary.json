@@ -1,0 +1,18 @@
+{
+  "dataset_path": null,
+  "dataset_name": "breast_cancer",
+  "dataset_source": "scikit-learn",
+  "original_row_count": 569,
+  "row_count_after_target_drop": 569,
+  "dropped_rows_missing_target": 0,
+  "feature_column_count": 30,
+  "target_column": "target",
+  "numeric_feature_count": 30,
+  "categorical_feature_count": 0,
+  "class_count": 2,
+  "classes": [
+    "benign",
+    "malignant"
+  ],
+  "sklearn_loader": "load_breast_cancer"
+}

@@ -1,0 +1,7 @@
+split,label,count
+train,benign,214
+train,malignant,127
+validation,benign,71
+validation,malignant,43
+test,benign,72
+test,malignant,42

@@ -1,0 +1,618 @@
+{
+  "command_line_args": {
+    "dataset_name": "iris",
+    "data_path": null,
+    "target_column": null,
+    "output_dir": "outputs\\iris",
+    "test_size": 0.2,
+    "validation_size": 0.2,
+    "scale_features": true,
+    "quantum_features": 4,
+    "optuna_trials": 40,
+    "top_k_confirmation": 5,
+    "confirmation_repeats": 3,
+    "cv_folds": 5,
+    "resource_sample_interval": 1.0,
+    "compute_label": "Proxmox_VM",
+    "positive_label": null,
+    "max_qsvm_samples": null,
+    "decision_boundary_resolution": 100
+  },
+  "dataset_summary": {
+    "dataset_path": null,
+    "dataset_name": "iris",
+    "dataset_source": "scikit-learn",
+    "original_row_count": 150,
+    "row_count_after_target_drop": 150,
+    "dropped_rows_missing_target": 0,
+    "feature_column_count": 4,
+    "target_column": "target",
+    "numeric_feature_count": 4,
+    "categorical_feature_count": 0,
+    "class_count": 3,
+    "classes": [
+      "setosa",
+      "versicolor",
+      "virginica"
+    ],
+    "sklearn_loader": "load_iris"
+  },
+  "system_info": {
+    "hostname": "PC2110",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "cpu_count_logical": 28,
+    "cpu_count_physical": 20,
+    "memory_total_gb": 31.84,
+    "compute_label": "Proxmox_VM",
+    "gpu_available": true,
+    "gpu_error_message": null
+  },
+  "classical_svm": {
+    "status": "completed",
+    "best_params": {
+      "C": 0.1,
+      "kernel": "linear"
+    },
+    "best_cv_score_macro_f1": 0.9776223776223777,
+    "validation_metrics": {
+      "accuracy": 0.9333333333333333,
+      "balanced_accuracy": 0.9333333333333332,
+      "macro_precision": 0.9333333333333332,
+      "macro_recall": 0.9333333333333332,
+      "macro_f1": 0.9333333333333332,
+      "weighted_precision": 0.9333333333333333,
+      "weighted_recall": 0.9333333333333333,
+      "weighted_f1": 0.9333333333333333
+    },
+    "test_metrics": {
+      "accuracy": 0.9333333333333333,
+      "balanced_accuracy": 0.9333333333333332,
+      "macro_precision": 0.9333333333333332,
+      "macro_recall": 0.9333333333333332,
+      "macro_f1": 0.9333333333333332,
+      "weighted_precision": 0.9333333333333333,
+      "weighted_recall": 0.9333333333333333,
+      "weighted_f1": 0.9333333333333333
+    },
+    "error_analysis": {
+      "overall_metrics": {
+        "accuracy": 0.9333333333333333,
+        "balanced_accuracy": 0.9333333333333332,
+        "macro_precision": 0.9333333333333332,
+        "macro_recall": 0.9333333333333332,
+        "macro_f1": 0.9333333333333332,
+        "weighted_precision": 0.9333333333333333,
+        "weighted_recall": 0.9333333333333333,
+        "weighted_f1": 0.9333333333333333
+      },
+      "per_class": {
+        "setosa": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 10.0
+        },
+        "versicolor": {
+          "precision": 0.9,
+          "recall": 0.9,
+          "f1-score": 0.9,
+          "support": 10.0
+        },
+        "virginica": {
+          "precision": 0.9,
+          "recall": 0.9,
+          "f1-score": 0.9,
+          "support": 10.0
+        },
+        "accuracy": 0.9333333333333333,
+        "macro avg": {
+          "precision": 0.9333333333333332,
+          "recall": 0.9333333333333332,
+          "f1-score": 0.9333333333333332,
+          "support": 30.0
+        },
+        "weighted avg": {
+          "precision": 0.9333333333333333,
+          "recall": 0.9333333333333333,
+          "f1-score": 0.9333333333333333,
+          "support": 30.0
+        }
+      },
+      "false_positive_counts": {
+        "setosa": 0,
+        "versicolor": 1,
+        "virginica": 1
+      },
+      "false_negative_counts": {
+        "setosa": 0,
+        "versicolor": 1,
+        "virginica": 1
+      },
+      "binary_error_terms": null,
+      "most_confused_class_pairs": [
+        {
+          "actual": "versicolor",
+          "predicted": "virginica",
+          "count": 1
+        },
+        {
+          "actual": "virginica",
+          "predicted": "versicolor",
+          "count": 1
+        }
+      ]
+    }
+  },
+  "qsvm_optuna": {
+    "status": "completed",
+    "best_params": {
+      "feature_map_type": "PauliFeatureMap",
+      "reps": 2,
+      "entanglement": "full",
+      "paulis": "[\"Y\", \"Z\"]"
+    },
+    "successful_trial_count": 34,
+    "requested_trial_count": 40
+  },
+  "qsvm_confirmation": {
+    "config_rank": 3,
+    "feature_map_type": "PauliFeatureMap",
+    "reps": 2,
+    "entanglement": "linear",
+    "paulis": "[\"Y\", \"Z\"]",
+    "mean_accuracy": 0.9555555555555556,
+    "mean_macro_precision": 0.9575757575757575,
+    "mean_macro_recall": 0.9555555555555556,
+    "mean_macro_f1": 0.9554998607630186,
+    "mean_weighted_f1": 0.9554998607630187,
+    "mean_fit_time_seconds": 15.68616243333478,
+    "mean_inference_time_seconds": 10.446930033333047,
+    "repeat_count": 3
+  },
+  "qsvm_final": {
+    "status": "completed",
+    "optuna_summary": {
+      "status": "completed",
+      "best_params": {
+        "feature_map_type": "PauliFeatureMap",
+        "reps": 2,
+        "entanglement": "full",
+        "paulis": "[\"Y\", \"Z\"]"
+      },
+      "successful_trial_count": 34,
+      "requested_trial_count": 40
+    },
+    "confirmation_summary_top": {
+      "config_rank": 3,
+      "feature_map_type": "PauliFeatureMap",
+      "reps": 2,
+      "entanglement": "linear",
+      "paulis": "[\"Y\", \"Z\"]",
+      "mean_accuracy": 0.9555555555555556,
+      "mean_macro_precision": 0.9575757575757575,
+      "mean_macro_recall": 0.9555555555555556,
+      "mean_macro_f1": 0.9554998607630186,
+      "mean_weighted_f1": 0.9554998607630187,
+      "mean_fit_time_seconds": 15.68616243333478,
+      "mean_inference_time_seconds": 10.446930033333047,
+      "repeat_count": 3
+    },
+    "best_confirmed_params": {
+      "feature_map_type": "PauliFeatureMap",
+      "reps": 2,
+      "entanglement": "linear",
+      "paulis": [
+        "Y",
+        "Z"
+      ]
+    },
+    "test_metrics": {
+      "accuracy": 0.9333333333333333,
+      "balanced_accuracy": 0.9333333333333332,
+      "macro_precision": 0.9333333333333332,
+      "macro_recall": 0.9333333333333332,
+      "macro_f1": 0.9333333333333332,
+      "weighted_precision": 0.9333333333333333,
+      "weighted_recall": 0.9333333333333333,
+      "weighted_f1": 0.9333333333333333
+    },
+    "error_analysis": {
+      "overall_metrics": {
+        "accuracy": 0.9333333333333333,
+        "balanced_accuracy": 0.9333333333333332,
+        "macro_precision": 0.9333333333333332,
+        "macro_recall": 0.9333333333333332,
+        "macro_f1": 0.9333333333333332,
+        "weighted_precision": 0.9333333333333333,
+        "weighted_recall": 0.9333333333333333,
+        "weighted_f1": 0.9333333333333333
+      },
+      "per_class": {
+        "setosa": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 10.0
+        },
+        "versicolor": {
+          "precision": 0.9,
+          "recall": 0.9,
+          "f1-score": 0.9,
+          "support": 10.0
+        },
+        "virginica": {
+          "precision": 0.9,
+          "recall": 0.9,
+          "f1-score": 0.9,
+          "support": 10.0
+        },
+        "accuracy": 0.9333333333333333,
+        "macro avg": {
+          "precision": 0.9333333333333332,
+          "recall": 0.9333333333333332,
+          "f1-score": 0.9333333333333332,
+          "support": 30.0
+        },
+        "weighted avg": {
+          "precision": 0.9333333333333333,
+          "recall": 0.9333333333333333,
+          "f1-score": 0.9333333333333333,
+          "support": 30.0
+        }
+      },
+      "false_positive_counts": {
+        "setosa": 0,
+        "versicolor": 1,
+        "virginica": 1
+      },
+      "false_negative_counts": {
+        "setosa": 0,
+        "versicolor": 1,
+        "virginica": 1
+      },
+      "binary_error_terms": null,
+      "most_confused_class_pairs": [
+        {
+          "actual": "versicolor",
+          "predicted": "virginica",
+          "count": 1
+        },
+        {
+          "actual": "virginica",
+          "predicted": "versicolor",
+          "count": 1
+        }
+      ]
+    }
+  },
+  "anova": {
+    "status": "completed",
+    "row_count": 15,
+    "valid_factors": [
+      "feature_map_type",
+      "reps",
+      "entanglement",
+      "paulis"
+    ],
+    "warnings": [],
+    "interaction_formula": "macro_f1 ~ C(feature_map_type) * C(entanglement) + C(reps)"
+  },
+  "error_analysis": {
+    "classical": {
+      "overall_metrics": {
+        "accuracy": 0.9333333333333333,
+        "balanced_accuracy": 0.9333333333333332,
+        "macro_precision": 0.9333333333333332,
+        "macro_recall": 0.9333333333333332,
+        "macro_f1": 0.9333333333333332,
+        "weighted_precision": 0.9333333333333333,
+        "weighted_recall": 0.9333333333333333,
+        "weighted_f1": 0.9333333333333333
+      },
+      "per_class": {
+        "setosa": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 10.0
+        },
+        "versicolor": {
+          "precision": 0.9,
+          "recall": 0.9,
+          "f1-score": 0.9,
+          "support": 10.0
+        },
+        "virginica": {
+          "precision": 0.9,
+          "recall": 0.9,
+          "f1-score": 0.9,
+          "support": 10.0
+        },
+        "accuracy": 0.9333333333333333,
+        "macro avg": {
+          "precision": 0.9333333333333332,
+          "recall": 0.9333333333333332,
+          "f1-score": 0.9333333333333332,
+          "support": 30.0
+        },
+        "weighted avg": {
+          "precision": 0.9333333333333333,
+          "recall": 0.9333333333333333,
+          "f1-score": 0.9333333333333333,
+          "support": 30.0
+        }
+      },
+      "false_positive_counts": {
+        "setosa": 0,
+        "versicolor": 1,
+        "virginica": 1
+      },
+      "false_negative_counts": {
+        "setosa": 0,
+        "versicolor": 1,
+        "virginica": 1
+      },
+      "binary_error_terms": null,
+      "most_confused_class_pairs": [
+        {
+          "actual": "versicolor",
+          "predicted": "virginica",
+          "count": 1
+        },
+        {
+          "actual": "virginica",
+          "predicted": "versicolor",
+          "count": 1
+        }
+      ]
+    },
+    "qsvm": {
+      "overall_metrics": {
+        "accuracy": 0.9333333333333333,
+        "balanced_accuracy": 0.9333333333333332,
+        "macro_precision": 0.9333333333333332,
+        "macro_recall": 0.9333333333333332,
+        "macro_f1": 0.9333333333333332,
+        "weighted_precision": 0.9333333333333333,
+        "weighted_recall": 0.9333333333333333,
+        "weighted_f1": 0.9333333333333333
+      },
+      "per_class": {
+        "setosa": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 10.0
+        },
+        "versicolor": {
+          "precision": 0.9,
+          "recall": 0.9,
+          "f1-score": 0.9,
+          "support": 10.0
+        },
+        "virginica": {
+          "precision": 0.9,
+          "recall": 0.9,
+          "f1-score": 0.9,
+          "support": 10.0
+        },
+        "accuracy": 0.9333333333333333,
+        "macro avg": {
+          "precision": 0.9333333333333332,
+          "recall": 0.9333333333333332,
+          "f1-score": 0.9333333333333332,
+          "support": 30.0
+        },
+        "weighted avg": {
+          "precision": 0.9333333333333333,
+          "recall": 0.9333333333333333,
+          "f1-score": 0.9333333333333333,
+          "support": 30.0
+        }
+      },
+      "false_positive_counts": {
+        "setosa": 0,
+        "versicolor": 1,
+        "virginica": 1
+      },
+      "false_negative_counts": {
+        "setosa": 0,
+        "versicolor": 1,
+        "virginica": 1
+      },
+      "binary_error_terms": null,
+      "most_confused_class_pairs": [
+        {
+          "actual": "versicolor",
+          "predicted": "virginica",
+          "count": 1
+        },
+        {
+          "actual": "virginica",
+          "predicted": "versicolor",
+          "count": 1
+        }
+      ]
+    }
+  },
+  "resource_usage": {
+    "gpu_available": true,
+    "gpu_error_message": null,
+    "phase_summaries": {
+      "preprocessing": {
+        "duration_seconds": 0.020307999999204185,
+        "peak_cpu_percent": 0.0,
+        "average_cpu_percent": 0.0,
+        "peak_ram_mb": 192.1015625,
+        "average_ram_mb": 191.859375,
+        "peak_system_ram_percent": 59.1,
+        "average_system_ram_percent": 59.1,
+        "peak_gpu_memory_mb": 3584.74609375,
+        "average_gpu_utilization_percent": 47.0,
+        "sample_count": 2
+      },
+      "classical_svm_grid_search": {
+        "duration_seconds": 1.3232523999995465,
+        "peak_cpu_percent": 97.0,
+        "average_cpu_percent": 62.300000000000004,
+        "peak_ram_mb": 194.0078125,
+        "average_ram_mb": 193.27604166666666,
+        "peak_system_ram_percent": 59.7,
+        "average_system_ram_percent": 59.4,
+        "peak_gpu_memory_mb": 4301.46484375,
+        "average_gpu_utilization_percent": 43.0,
+        "sample_count": 3
+      },
+      "classical_svm_final_training": {
+        "duration_seconds": 0.0013581000002886867,
+        "peak_cpu_percent": 0.0,
+        "average_cpu_percent": 0.0,
+        "peak_ram_mb": 194.3515625,
+        "average_ram_mb": 194.3515625,
+        "peak_system_ram_percent": 59.7,
+        "average_system_ram_percent": 59.7,
+        "peak_gpu_memory_mb": 4061.90234375,
+        "average_gpu_utilization_percent": 41.0,
+        "sample_count": 2
+      },
+      "final_evaluation": {
+        "duration_seconds": 11.76962199999798,
+        "peak_cpu_percent": 101.5,
+        "average_cpu_percent": 78.34666666666665,
+        "peak_ram_mb": 270.0703125,
+        "average_ram_mb": 258.80651041666664,
+        "peak_system_ram_percent": 67.7,
+        "average_system_ram_percent": 66.46,
+        "peak_gpu_memory_mb": 6973.8515625,
+        "average_gpu_utilization_percent": 39.2,
+        "sample_count": 15
+      },
+      "qsvm_optuna_search": {
+        "duration_seconds": 850.4374079999998,
+        "peak_cpu_percent": 195.3,
+        "average_cpu_percent": 94.9410071942446,
+        "peak_ram_mb": 254.8984375,
+        "average_ram_mb": 251.2665851693645,
+        "peak_system_ram_percent": 69.6,
+        "average_system_ram_percent": 66.63717026378897,
+        "peak_gpu_memory_mb": 7195.69921875,
+        "average_gpu_utilization_percent": 34.23501199040767,
+        "sample_count": 834
+      },
+      "qsvm_confirmation_phase": {
+        "duration_seconds": 292.58419149999827,
+        "peak_cpu_percent": 133.0,
+        "average_cpu_percent": 94.31010452961672,
+        "peak_ram_mb": 256.33984375,
+        "average_ram_mb": 255.54126742160278,
+        "peak_system_ram_percent": 69.3,
+        "average_system_ram_percent": 68.5432055749129,
+        "peak_gpu_memory_mb": 7085.97265625,
+        "average_gpu_utilization_percent": 35.62369337979094,
+        "sample_count": 287
+      },
+      "qsvm_final_training": {
+        "duration_seconds": 23.192966500002512,
+        "peak_cpu_percent": 101.6,
+        "average_cpu_percent": 93.25416666666666,
+        "peak_ram_mb": 272.23828125,
+        "average_ram_mb": 261.4747721354167,
+        "peak_system_ram_percent": 67.5,
+        "average_system_ram_percent": 67.42916666666667,
+        "peak_gpu_memory_mb": 6973.8515625,
+        "average_gpu_utilization_percent": 38.75,
+        "sample_count": 24
+      },
+      "decision_boundary_visualization": {
+        "duration_seconds": 406.33023500000127,
+        "peak_cpu_percent": 101.8,
+        "average_cpu_percent": 97.12241813602014,
+        "peak_ram_mb": 958.40234375,
+        "average_ram_mb": 657.0360811555415,
+        "peak_system_ram_percent": 69.4,
+        "average_system_ram_percent": 68.62367758186397,
+        "peak_gpu_memory_mb": 7005.2890625,
+        "average_gpu_utilization_percent": 38.622166246851386,
+        "sample_count": 397
+      }
+    },
+    "warnings": [
+      "classical_svm_grid_search: CPU saturation likely occurred.",
+      "final_evaluation: CPU saturation likely occurred.",
+      "qsvm_optuna_search: CPU saturation likely occurred.",
+      "qsvm_confirmation_phase: CPU saturation likely occurred.",
+      "qsvm_final_training: CPU saturation likely occurred."
+    ]
+  },
+  "compute_allocation": {
+    "compute_label": "Proxmox_VM",
+    "detected_cpu_count": 28,
+    "detected_ram_gb": 31.84,
+    "detected_gpu_available": true,
+    "highest_duration_phase": "qsvm_optuna_search",
+    "cpu_saturation_phases": [
+      "classical_svm_grid_search",
+      "final_evaluation",
+      "qsvm_optuna_search",
+      "qsvm_confirmation_phase",
+      "qsvm_final_training"
+    ],
+    "memory_pressure_phases": [],
+    "gpu_used": true
+  },
+  "artifact_paths": {
+    "experiment_log": "outputs\\iris\\logs\\experiment.log",
+    "class_distribution": "outputs\\iris\\tables\\class_distribution.csv",
+    "train_validation_test_distribution": "outputs\\iris\\tables\\train_validation_test_distribution.csv",
+    "dataset_summary": "outputs\\iris\\metadata\\dataset_summary.json",
+    "quantum_feature_info": "outputs\\iris\\metadata\\quantum_feature_info.json",
+    "svm_grid_results": "outputs\\iris\\tables\\svm_grid_results.csv",
+    "svm_best_params": "outputs\\iris\\metadata\\svm_best_params.json",
+    "svm_test_metrics": "outputs\\iris\\metadata\\svm_test_metrics.json",
+    "svm_classification_report": "outputs\\iris\\tables\\svm_classification_report.csv",
+    "svm_confusion_matrix": "outputs\\iris\\tables\\svm_confusion_matrix.csv",
+    "svm_error_analysis": "outputs\\iris\\metadata\\svm_error_analysis.json",
+    "svm_final_model": "outputs\\iris\\models\\svm_final_model.joblib",
+    "qsvm_optuna_trials": "outputs\\iris\\tables\\qsvm_optuna_trials.csv",
+    "qsvm_optuna_best_params": "outputs\\iris\\metadata\\qsvm_optuna_best_params.json",
+    "qsvm_optuna_study": "outputs\\iris\\models\\qsvm_optuna_study.pkl",
+    "qsvm_optuna_summary": "outputs\\iris\\metadata\\qsvm_optuna_summary.json",
+    "qsvm_confirmation_results": "outputs\\iris\\tables\\qsvm_confirmation_results.csv",
+    "qsvm_confirmation_summary": "outputs\\iris\\tables\\qsvm_confirmation_summary.csv",
+    "qsvm_best_confirmed_params": "outputs\\iris\\metadata\\qsvm_best_confirmed_params.json",
+    "qsvm_test_metrics": "outputs\\iris\\metadata\\qsvm_test_metrics.json",
+    "qsvm_classification_report": "outputs\\iris\\tables\\qsvm_classification_report.csv",
+    "qsvm_confusion_matrix": "outputs\\iris\\tables\\qsvm_confusion_matrix.csv",
+    "qsvm_error_analysis": "outputs\\iris\\metadata\\qsvm_error_analysis.json",
+    "qsvm_best_confirmed_model_info": "outputs\\iris\\metadata\\qsvm_best_confirmed_model_info.json",
+    "anova_macro_f1": "outputs\\iris\\tables\\anova_macro_f1.csv",
+    "anova_accuracy": "outputs\\iris\\tables\\anova_accuracy.csv",
+    "anova_fit_time": "outputs\\iris\\tables\\anova_fit_time.csv",
+    "anova_interpretation": "outputs\\iris\\reports\\anova_interpretation.md",
+    "anova_summary": "outputs\\iris\\metadata\\anova_summary.json",
+    "resource_log": "outputs\\iris\\tables\\resource_log.csv",
+    "resource_summary": "outputs\\iris\\metadata\\resource_summary.json",
+    "resource_summary_md": "outputs\\iris\\reports\\resource_summary.md",
+    "compute_allocation_summary": "outputs\\iris\\metadata\\compute_allocation_summary.json",
+    "compute_allocation_analysis": "outputs\\iris\\reports\\compute_allocation_analysis.md",
+    "svm_vs_qsvm_comparison": "outputs\\iris\\tables\\svm_vs_qsvm_comparison.csv",
+    "model_comparison_error_analysis": "outputs\\iris\\reports\\model_comparison_error_analysis.md",
+    "package_versions": "outputs\\iris\\metadata\\package_versions.txt",
+    "reproducibility": "outputs\\iris\\metadata\\reproducibility.json",
+    "model_metric_comparison_bar": "outputs\\iris\\plots\\model_metric_comparison_bar.png",
+    "svm_confusion_matrix_heatmap": "outputs\\iris\\plots\\svm_confusion_matrix_heatmap.png",
+    "qsvm_confusion_matrix_heatmap": "outputs\\iris\\plots\\qsvm_confusion_matrix_heatmap.png",
+    "per_class_f1_bar": "outputs\\iris\\plots\\per_class_f1_bar.png",
+    "qsvm_optuna_progress_line": "outputs\\iris\\plots\\qsvm_optuna_progress_line.png",
+    "qsvm_runtime_vs_macro_f1_scatter": "outputs\\iris\\plots\\qsvm_runtime_vs_macro_f1_scatter.png",
+    "qsvm_confirmation_macro_f1_boxplot": "outputs\\iris\\plots\\qsvm_confirmation_macro_f1_boxplot.png",
+    "resource_phase_summary_bar": "outputs\\iris\\plots\\resource_phase_summary_bar.png",
+    "pca_scatter_train_test": "outputs\\iris\\plots\\pca_scatter_train_test.png",
+    "svm_decision_boundary_pca2d": "outputs\\iris\\plots\\svm_decision_boundary_pca2d.png",
+    "qsvm_decision_boundary_pca2d": "outputs\\iris\\plots\\qsvm_decision_boundary_pca2d.png",
+    "experiment_report_md": "outputs\\iris\\reports\\experiment_report.md",
+    "experiment_report_txt": "outputs\\iris\\reports\\experiment_report.txt"
+  },
+  "warnings": [],
+  "failures": []
+}

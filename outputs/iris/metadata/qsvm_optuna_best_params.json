@@ -1,0 +1,6 @@
+{
+  "feature_map_type": "PauliFeatureMap",
+  "reps": 2,
+  "entanglement": "full",
+  "paulis": "[\"Y\", \"Z\"]"
+}
