@@ -92,10 +92,18 @@ Example:
 python run_one_go_svm_qsvm_experiment.py --dataset_name iris --output_dir outputs
 ```
 
+To run every built-in dataset sequentially, omit the dataset selector or pass `--all_datasets`:
+
+```bash
+python run_one_go_svm_qsvm_experiment.py --output_dir outputs
+```
+
+This writes each dataset run to its own subdirectory, such as `outputs/iris`, `outputs/breast_cancer`, `outputs/wine`, and `outputs/heart_disease`.
+
 Notes:
 
 - `iris`, `breast_cancer`, and `wine` are loaded from scikit-learn.
-- `heart_disease` is loaded through OpenML via scikit-learn's `fetch_openml`, so it may require network access the first time it is fetched on a VM.
+- `heart_disease` is loaded from the UCI Machine Learning Repository through `ucimlrepo.fetch_ucirepo(id=45)`, so it may require network access the first time it is fetched on a VM.
 
 ## Custom datasets
 

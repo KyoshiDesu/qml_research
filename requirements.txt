@@ -8,6 +8,7 @@ optuna
 psutil
 openpyxl
 joblib
+ucimlrepo
 qiskit
 qiskit-aer
 qiskit-machine-learning
@@ -15,5 +16,6 @@ pynvml
 
 # Optional dependency notes:
 # - qiskit, qiskit-aer, and qiskit-machine-learning are required for the QSVM path.
+# - ucimlrepo is required for the built-in heart_disease dataset.
 # - pynvml is only required for NVIDIA GPU monitoring.
 # - statsmodels is only required for ANOVA analysis.

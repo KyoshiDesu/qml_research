@@ -1,0 +1,12 @@
+2026-06-17 11:40:47,948 | INFO | Starting one-run SVM versus QSVM experiment.
+2026-06-17 11:40:47,990 | INFO | Starting phase: preprocessing
+2026-06-17 11:40:48,012 | INFO | Completed phase: preprocessing
+2026-06-17 11:40:48,013 | INFO | Starting phase: classical_svm_grid_search
+2026-06-17 11:40:49,337 | INFO | Completed phase: classical_svm_grid_search
+2026-06-17 11:40:49,341 | INFO | Starting phase: classical_svm_final_training
+2026-06-17 11:40:49,343 | INFO | Completed phase: classical_svm_final_training
+2026-06-17 11:40:49,343 | INFO | Starting phase: final_evaluation
+2026-06-17 11:40:49,344 | INFO | Completed phase: final_evaluation
+2026-06-17 11:40:49,363 | INFO | Classical SVM best params: {'C': 0.1, 'kernel': 'linear'}
+2026-06-17 11:40:50,269 | INFO | Starting phase: qsvm_optuna_search
+2026-06-17 11:41:10,254 | WARNING | QSVM Optuna trial 1 failed: 'NoneType' object has no attribute 'items'

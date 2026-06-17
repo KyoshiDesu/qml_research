@@ -11,7 +11,7 @@ import sys
 import threading
 import traceback
 from contextlib import contextmanager
-from dataclasses import dataclass, fields
+from dataclasses import dataclass, fields, replace
 from datetime import datetime, timezone
 from importlib import metadata as importlib_metadata
 from pathlib import Path
@@ -27,7 +27,7 @@ import pandas as pd
 import psutil
 from matplotlib import pyplot as plt
 from sklearn.compose import ColumnTransformer
-from sklearn.datasets import fetch_openml, load_breast_cancer, load_iris, load_wine
+from sklearn.datasets import load_breast_cancer, load_iris, load_wine
 from sklearn.decomposition import PCA
 from sklearn.feature_selection import SelectKBest, f_classif
 from sklearn.impute import SimpleImputer
@@ -65,11 +65,14 @@ OPTIONAL_PACKAGES = [
     "psutil",
     "openpyxl",
     "joblib",
+    "ucimlrepo",
     "qiskit",
     "qiskit-aer",
     "qiskit-machine-learning",
     "pynvml",
 ]
+
+BUILTIN_DATASET_NAMES = ["iris", "breast_cancer", "wine", "heart_disease"]
 
 
 def str_to_bool(value: str) -> bool:
@@ -86,6 +89,7 @@ class ExperimentConfig:
     data_path: Path | None
     target_column: str | None
     dataset_name: str | None
+    run_all_datasets: bool
     output_dir: Path
     test_size: float
     validation_size: float
@@ -103,8 +107,15 @@ class ExperimentConfig:
     decision_boundary_resolution: int
 
     def validate(self) -> None:
-        if self.data_path is None and self.dataset_name is None:
+        if self.run_all_datasets:
+            if self.data_path is not None or self.dataset_name is not None:
+                raise ValueError(
+                    "Provide --all_datasets without --dataset_name or --data_path."
+                )
+        elif self.data_path is None and self.dataset_name is None:
             raise ValueError("Provide either --dataset_name or --data_path.")
+        elif self.data_path is not None and self.dataset_name is not None:
+            raise ValueError("Provide only one of --dataset_name or --data_path.")
         if self.data_path is not None and not self.data_path.exists():
             raise FileNotFoundError(f"Dataset not found: {self.data_path}")
         if self.data_path is not None and not self.target_column:
@@ -419,12 +430,21 @@ def parse_args() -> ExperimentConfig:
     parser = argparse.ArgumentParser(
         description="Run a complete one-go SVM versus QSVM experiment for Proxmox VM benchmarking."
     )
-    parser.add_argument(
+    dataset_group = parser.add_mutually_exclusive_group(required=False)
+    dataset_group.add_argument(
         "--dataset_name",
-        choices=["iris", "breast_cancer", "heart_disease", "wine"],
+        choices=BUILTIN_DATASET_NAMES,
         default=None,
     )
-    parser.add_argument("--data_path", default=None)
+    dataset_group.add_argument("--data_path", default=None)
+    dataset_group.add_argument(
+        "--all_datasets",
+        action="store_true",
+        help=(
+            "Run all built-in datasets sequentially. This is also the default when "
+            "neither --dataset_name nor --data_path is supplied."
+        ),
+    )
     parser.add_argument("--target_column", default=None)
     parser.add_argument("--output_dir", default="outputs")
     parser.add_argument("--test_size", type=float, default=0.2)
@@ -447,6 +467,8 @@ def parse_args() -> ExperimentConfig:
         data_path=Path(args.data_path) if args.data_path else None,
         target_column=args.target_column,
         dataset_name=args.dataset_name,
+        run_all_datasets=args.all_datasets
+        or (args.dataset_name is None and args.data_path is None),
         output_dir=Path(args.output_dir),
         test_size=args.test_size,
         validation_size=args.validation_size,
@@ -463,7 +485,10 @@ def parse_args() -> ExperimentConfig:
         max_qsvm_samples=args.max_qsvm_samples,
         decision_boundary_resolution=args.decision_boundary_resolution,
     )
-    config.validate()
+    try:
+        config.validate()
+    except (FileNotFoundError, ValueError) as exc:
+        parser.error(str(exc))
     return config
 
 
@@ -585,36 +610,6 @@ def load_dataset_frame(data_path: Path) -> pd.DataFrame:
     raise ValueError("data_path must point to a CSV or Excel file.")
 
 
-def infer_openml_target_column(dataset: Any, frame: pd.DataFrame) -> str:
-    target_object = getattr(dataset, "target", None)
-    if target_object is not None:
-        target_name = getattr(target_object, "name", None)
-        if target_name:
-            return str(target_name)
-
-    target_names = getattr(dataset, "target_names", None)
-    if isinstance(target_names, str) and target_names in frame.columns:
-        return target_names
-    if isinstance(target_names, (list, tuple)) and len(target_names) == 1:
-        candidate = str(target_names[0])
-        if candidate in frame.columns:
-            return candidate
-
-    details = getattr(dataset, "details", None)
-    if isinstance(details, dict):
-        default_target_attribute = details.get("default_target_attribute")
-        if default_target_attribute and default_target_attribute in frame.columns:
-            return str(default_target_attribute)
-
-    for candidate in ["target", "class", "num", "label", "presence"]:
-        if candidate in frame.columns:
-            return candidate
-
-    raise ValueError(
-        "Could not infer the target column for the OpenML heart_disease dataset."
-    )
-
-
 def load_builtin_dataset_frame(
     dataset_name: str,
 ) -> tuple[pd.DataFrame, str, dict[str, Any]]:
@@ -628,7 +623,11 @@ def load_builtin_dataset_frame(
         return (
             frame,
             target_column,
-            {"dataset_source": "builtin", "dataset_name": dataset_name},
+            {
+                "dataset_source": "scikit-learn",
+                "dataset_name": dataset_name,
+                "sklearn_loader": "load_iris",
+            },
         )
     if dataset_name == "breast_cancer":
         dataset = load_breast_cancer(as_frame=True)
@@ -640,7 +639,11 @@ def load_builtin_dataset_frame(
         return (
             frame,
             target_column,
-            {"dataset_source": "builtin", "dataset_name": dataset_name},
+            {
+                "dataset_source": "scikit-learn",
+                "dataset_name": dataset_name,
+                "sklearn_loader": "load_breast_cancer",
+            },
         )
     if dataset_name == "wine":
         dataset = load_wine(as_frame=True)
@@ -652,25 +655,38 @@ def load_builtin_dataset_frame(
         return (
             frame,
             target_column,
-            {"dataset_source": "builtin", "dataset_name": dataset_name},
+            {
+                "dataset_source": "scikit-learn",
+                "dataset_name": dataset_name,
+                "sklearn_loader": "load_wine",
+            },
         )
     if dataset_name == "heart_disease":
-        dataset = fetch_openml(name="heart-disease", version=1, as_frame=True)
-        frame = dataset.frame.copy()
-        target_column = infer_openml_target_column(dataset, frame)
-        if (
-            target_column not in frame.columns
-            and getattr(dataset, "target", None) is not None
-        ):
-            frame[target_column] = dataset.target
+        try:
+            from ucimlrepo import fetch_ucirepo
+        except ImportError as exc:
+            raise ImportError(
+                "The heart_disease built-in dataset requires ucimlrepo. "
+                "Install it with `pip install ucimlrepo` or `pip install -r requirements.txt`."
+            ) from exc
+
+        heart_disease = fetch_ucirepo(id=45)
+        features = heart_disease.data.features.copy()
+        targets = heart_disease.data.targets.copy()
+        if targets.empty:
+            raise ValueError("UCI heart disease dataset id=45 did not provide targets.")
+        target_column = str(targets.columns[0])
+        frame = pd.concat([features, targets[[target_column]]], axis=1)
+        metadata = heart_disease.metadata
         return (
             frame,
             target_column,
             {
-                "dataset_source": "openml",
+                "dataset_source": "ucimlrepo",
                 "dataset_name": dataset_name,
-                "openml_name": "heart-disease",
-                "openml_version": 1,
+                "uci_dataset_id": 45,
+                "uci_dataset_name": metadata.get("name"),
+                "uci_repository_url": metadata.get("repository_url"),
             },
         )
     raise ValueError(f"Unsupported built-in dataset name: {dataset_name}")
@@ -2327,6 +2343,360 @@ def save_comparison_artifacts(
     )
 
 
+def _add_bar_labels(ax: Any, fmt: str = "{:.3f}") -> None:
+    for patch in ax.patches:
+        height = patch.get_height()
+        if not np.isfinite(height):
+            continue
+        ax.annotate(
+            fmt.format(height),
+            (patch.get_x() + patch.get_width() / 2, height),
+            ha="center",
+            va="bottom",
+            fontsize=8,
+            xytext=(0, 2),
+            textcoords="offset points",
+        )
+
+
+def plot_model_metric_comparison(
+    classical_result: dict[str, Any],
+    qsvm_result: dict[str, Any],
+    layout: OutputLayout,
+    artifact_paths: dict[str, str],
+) -> None:
+    metric_keys = [
+        "accuracy",
+        "balanced_accuracy",
+        "macro_precision",
+        "macro_recall",
+        "macro_f1",
+        "weighted_f1",
+    ]
+    rows = [("Classical SVM", classical_result["test_metrics"])]
+    if qsvm_result.get("status") == "completed":
+        rows.append(("QSVM", qsvm_result["test_metrics"]))
+
+    x_positions = np.arange(len(metric_keys))
+    bar_width = 0.36 if len(rows) > 1 else 0.5
+    plt.figure(figsize=(12, 6))
+    ax = plt.gca()
+    for row_index, (model_name, metrics) in enumerate(rows):
+        offset = (row_index - (len(rows) - 1) / 2) * bar_width
+        values = [metrics[key] for key in metric_keys]
+        ax.bar(x_positions + offset, values, width=bar_width, label=model_name)
+    ax.set_title("Final Test Metric Comparison")
+    ax.set_ylabel("Score")
+    ax.set_ylim(0, 1.08)
+    ax.set_xticks(x_positions)
+    ax.set_xticklabels(
+        [key.replace("_", " ").title() for key in metric_keys],
+        rotation=25,
+        ha="right",
+    )
+    ax.legend(loc="best")
+    ax.grid(axis="y", alpha=0.25)
+    _add_bar_labels(ax)
+    plt.tight_layout()
+    plot_path = layout.plots / "model_metric_comparison_bar.png"
+    plt.savefig(plot_path, dpi=160)
+    plt.close()
+    register_artifact(artifact_paths, "model_metric_comparison_bar", plot_path)
+
+
+def plot_confusion_matrix_heatmap(
+    matrix_path: Path,
+    title: str,
+    output_path: Path,
+    artifact_key: str,
+    artifact_paths: dict[str, str],
+) -> None:
+    if not matrix_path.exists():
+        return
+    matrix_frame = pd.read_csv(matrix_path, index_col=0)
+    matrix = matrix_frame.to_numpy(dtype=float)
+
+    plt.figure(figsize=(8, 7))
+    ax = plt.gca()
+    image = ax.imshow(matrix, cmap="Blues")
+    plt.colorbar(image, ax=ax, fraction=0.046, pad=0.04, label="Count")
+    ax.set_title(title)
+    ax.set_xlabel("Predicted label")
+    ax.set_ylabel("True label")
+    ax.set_xticks(np.arange(len(matrix_frame.columns)))
+    ax.set_yticks(np.arange(len(matrix_frame.index)))
+    ax.set_xticklabels(matrix_frame.columns, rotation=45, ha="right")
+    ax.set_yticklabels(matrix_frame.index)
+    threshold = matrix.max() / 2 if matrix.size else 0
+    for row_index in range(matrix.shape[0]):
+        for column_index in range(matrix.shape[1]):
+            value = int(matrix[row_index, column_index])
+            color = "white" if matrix[row_index, column_index] > threshold else "black"
+            ax.text(
+                column_index,
+                row_index,
+                value,
+                ha="center",
+                va="center",
+                color=color,
+            )
+    plt.tight_layout()
+    plt.savefig(output_path, dpi=160)
+    plt.close()
+    register_artifact(artifact_paths, artifact_key, output_path)
+
+
+def plot_per_class_f1(
+    layout: OutputLayout,
+    artifact_paths: dict[str, str],
+) -> None:
+    frames: list[pd.DataFrame] = []
+    for model_name, artifact_key in [
+        ("Classical SVM", "svm_classification_report"),
+        ("QSVM", "qsvm_classification_report"),
+    ]:
+        report_path = artifact_paths.get(artifact_key)
+        if not report_path:
+            continue
+        frame = pd.read_csv(report_path)
+        frame = frame[
+            ~frame["label"].isin(["accuracy", "macro avg", "weighted avg"])
+        ].copy()
+        if frame.empty or "f1-score" not in frame.columns:
+            continue
+        frame["model"] = model_name
+        frames.append(frame[["label", "model", "f1-score"]])
+    if not frames:
+        return
+
+    combined = pd.concat(frames, ignore_index=True)
+    labels = combined["label"].drop_duplicates().tolist()
+    model_names = combined["model"].drop_duplicates().tolist()
+    x_positions = np.arange(len(labels))
+    bar_width = 0.36 if len(model_names) > 1 else 0.5
+
+    plt.figure(figsize=(12, 6))
+    ax = plt.gca()
+    for model_index, model_name in enumerate(model_names):
+        values = []
+        model_frame = combined[combined["model"] == model_name]
+        for label in labels:
+            matching = model_frame.loc[model_frame["label"] == label, "f1-score"]
+            values.append(float(matching.iloc[0]) if not matching.empty else np.nan)
+        offset = (model_index - (len(model_names) - 1) / 2) * bar_width
+        ax.bar(x_positions + offset, values, width=bar_width, label=model_name)
+    ax.set_title("Per-Class F1 Score")
+    ax.set_ylabel("F1 score")
+    ax.set_ylim(0, 1.08)
+    ax.set_xticks(x_positions)
+    ax.set_xticklabels(labels, rotation=30, ha="right")
+    ax.legend(loc="best")
+    ax.grid(axis="y", alpha=0.25)
+    _add_bar_labels(ax)
+    plt.tight_layout()
+    plot_path = layout.plots / "per_class_f1_bar.png"
+    plt.savefig(plot_path, dpi=160)
+    plt.close()
+    register_artifact(artifact_paths, "per_class_f1_bar", plot_path)
+
+
+def plot_qsvm_optuna_progress(
+    layout: OutputLayout,
+    artifact_paths: dict[str, str],
+    warnings_list: list[str],
+) -> None:
+    optuna_path = artifact_paths.get("qsvm_optuna_trials")
+    if not optuna_path:
+        return
+    frame = pd.read_csv(optuna_path)
+    if frame.empty or "macro_f1" not in frame.columns:
+        return
+    trial_column = "trial_number" if "trial_number" in frame.columns else "number"
+    if trial_column not in frame.columns:
+        return
+    valid = frame.dropna(subset=[trial_column, "macro_f1"]).copy()
+    if valid.empty:
+        return
+    valid = valid.sort_values(trial_column)
+    valid["best_so_far_macro_f1"] = valid["macro_f1"].cummax()
+
+    plt.figure(figsize=(11, 6))
+    ax = plt.gca()
+    ax.plot(
+        valid[trial_column],
+        valid["macro_f1"],
+        marker="o",
+        linewidth=1,
+        alpha=0.8,
+        label="Trial macro F1",
+    )
+    ax.plot(
+        valid[trial_column],
+        valid["best_so_far_macro_f1"],
+        linewidth=2.5,
+        label="Best so far",
+    )
+    if "status" in frame.columns:
+        failed = frame[frame["status"] != "completed"].copy()
+        if not failed.empty and trial_column in failed.columns:
+            ax.scatter(
+                failed[trial_column],
+                np.zeros(len(failed)),
+                marker="x",
+                color="crimson",
+                label="Failed trial",
+            )
+    ax.set_title("QSVM Optuna Search Progress")
+    ax.set_xlabel("Trial")
+    ax.set_ylabel("Validation macro F1")
+    ax.set_ylim(0, 1.05)
+    ax.grid(alpha=0.25)
+    ax.legend(loc="best")
+    plt.tight_layout()
+    plot_path = layout.plots / "qsvm_optuna_progress_line.png"
+    plt.savefig(plot_path, dpi=160)
+    plt.close()
+    register_artifact(artifact_paths, "qsvm_optuna_progress_line", plot_path)
+
+    if "fit_time_seconds" in valid.columns:
+        scatter = valid.dropna(subset=["fit_time_seconds", "macro_f1"]).copy()
+        if not scatter.empty:
+            plt.figure(figsize=(10, 6))
+            ax = plt.gca()
+            color_values = (
+                scatter["reps"].to_numpy(dtype=float)
+                if "reps" in scatter.columns
+                else scatter[trial_column].to_numpy(dtype=float)
+            )
+            image = ax.scatter(
+                scatter["fit_time_seconds"],
+                scatter["macro_f1"],
+                c=color_values,
+                cmap="viridis",
+                s=70,
+                alpha=0.85,
+                edgecolor="black",
+                linewidth=0.3,
+            )
+            colorbar_label = "Reps" if "reps" in scatter.columns else "Trial"
+            plt.colorbar(image, ax=ax, label=colorbar_label)
+            ax.set_title("QSVM Trial Runtime vs Macro F1")
+            ax.set_xlabel("Fit time (seconds)")
+            ax.set_ylabel("Validation macro F1")
+            ax.set_ylim(0, 1.05)
+            ax.grid(alpha=0.25)
+            plt.tight_layout()
+            scatter_path = layout.plots / "qsvm_runtime_vs_macro_f1_scatter.png"
+            plt.savefig(scatter_path, dpi=160)
+            plt.close()
+            register_artifact(
+                artifact_paths, "qsvm_runtime_vs_macro_f1_scatter", scatter_path
+            )
+    elif "fit_time_seconds" not in valid.columns:
+        warnings_list.append(
+            "QSVM runtime scatter skipped: fit_time_seconds column missing."
+        )
+
+
+def plot_qsvm_confirmation_distribution(
+    layout: OutputLayout,
+    artifact_paths: dict[str, str],
+) -> None:
+    confirmation_path = artifact_paths.get("qsvm_confirmation_results")
+    if not confirmation_path:
+        return
+    frame = pd.read_csv(confirmation_path).dropna(subset=["config_rank", "macro_f1"])
+    if frame.empty:
+        return
+    grouped = [
+        group["macro_f1"].to_numpy(dtype=float)
+        for _, group in frame.sort_values("config_rank").groupby("config_rank")
+    ]
+    labels = [
+        f"Rank {int(rank)}"
+        for rank in frame.sort_values("config_rank")["config_rank"].drop_duplicates()
+    ]
+
+    plt.figure(figsize=(10, 6))
+    ax = plt.gca()
+    ax.boxplot(grouped, labels=labels, showmeans=True)
+    ax.set_title("QSVM Confirmation Repeat Distribution")
+    ax.set_xlabel("Candidate configuration")
+    ax.set_ylabel("Validation macro F1")
+    ax.set_ylim(0, 1.05)
+    ax.grid(axis="y", alpha=0.25)
+    plt.tight_layout()
+    plot_path = layout.plots / "qsvm_confirmation_macro_f1_boxplot.png"
+    plt.savefig(plot_path, dpi=160)
+    plt.close()
+    register_artifact(artifact_paths, "qsvm_confirmation_macro_f1_boxplot", plot_path)
+
+
+def plot_resource_phase_summary(
+    resource_summary: dict[str, Any],
+    layout: OutputLayout,
+    artifact_paths: dict[str, str],
+) -> None:
+    phase_summaries = resource_summary.get("phase_summaries", {})
+    if not phase_summaries:
+        return
+    frame = pd.DataFrame.from_dict(phase_summaries, orient="index").reset_index()
+    frame = frame.rename(columns={"index": "phase"})
+    required_columns = {"phase", "duration_seconds", "peak_cpu_percent", "peak_ram_mb"}
+    if not required_columns.issubset(frame.columns):
+        return
+    frame = frame.sort_values("duration_seconds", ascending=True)
+
+    fig, axes = plt.subplots(nrows=1, ncols=3, figsize=(16, 7), sharey=True)
+    axes[0].barh(frame["phase"], frame["duration_seconds"], color="#4C78A8")
+    axes[0].set_title("Duration")
+    axes[0].set_xlabel("Seconds")
+    axes[1].barh(frame["phase"], frame["peak_cpu_percent"], color="#F58518")
+    axes[1].set_title("Peak CPU")
+    axes[1].set_xlabel("Percent")
+    axes[2].barh(frame["phase"], frame["peak_ram_mb"], color="#54A24B")
+    axes[2].set_title("Peak RAM")
+    axes[2].set_xlabel("MB")
+    for ax in axes:
+        ax.grid(axis="x", alpha=0.25)
+    fig.suptitle("Resource Usage by Experiment Phase")
+    plt.tight_layout()
+    plot_path = layout.plots / "resource_phase_summary_bar.png"
+    plt.savefig(plot_path, dpi=160)
+    plt.close()
+    register_artifact(artifact_paths, "resource_phase_summary_bar", plot_path)
+
+
+def generate_experiment_diagnostic_plots(
+    classical_result: dict[str, Any],
+    qsvm_result: dict[str, Any],
+    resource_summary: dict[str, Any],
+    layout: OutputLayout,
+    artifact_paths: dict[str, str],
+    warnings_list: list[str],
+) -> None:
+    plot_model_metric_comparison(classical_result, qsvm_result, layout, artifact_paths)
+    plot_confusion_matrix_heatmap(
+        matrix_path=layout.tables / "svm_confusion_matrix.csv",
+        title="Classical SVM Confusion Matrix",
+        output_path=layout.plots / "svm_confusion_matrix_heatmap.png",
+        artifact_key="svm_confusion_matrix_heatmap",
+        artifact_paths=artifact_paths,
+    )
+    if qsvm_result.get("status") == "completed":
+        plot_confusion_matrix_heatmap(
+            matrix_path=layout.tables / "qsvm_confusion_matrix.csv",
+            title="QSVM Confusion Matrix",
+            output_path=layout.plots / "qsvm_confusion_matrix_heatmap.png",
+            artifact_key="qsvm_confusion_matrix_heatmap",
+            artifact_paths=artifact_paths,
+        )
+    plot_per_class_f1(layout, artifact_paths)
+    plot_qsvm_optuna_progress(layout, artifact_paths, warnings_list)
+    plot_qsvm_confirmation_distribution(layout, artifact_paths)
+    plot_resource_phase_summary(resource_summary, layout, artifact_paths)
+
+
 def build_report_markdown(
     config: ExperimentConfig,
     dataset_summary: dict[str, Any],
@@ -2444,15 +2814,18 @@ def build_report_markdown(
             f"- CPU saturation phases: {', '.join(compute_summary.get('cpu_saturation_phases', [])) or 'none'}",
             f"- Memory pressure phases: {', '.join(compute_summary.get('memory_pressure_phases', [])) or 'none'}",
             "",
-            "## 14. Decision Boundary Visualization",
+            "## 14. Visualization Suite",
             "",
-            "PCA-based 2D decision boundary plots were produced as visualization-only models and are explicitly separate from final evaluation models.",
+            "The run generates multiple plot types for a more robust experiment report: final metric bar charts, confusion-matrix heatmaps, per-class F1 bars, QSVM search diagnostics, confirmation-repeat boxplots, resource phase bars, PCA scatter plots, and PCA-based decision boundaries.",
+            "",
+            "PCA-based 2D decision boundary plots are visualization-only models and are explicitly separate from final evaluation models.",
             "",
             "## 15. Limitations",
             "",
             "- QSVM execution depends on Qiskit Machine Learning and related simulator dependencies.",
             "- ANOVA remains exploratory unless the confirmation design is balanced and sufficiently powered.",
             "- PCA-based boundary plots are for interpretation only and do not replace final high-dimensional evaluation.",
+            "- Diagnostic plots summarize available artifacts; QSVM-specific plots are skipped when QSVM dependencies or trials fail.",
             "",
             "## 16. Reproducibility Notes",
             "",
@@ -2579,6 +2952,14 @@ def run_experiment(config: ExperimentConfig) -> dict[str, Any]:
 
     save_comparison_artifacts(classical_result, qsvm_result, layout, artifact_paths)
     reproducibility = save_reproducibility_artifacts(config, layout, artifact_paths)
+    generate_experiment_diagnostic_plots(
+        classical_result=classical_result,
+        qsvm_result=qsvm_result,
+        resource_summary=resource_summary,
+        layout=layout,
+        artifact_paths=artifact_paths,
+        warnings_list=warnings_list,
+    )
     generate_decision_boundary_plots(
         dataset=dataset,
         final_preprocessing=final_preprocessing,
@@ -2646,20 +3027,82 @@ def run_experiment(config: ExperimentConfig) -> dict[str, Any]:
     }
 
 
+def print_experiment_result(results: dict[str, Any]) -> None:
+    print(f"Experiment completed. JSON report: {results['report_json_path']}")
+    if results["warnings"]:
+        print("Warnings:")
+        for warning in results["warnings"]:
+            print(f"- {warning}")
+    if results["failures"]:
+        print("Failures:")
+        for failure in results["failures"]:
+            print(f"- {failure}")
+
+
+def run_all_builtin_datasets(config: ExperimentConfig) -> list[dict[str, Any]]:
+    results_by_dataset: list[dict[str, Any]] = []
+    failed_datasets: list[str] = []
+
+    print(
+        "Running built-in datasets in sequence: "
+        + ", ".join(BUILTIN_DATASET_NAMES)
+    )
+    for dataset_name in BUILTIN_DATASET_NAMES:
+        dataset_output_dir = config.output_dir / dataset_name
+        dataset_config = replace(
+            config,
+            data_path=None,
+            target_column=None,
+            dataset_name=dataset_name,
+            run_all_datasets=False,
+            output_dir=dataset_output_dir,
+        )
+        print(f"\nStarting dataset: {dataset_name}")
+        try:
+            results = run_experiment(dataset_config)
+            results_by_dataset.append(
+                {
+                    "dataset_name": dataset_name,
+                    "report_json_path": results["report_json_path"],
+                    "warnings": results["warnings"],
+                    "failures": results["failures"],
+                }
+            )
+            print_experiment_result(results)
+        except Exception:
+            failed_datasets.append(dataset_name)
+            print(f"Dataset failed: {dataset_name}")
+            print(traceback.format_exc())
+
+    print("\nSequential dataset run summary:")
+    for result in results_by_dataset:
+        status = "completed"
+        if result["failures"]:
+            status = "completed_with_failures"
+        print(
+            f"- {result['dataset_name']}: {status}; "
+            f"report={result['report_json_path']}"
+        )
+    for dataset_name in failed_datasets:
+        print(f"- {dataset_name}: failed")
+
+    if failed_datasets:
+        raise RuntimeError(
+            "One or more datasets failed: " + ", ".join(failed_datasets)
+        )
+
+    return results_by_dataset
+
+
 def main() -> None:
     config = parse_args()
     config.validate()
     try:
-        results = run_experiment(config)
-        print(f"Experiment completed. JSON report: {results['report_json_path']}")
-        if results["warnings"]:
-            print("Warnings:")
-            for warning in results["warnings"]:
-                print(f"- {warning}")
-        if results["failures"]:
-            print("Failures:")
-            for failure in results["failures"]:
-                print(f"- {failure}")
+        if config.run_all_datasets:
+            run_all_builtin_datasets(config)
+        else:
+            results = run_experiment(config)
+            print_experiment_result(results)
     except Exception as exc:
         print("Experiment failed.")
         print(str(exc))
