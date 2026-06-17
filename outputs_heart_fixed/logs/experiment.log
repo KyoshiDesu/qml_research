@@ -9,3 +9,4 @@
 2026-06-17 17:26:46,396 | INFO | Completed phase: final_evaluation
 2026-06-17 17:26:46,414 | INFO | Classical SVM best params: {'C': 10, 'gamma': 'scale', 'kernel': 'sigmoid'}
 2026-06-17 17:26:46,796 | INFO | Starting phase: qsvm_optuna_search
+2026-06-17 17:28:02,403 | WARNING | QSVM Optuna trial 1 failed: 'NoneType' object has no attribute 'items'
