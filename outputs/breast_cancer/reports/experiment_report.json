@@ -1,0 +1,565 @@
+{
+  "command_line_args": {
+    "dataset_name": "breast_cancer",
+    "data_path": null,
+    "target_column": null,
+    "output_dir": "outputs\\breast_cancer",
+    "test_size": 0.2,
+    "validation_size": 0.2,
+    "scale_features": true,
+    "quantum_features": 4,
+    "optuna_trials": 40,
+    "top_k_confirmation": 5,
+    "confirmation_repeats": 3,
+    "cv_folds": 5,
+    "resource_sample_interval": 1.0,
+    "compute_label": "Proxmox_VM",
+    "positive_label": null,
+    "max_qsvm_samples": null,
+    "decision_boundary_resolution": 100
+  },
+  "dataset_summary": {
+    "dataset_path": null,
+    "dataset_name": "breast_cancer",
+    "dataset_source": "scikit-learn",
+    "original_row_count": 569,
+    "row_count_after_target_drop": 569,
+    "dropped_rows_missing_target": 0,
+    "feature_column_count": 30,
+    "target_column": "target",
+    "numeric_feature_count": 30,
+    "categorical_feature_count": 0,
+    "class_count": 2,
+    "classes": [
+      "benign",
+      "malignant"
+    ],
+    "sklearn_loader": "load_breast_cancer"
+  },
+  "system_info": {
+    "hostname": "PC2110",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "cpu_count_logical": 28,
+    "cpu_count_physical": 20,
+    "memory_total_gb": 31.84,
+    "compute_label": "Proxmox_VM",
+    "gpu_available": true,
+    "gpu_error_message": null
+  },
+  "classical_svm": {
+    "status": "completed",
+    "best_params": {
+      "C": 10,
+      "gamma": 0.01,
+      "kernel": "rbf"
+    },
+    "best_cv_score_macro_f1": 0.9748014675433488,
+    "validation_metrics": {
+      "accuracy": 0.9736842105263158,
+      "balanced_accuracy": 0.9742875859810023,
+      "macro_precision": 0.9701298701298702,
+      "macro_recall": 0.9742875859810023,
+      "macro_f1": 0.9721203228173148,
+      "weighted_precision": 0.9739576213260425,
+      "weighted_recall": 0.9736842105263158,
+      "weighted_f1": 0.9737421322933159
+    },
+    "test_metrics": {
+      "accuracy": 0.9824561403508771,
+      "balanced_accuracy": 0.9761904761904762,
+      "macro_precision": 0.9864864864864865,
+      "macro_recall": 0.9761904761904762,
+      "macro_f1": 0.9809555629802873,
+      "weighted_precision": 0.9829302987197724,
+      "weighted_recall": 0.9824561403508771,
+      "weighted_f1": 0.9823623542652152
+    },
+    "error_analysis": {
+      "overall_metrics": {
+        "accuracy": 0.9824561403508771,
+        "balanced_accuracy": 0.9761904761904762,
+        "macro_precision": 0.9864864864864865,
+        "macro_recall": 0.9761904761904762,
+        "macro_f1": 0.9809555629802873,
+        "weighted_precision": 0.9829302987197724,
+        "weighted_recall": 0.9824561403508771,
+        "weighted_f1": 0.9823623542652152
+      },
+      "per_class": {
+        "benign": {
+          "precision": 0.972972972972973,
+          "recall": 1.0,
+          "f1-score": 0.9863013698630136,
+          "support": 72.0
+        },
+        "malignant": {
+          "precision": 1.0,
+          "recall": 0.9523809523809523,
+          "f1-score": 0.975609756097561,
+          "support": 42.0
+        },
+        "accuracy": 0.9824561403508771,
+        "macro avg": {
+          "precision": 0.9864864864864865,
+          "recall": 0.9761904761904762,
+          "f1-score": 0.9809555629802873,
+          "support": 114.0
+        },
+        "weighted avg": {
+          "precision": 0.9829302987197724,
+          "recall": 0.9824561403508771,
+          "f1-score": 0.9823623542652152,
+          "support": 114.0
+        }
+      },
+      "false_positive_counts": {
+        "benign": 2,
+        "malignant": 0
+      },
+      "false_negative_counts": {
+        "benign": 0,
+        "malignant": 2
+      },
+      "binary_error_terms": {
+        "positive_label": "malignant",
+        "false_positive_type_i_error": 0,
+        "false_negative_type_ii_error": 2
+      },
+      "most_confused_class_pairs": []
+    }
+  },
+  "qsvm_optuna": {
+    "status": "completed",
+    "best_params": {
+      "feature_map_type": "PauliFeatureMap",
+      "reps": 2,
+      "entanglement": "full",
+      "paulis": "[\"Z\"]"
+    },
+    "successful_trial_count": 34,
+    "requested_trial_count": 40
+  },
+  "qsvm_confirmation": {
+    "config_rank": 5,
+    "feature_map_type": "PauliFeatureMap",
+    "reps": 1,
+    "entanglement": "linear",
+    "paulis": "[\"Z\"]",
+    "mean_accuracy": 0.9707602339181287,
+    "mean_macro_precision": 0.9726707551707552,
+    "mean_macro_recall": 0.9658259635331369,
+    "mean_macro_f1": 0.968688713628362,
+    "mean_weighted_f1": 0.9706603883953905,
+    "mean_fit_time_seconds": 93.40574249999918,
+    "mean_inference_time_seconds": 63.58495086666759,
+    "repeat_count": 3
+  },
+  "qsvm_final": {
+    "status": "completed",
+    "optuna_summary": {
+      "status": "completed",
+      "best_params": {
+        "feature_map_type": "PauliFeatureMap",
+        "reps": 2,
+        "entanglement": "full",
+        "paulis": "[\"Z\"]"
+      },
+      "successful_trial_count": 34,
+      "requested_trial_count": 40
+    },
+    "confirmation_summary_top": {
+      "config_rank": 5,
+      "feature_map_type": "PauliFeatureMap",
+      "reps": 1,
+      "entanglement": "linear",
+      "paulis": "[\"Z\"]",
+      "mean_accuracy": 0.9707602339181287,
+      "mean_macro_precision": 0.9726707551707552,
+      "mean_macro_recall": 0.9658259635331369,
+      "mean_macro_f1": 0.968688713628362,
+      "mean_weighted_f1": 0.9706603883953905,
+      "mean_fit_time_seconds": 93.40574249999918,
+      "mean_inference_time_seconds": 63.58495086666759,
+      "repeat_count": 3
+    },
+    "best_confirmed_params": {
+      "feature_map_type": "PauliFeatureMap",
+      "reps": 1,
+      "entanglement": "linear",
+      "paulis": [
+        "Z"
+      ]
+    },
+    "test_metrics": {
+      "accuracy": 0.956140350877193,
+      "balanced_accuracy": 0.9454365079365079,
+      "macro_precision": 0.9605128205128205,
+      "macro_recall": 0.9454365079365079,
+      "macro_f1": 0.9521289997480473,
+      "weighted_precision": 0.9568690958164642,
+      "weighted_recall": 0.956140350877193,
+      "weighted_f1": 0.9557756825927252
+    },
+    "error_analysis": {
+      "overall_metrics": {
+        "accuracy": 0.956140350877193,
+        "balanced_accuracy": 0.9454365079365079,
+        "macro_precision": 0.9605128205128205,
+        "macro_recall": 0.9454365079365079,
+        "macro_f1": 0.9521289997480473,
+        "weighted_precision": 0.9568690958164642,
+        "weighted_recall": 0.956140350877193,
+        "weighted_f1": 0.9557756825927252
+      },
+      "per_class": {
+        "benign": {
+          "precision": 0.9466666666666667,
+          "recall": 0.9861111111111112,
+          "f1-score": 0.9659863945578231,
+          "support": 72.0
+        },
+        "malignant": {
+          "precision": 0.9743589743589743,
+          "recall": 0.9047619047619048,
+          "f1-score": 0.9382716049382716,
+          "support": 42.0
+        },
+        "accuracy": 0.956140350877193,
+        "macro avg": {
+          "precision": 0.9605128205128205,
+          "recall": 0.9454365079365079,
+          "f1-score": 0.9521289997480473,
+          "support": 114.0
+        },
+        "weighted avg": {
+          "precision": 0.9568690958164642,
+          "recall": 0.956140350877193,
+          "f1-score": 0.9557756825927252,
+          "support": 114.0
+        }
+      },
+      "false_positive_counts": {
+        "benign": 4,
+        "malignant": 1
+      },
+      "false_negative_counts": {
+        "benign": 1,
+        "malignant": 4
+      },
+      "binary_error_terms": {
+        "positive_label": "malignant",
+        "false_positive_type_i_error": 1,
+        "false_negative_type_ii_error": 4
+      },
+      "most_confused_class_pairs": []
+    }
+  },
+  "anova": {
+    "status": "completed",
+    "row_count": 15,
+    "valid_factors": [
+      "reps",
+      "entanglement",
+      "paulis"
+    ],
+    "warnings": [
+      "Interaction ANOVA was skipped because the confirmation table was too small or lacked factor diversity."
+    ],
+    "interaction_formula": null
+  },
+  "error_analysis": {
+    "classical": {
+      "overall_metrics": {
+        "accuracy": 0.9824561403508771,
+        "balanced_accuracy": 0.9761904761904762,
+        "macro_precision": 0.9864864864864865,
+        "macro_recall": 0.9761904761904762,
+        "macro_f1": 0.9809555629802873,
+        "weighted_precision": 0.9829302987197724,
+        "weighted_recall": 0.9824561403508771,
+        "weighted_f1": 0.9823623542652152
+      },
+      "per_class": {
+        "benign": {
+          "precision": 0.972972972972973,
+          "recall": 1.0,
+          "f1-score": 0.9863013698630136,
+          "support": 72.0
+        },
+        "malignant": {
+          "precision": 1.0,
+          "recall": 0.9523809523809523,
+          "f1-score": 0.975609756097561,
+          "support": 42.0
+        },
+        "accuracy": 0.9824561403508771,
+        "macro avg": {
+          "precision": 0.9864864864864865,
+          "recall": 0.9761904761904762,
+          "f1-score": 0.9809555629802873,
+          "support": 114.0
+        },
+        "weighted avg": {
+          "precision": 0.9829302987197724,
+          "recall": 0.9824561403508771,
+          "f1-score": 0.9823623542652152,
+          "support": 114.0
+        }
+      },
+      "false_positive_counts": {
+        "benign": 2,
+        "malignant": 0
+      },
+      "false_negative_counts": {
+        "benign": 0,
+        "malignant": 2
+      },
+      "binary_error_terms": {
+        "positive_label": "malignant",
+        "false_positive_type_i_error": 0,
+        "false_negative_type_ii_error": 2
+      },
+      "most_confused_class_pairs": []
+    },
+    "qsvm": {
+      "overall_metrics": {
+        "accuracy": 0.956140350877193,
+        "balanced_accuracy": 0.9454365079365079,
+        "macro_precision": 0.9605128205128205,
+        "macro_recall": 0.9454365079365079,
+        "macro_f1": 0.9521289997480473,
+        "weighted_precision": 0.9568690958164642,
+        "weighted_recall": 0.956140350877193,
+        "weighted_f1": 0.9557756825927252
+      },
+      "per_class": {
+        "benign": {
+          "precision": 0.9466666666666667,
+          "recall": 0.9861111111111112,
+          "f1-score": 0.9659863945578231,
+          "support": 72.0
+        },
+        "malignant": {
+          "precision": 0.9743589743589743,
+          "recall": 0.9047619047619048,
+          "f1-score": 0.9382716049382716,
+          "support": 42.0
+        },
+        "accuracy": 0.956140350877193,
+        "macro avg": {
+          "precision": 0.9605128205128205,
+          "recall": 0.9454365079365079,
+          "f1-score": 0.9521289997480473,
+          "support": 114.0
+        },
+        "weighted avg": {
+          "precision": 0.9568690958164642,
+          "recall": 0.956140350877193,
+          "f1-score": 0.9557756825927252,
+          "support": 114.0
+        }
+      },
+      "false_positive_counts": {
+        "benign": 4,
+        "malignant": 1
+      },
+      "false_negative_counts": {
+        "benign": 1,
+        "malignant": 4
+      },
+      "binary_error_terms": {
+        "positive_label": "malignant",
+        "false_positive_type_i_error": 1,
+        "false_negative_type_ii_error": 4
+      },
+      "most_confused_class_pairs": []
+    }
+  },
+  "resource_usage": {
+    "gpu_available": true,
+    "gpu_error_message": null,
+    "phase_summaries": {
+      "preprocessing": {
+        "duration_seconds": 0.018070400001306552,
+        "peak_cpu_percent": 104.2,
+        "average_cpu_percent": 52.1,
+        "peak_ram_mb": 700.72265625,
+        "average_ram_mb": 700.453125,
+        "peak_system_ram_percent": 68.5,
+        "average_system_ram_percent": 68.5,
+        "peak_gpu_memory_mb": 6957.15625,
+        "average_gpu_utilization_percent": 37.0,
+        "sample_count": 2
+      },
+      "classical_svm_grid_search": {
+        "duration_seconds": 2.4355713999975706,
+        "peak_cpu_percent": 98.5,
+        "average_cpu_percent": 72.325,
+        "peak_ram_mb": 700.82421875,
+        "average_ram_mb": 700.798828125,
+        "peak_system_ram_percent": 68.5,
+        "average_system_ram_percent": 68.5,
+        "peak_gpu_memory_mb": 6963.71875,
+        "average_gpu_utilization_percent": 39.0,
+        "sample_count": 4
+      },
+      "classical_svm_final_training": {
+        "duration_seconds": 0.002019899999140762,
+        "peak_cpu_percent": 0.0,
+        "average_cpu_percent": 0.0,
+        "peak_ram_mb": 701.08984375,
+        "average_ram_mb": 701.08203125,
+        "peak_system_ram_percent": 68.5,
+        "average_system_ram_percent": 68.5,
+        "peak_gpu_memory_mb": 6963.71875,
+        "average_gpu_utilization_percent": 40.0,
+        "sample_count": 2
+      },
+      "final_evaluation": {
+        "duration_seconds": 83.50787449999916,
+        "peak_cpu_percent": 106.8,
+        "average_cpu_percent": 95.35176470588235,
+        "peak_ram_mb": 767.7578125,
+        "average_ram_mb": 764.6229319852941,
+        "peak_system_ram_percent": 68.5,
+        "average_system_ram_percent": 52.8305882352941,
+        "peak_gpu_memory_mb": 6963.71875,
+        "average_gpu_utilization_percent": 5.2823529411764705,
+        "sample_count": 85
+      },
+      "qsvm_optuna_search": {
+        "duration_seconds": 9192.284426899998,
+        "peak_cpu_percent": 312.5,
+        "average_cpu_percent": 96.2351950947603,
+        "peak_ram_mb": 772.88671875,
+        "average_ram_mb": 586.4327868067169,
+        "peak_system_ram_percent": 77.4,
+        "average_system_ram_percent": 51.18596432552955,
+        "peak_gpu_memory_mb": 6994.484375,
+        "average_gpu_utilization_percent": 5.52118171683389,
+        "sample_count": 8970
+      },
+      "qsvm_confirmation_phase": {
+        "duration_seconds": 2927.2796436999997,
+        "peak_cpu_percent": 312.5,
+        "average_cpu_percent": 93.68313505948214,
+        "peak_ram_mb": 560.8125,
+        "average_ram_mb": 535.4851335614941,
+        "peak_system_ram_percent": 53.5,
+        "average_system_ram_percent": 51.793247025892235,
+        "peak_gpu_memory_mb": 3646.17578125,
+        "average_gpu_utilization_percent": 1.8254023792862142,
+        "sample_count": 2858
+      },
+      "qsvm_final_training": {
+        "duration_seconds": 173.5296156000004,
+        "peak_cpu_percent": 114.3,
+        "average_cpu_percent": 98.53529411764706,
+        "peak_ram_mb": 819.41015625,
+        "average_ram_mb": 658.9309512867648,
+        "peak_system_ram_percent": 52.6,
+        "average_system_ram_percent": 51.66294117647058,
+        "peak_gpu_memory_mb": 3011.09375,
+        "average_gpu_utilization_percent": 1.1529411764705881,
+        "sample_count": 170
+      },
+      "decision_boundary_visualization": {
+        "duration_seconds": 704.1074102999992,
+        "peak_cpu_percent": 108.9,
+        "average_cpu_percent": 98.6098240469208,
+        "peak_ram_mb": 2924.30078125,
+        "average_ram_mb": 1911.781421829179,
+        "peak_system_ram_percent": 58.5,
+        "average_system_ram_percent": 55.59076246334311,
+        "peak_gpu_memory_mb": 3216.9140625,
+        "average_gpu_utilization_percent": 3.302052785923754,
+        "sample_count": 682
+      }
+    },
+    "warnings": [
+      "preprocessing: CPU saturation likely occurred.",
+      "classical_svm_grid_search: CPU saturation likely occurred.",
+      "final_evaluation: CPU saturation likely occurred.",
+      "qsvm_optuna_search: CPU saturation likely occurred.",
+      "qsvm_confirmation_phase: CPU saturation likely occurred.",
+      "qsvm_confirmation_phase: GPU was available but mostly idle.",
+      "qsvm_final_training: CPU saturation likely occurred.",
+      "qsvm_final_training: GPU was available but mostly idle."
+    ]
+  },
+  "compute_allocation": {
+    "compute_label": "Proxmox_VM",
+    "detected_cpu_count": 28,
+    "detected_ram_gb": 31.84,
+    "detected_gpu_available": true,
+    "highest_duration_phase": "qsvm_optuna_search",
+    "cpu_saturation_phases": [
+      "preprocessing",
+      "classical_svm_grid_search",
+      "final_evaluation",
+      "qsvm_optuna_search",
+      "qsvm_confirmation_phase",
+      "qsvm_final_training"
+    ],
+    "memory_pressure_phases": [],
+    "gpu_used": true
+  },
+  "artifact_paths": {
+    "experiment_log": "outputs\\breast_cancer\\logs\\experiment.log",
+    "class_distribution": "outputs\\breast_cancer\\tables\\class_distribution.csv",
+    "train_validation_test_distribution": "outputs\\breast_cancer\\tables\\train_validation_test_distribution.csv",
+    "dataset_summary": "outputs\\breast_cancer\\metadata\\dataset_summary.json",
+    "quantum_feature_info": "outputs\\breast_cancer\\metadata\\quantum_feature_info.json",
+    "quantum_pca_components": "outputs\\breast_cancer\\tables\\quantum_pca_components.csv",
+    "svm_grid_results": "outputs\\breast_cancer\\tables\\svm_grid_results.csv",
+    "svm_best_params": "outputs\\breast_cancer\\metadata\\svm_best_params.json",
+    "svm_test_metrics": "outputs\\breast_cancer\\metadata\\svm_test_metrics.json",
+    "svm_classification_report": "outputs\\breast_cancer\\tables\\svm_classification_report.csv",
+    "svm_confusion_matrix": "outputs\\breast_cancer\\tables\\svm_confusion_matrix.csv",
+    "svm_error_analysis": "outputs\\breast_cancer\\metadata\\svm_error_analysis.json",
+    "svm_final_model": "outputs\\breast_cancer\\models\\svm_final_model.joblib",
+    "qsvm_optuna_trials": "outputs\\breast_cancer\\tables\\qsvm_optuna_trials.csv",
+    "qsvm_optuna_best_params": "outputs\\breast_cancer\\metadata\\qsvm_optuna_best_params.json",
+    "qsvm_optuna_study": "outputs\\breast_cancer\\models\\qsvm_optuna_study.pkl",
+    "qsvm_optuna_summary": "outputs\\breast_cancer\\metadata\\qsvm_optuna_summary.json",
+    "qsvm_confirmation_results": "outputs\\breast_cancer\\tables\\qsvm_confirmation_results.csv",
+    "qsvm_confirmation_summary": "outputs\\breast_cancer\\tables\\qsvm_confirmation_summary.csv",
+    "qsvm_best_confirmed_params": "outputs\\breast_cancer\\metadata\\qsvm_best_confirmed_params.json",
+    "qsvm_test_metrics": "outputs\\breast_cancer\\metadata\\qsvm_test_metrics.json",
+    "qsvm_classification_report": "outputs\\breast_cancer\\tables\\qsvm_classification_report.csv",
+    "qsvm_confusion_matrix": "outputs\\breast_cancer\\tables\\qsvm_confusion_matrix.csv",
+    "qsvm_error_analysis": "outputs\\breast_cancer\\metadata\\qsvm_error_analysis.json",
+    "qsvm_best_confirmed_model_info": "outputs\\breast_cancer\\metadata\\qsvm_best_confirmed_model_info.json",
+    "anova_macro_f1": "outputs\\breast_cancer\\tables\\anova_macro_f1.csv",
+    "anova_accuracy": "outputs\\breast_cancer\\tables\\anova_accuracy.csv",
+    "anova_fit_time": "outputs\\breast_cancer\\tables\\anova_fit_time.csv",
+    "anova_interpretation": "outputs\\breast_cancer\\reports\\anova_interpretation.md",
+    "anova_summary": "outputs\\breast_cancer\\metadata\\anova_summary.json",
+    "resource_log": "outputs\\breast_cancer\\tables\\resource_log.csv",
+    "resource_summary": "outputs\\breast_cancer\\metadata\\resource_summary.json",
+    "resource_summary_md": "outputs\\breast_cancer\\reports\\resource_summary.md",
+    "compute_allocation_summary": "outputs\\breast_cancer\\metadata\\compute_allocation_summary.json",
+    "compute_allocation_analysis": "outputs\\breast_cancer\\reports\\compute_allocation_analysis.md",
+    "svm_vs_qsvm_comparison": "outputs\\breast_cancer\\tables\\svm_vs_qsvm_comparison.csv",
+    "model_comparison_error_analysis": "outputs\\breast_cancer\\reports\\model_comparison_error_analysis.md",
+    "package_versions": "outputs\\breast_cancer\\metadata\\package_versions.txt",
+    "reproducibility": "outputs\\breast_cancer\\metadata\\reproducibility.json",
+    "model_metric_comparison_bar": "outputs\\breast_cancer\\plots\\model_metric_comparison_bar.png",
+    "svm_confusion_matrix_heatmap": "outputs\\breast_cancer\\plots\\svm_confusion_matrix_heatmap.png",
+    "qsvm_confusion_matrix_heatmap": "outputs\\breast_cancer\\plots\\qsvm_confusion_matrix_heatmap.png",
+    "per_class_f1_bar": "outputs\\breast_cancer\\plots\\per_class_f1_bar.png",
+    "qsvm_optuna_progress_line": "outputs\\breast_cancer\\plots\\qsvm_optuna_progress_line.png",
+    "qsvm_runtime_vs_macro_f1_scatter": "outputs\\breast_cancer\\plots\\qsvm_runtime_vs_macro_f1_scatter.png",
+    "qsvm_confirmation_macro_f1_boxplot": "outputs\\breast_cancer\\plots\\qsvm_confirmation_macro_f1_boxplot.png",
+    "resource_phase_summary_bar": "outputs\\breast_cancer\\plots\\resource_phase_summary_bar.png",
+    "pca_scatter_train_test": "outputs\\breast_cancer\\plots\\pca_scatter_train_test.png",
+    "svm_decision_boundary_pca2d": "outputs\\breast_cancer\\plots\\svm_decision_boundary_pca2d.png",
+    "qsvm_decision_boundary_pca2d": "outputs\\breast_cancer\\plots\\qsvm_decision_boundary_pca2d.png",
+    "experiment_report_md": "outputs\\breast_cancer\\reports\\experiment_report.md",
+    "experiment_report_txt": "outputs\\breast_cancer\\reports\\experiment_report.txt"
+  },
+  "warnings": [
+    "Interaction ANOVA was skipped because the confirmation table was too small or lacked factor diversity."
+  ],
+  "failures": []
+}

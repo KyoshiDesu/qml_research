@@ -1,0 +1,11 @@
+2026-06-17 17:26:43,094 | INFO | Starting one-run SVM versus QSVM experiment.
+2026-06-17 17:26:44,343 | INFO | Starting phase: preprocessing
+2026-06-17 17:26:44,361 | INFO | Completed phase: preprocessing
+2026-06-17 17:26:44,363 | INFO | Starting phase: classical_svm_grid_search
+2026-06-17 17:26:46,375 | INFO | Completed phase: classical_svm_grid_search
+2026-06-17 17:26:46,391 | INFO | Starting phase: classical_svm_final_training
+2026-06-17 17:26:46,395 | INFO | Completed phase: classical_svm_final_training
+2026-06-17 17:26:46,395 | INFO | Starting phase: final_evaluation
+2026-06-17 17:26:46,396 | INFO | Completed phase: final_evaluation
+2026-06-17 17:26:46,414 | INFO | Classical SVM best params: {'C': 10, 'gamma': 'scale', 'kernel': 'sigmoid'}
+2026-06-17 17:26:46,796 | INFO | Starting phase: qsvm_optuna_search

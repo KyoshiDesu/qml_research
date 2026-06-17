@@ -1,0 +1,27 @@
+2026-06-17 16:15:06,787 | INFO | Starting one-run SVM versus QSVM experiment.
+2026-06-17 16:15:08,323 | INFO | Starting phase: preprocessing
+2026-06-17 16:15:08,340 | INFO | Completed phase: preprocessing
+2026-06-17 16:15:08,342 | INFO | Starting phase: classical_svm_grid_search
+2026-06-17 16:15:10,478 | INFO | Completed phase: classical_svm_grid_search
+2026-06-17 16:15:10,494 | INFO | Starting phase: classical_svm_final_training
+2026-06-17 16:15:10,499 | INFO | Completed phase: classical_svm_final_training
+2026-06-17 16:15:10,499 | INFO | Starting phase: final_evaluation
+2026-06-17 16:15:10,501 | INFO | Completed phase: final_evaluation
+2026-06-17 16:15:10,519 | INFO | Classical SVM best params: {'C': 10, 'degree': 3, 'gamma': 0.1, 'kernel': 'poly'}
+2026-06-17 16:15:10,520 | INFO | Starting phase: qsvm_optuna_search
+2026-06-17 16:16:39,438 | WARNING | QSVM Optuna trial 1 failed: 'NoneType' object has no attribute 'items'
+2026-06-17 16:20:13,493 | WARNING | QSVM Optuna trial 4 failed: 'NoneType' object has no attribute 'items'
+2026-06-17 16:38:44,702 | WARNING | QSVM Optuna trial 18 failed: 'NoneType' object has no attribute 'items'
+2026-06-17 16:44:55,081 | WARNING | QSVM Optuna trial 25 failed: 'NoneType' object has no attribute 'items'
+2026-06-17 16:49:11,195 | WARNING | QSVM Optuna trial 29 failed: 'NoneType' object has no attribute 'items'
+2026-06-17 16:55:26,488 | WARNING | QSVM Optuna trial 36 failed: 'NoneType' object has no attribute 'items'
+2026-06-17 16:59:10,873 | INFO | Completed phase: qsvm_optuna_search
+2026-06-17 16:59:10,901 | INFO | Starting phase: qsvm_confirmation_phase
+2026-06-17 17:11:44,196 | INFO | Completed phase: qsvm_confirmation_phase
+2026-06-17 17:11:44,204 | INFO | Starting phase: qsvm_final_training
+2026-06-17 17:12:24,503 | INFO | Completed phase: qsvm_final_training
+2026-06-17 17:12:24,503 | INFO | Starting phase: final_evaluation
+2026-06-17 17:12:44,936 | INFO | Completed phase: final_evaluation
+2026-06-17 17:12:46,043 | INFO | Starting phase: decision_boundary_visualization
+2026-06-17 17:19:28,668 | INFO | Completed phase: decision_boundary_visualization
+2026-06-17 17:19:28,671 | INFO | Experiment completed successfully.

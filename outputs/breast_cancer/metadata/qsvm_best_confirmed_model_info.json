@@ -1,0 +1,23 @@
+{
+  "status": "completed",
+  "best_confirmed_params": {
+    "feature_map_type": "PauliFeatureMap",
+    "reps": 1,
+    "entanglement": "linear",
+    "paulis": [
+      "Z"
+    ]
+  },
+  "quantum_feature_count": 4,
+  "max_qsvm_samples": null,
+  "test_metrics": {
+    "accuracy": 0.956140350877193,
+    "balanced_accuracy": 0.9454365079365079,
+    "macro_precision": 0.9605128205128205,
+    "macro_recall": 0.9454365079365079,
+    "macro_f1": 0.9521289997480473,
+    "weighted_precision": 0.9568690958164642,
+    "weighted_recall": 0.956140350877193,
+    "weighted_f1": 0.9557756825927252
+  }
+}

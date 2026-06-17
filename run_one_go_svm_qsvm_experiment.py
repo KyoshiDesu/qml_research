@@ -11,7 +11,7 @@ import sys
 import threading
 import traceback
 from contextlib import contextmanager
-from dataclasses import dataclass, fields, replace
+from dataclasses import dataclass, fields
 from datetime import datetime, timezone
 from importlib import metadata as importlib_metadata
 from pathlib import Path
@@ -89,7 +89,6 @@ class ExperimentConfig:
     data_path: Path | None
     target_column: str | None
     dataset_name: str | None
-    run_all_datasets: bool
     output_dir: Path
     test_size: float
     validation_size: float
@@ -107,14 +106,9 @@ class ExperimentConfig:
     decision_boundary_resolution: int
 
     def validate(self) -> None:
-        if self.run_all_datasets:
-            if self.data_path is not None or self.dataset_name is not None:
-                raise ValueError(
-                    "Provide --all_datasets without --dataset_name or --data_path."
-                )
-        elif self.data_path is None and self.dataset_name is None:
+        if self.data_path is None and self.dataset_name is None:
             raise ValueError("Provide either --dataset_name or --data_path.")
-        elif self.data_path is not None and self.dataset_name is not None:
+        if self.data_path is not None and self.dataset_name is not None:
             raise ValueError("Provide only one of --dataset_name or --data_path.")
         if self.data_path is not None and not self.data_path.exists():
             raise FileNotFoundError(f"Dataset not found: {self.data_path}")
@@ -430,21 +424,13 @@ def parse_args() -> ExperimentConfig:
     parser = argparse.ArgumentParser(
         description="Run a complete one-go SVM versus QSVM experiment for Proxmox VM benchmarking."
     )
-    dataset_group = parser.add_mutually_exclusive_group(required=False)
+    dataset_group = parser.add_mutually_exclusive_group(required=True)
     dataset_group.add_argument(
         "--dataset_name",
         choices=BUILTIN_DATASET_NAMES,
         default=None,
     )
     dataset_group.add_argument("--data_path", default=None)
-    dataset_group.add_argument(
-        "--all_datasets",
-        action="store_true",
-        help=(
-            "Run all built-in datasets sequentially. This is also the default when "
-            "neither --dataset_name nor --data_path is supplied."
-        ),
-    )
     parser.add_argument("--target_column", default=None)
     parser.add_argument("--output_dir", default="outputs")
     parser.add_argument("--test_size", type=float, default=0.2)
@@ -467,8 +453,6 @@ def parse_args() -> ExperimentConfig:
         data_path=Path(args.data_path) if args.data_path else None,
         target_column=args.target_column,
         dataset_name=args.dataset_name,
-        run_all_datasets=args.all_datasets
-        or (args.dataset_name is None and args.data_path is None),
         output_dir=Path(args.output_dir),
         test_size=args.test_size,
         validation_size=args.validation_size,
@@ -675,8 +659,16 @@ def load_builtin_dataset_frame(
         targets = heart_disease.data.targets.copy()
         if targets.empty:
             raise ValueError("UCI heart disease dataset id=45 did not provide targets.")
-        target_column = str(targets.columns[0])
-        frame = pd.concat([features, targets[[target_column]]], axis=1)
+        original_target_column = str(targets.columns[0])
+        target_column = "target"
+        numeric_target = pd.to_numeric(
+            targets[original_target_column], errors="coerce"
+        )
+        binary_target = numeric_target.gt(0).astype(float)
+        binary_target[numeric_target.isna()] = np.nan
+        frame = pd.concat(
+            [features, pd.DataFrame({target_column: binary_target})], axis=1
+        )
         metadata = heart_disease.metadata
         return (
             frame,
@@ -687,6 +679,8 @@ def load_builtin_dataset_frame(
                 "uci_dataset_id": 45,
                 "uci_dataset_name": metadata.get("name"),
                 "uci_repository_url": metadata.get("repository_url"),
+                "uci_original_target_column": original_target_column,
+                "target_transform": "binary_presence: 0 -> 0.0, 1-4 -> 1.0",
             },
         )
     raise ValueError(f"Unsupported built-in dataset name: {dataset_name}")
@@ -3039,70 +3033,12 @@ def print_experiment_result(results: dict[str, Any]) -> None:
             print(f"- {failure}")
 
 
-def run_all_builtin_datasets(config: ExperimentConfig) -> list[dict[str, Any]]:
-    results_by_dataset: list[dict[str, Any]] = []
-    failed_datasets: list[str] = []
-
-    print(
-        "Running built-in datasets in sequence: "
-        + ", ".join(BUILTIN_DATASET_NAMES)
-    )
-    for dataset_name in BUILTIN_DATASET_NAMES:
-        dataset_output_dir = config.output_dir / dataset_name
-        dataset_config = replace(
-            config,
-            data_path=None,
-            target_column=None,
-            dataset_name=dataset_name,
-            run_all_datasets=False,
-            output_dir=dataset_output_dir,
-        )
-        print(f"\nStarting dataset: {dataset_name}")
-        try:
-            results = run_experiment(dataset_config)
-            results_by_dataset.append(
-                {
-                    "dataset_name": dataset_name,
-                    "report_json_path": results["report_json_path"],
-                    "warnings": results["warnings"],
-                    "failures": results["failures"],
-                }
-            )
-            print_experiment_result(results)
-        except Exception:
-            failed_datasets.append(dataset_name)
-            print(f"Dataset failed: {dataset_name}")
-            print(traceback.format_exc())
-
-    print("\nSequential dataset run summary:")
-    for result in results_by_dataset:
-        status = "completed"
-        if result["failures"]:
-            status = "completed_with_failures"
-        print(
-            f"- {result['dataset_name']}: {status}; "
-            f"report={result['report_json_path']}"
-        )
-    for dataset_name in failed_datasets:
-        print(f"- {dataset_name}: failed")
-
-    if failed_datasets:
-        raise RuntimeError(
-            "One or more datasets failed: " + ", ".join(failed_datasets)
-        )
-
-    return results_by_dataset
-
-
 def main() -> None:
     config = parse_args()
     config.validate()
     try:
-        if config.run_all_datasets:
-            run_all_builtin_datasets(config)
-        else:
-            results = run_experiment(config)
-            print_experiment_result(results)
+        results = run_experiment(config)
+        print_experiment_result(results)
     except Exception as exc:
         print("Experiment failed.")
         print(str(exc))

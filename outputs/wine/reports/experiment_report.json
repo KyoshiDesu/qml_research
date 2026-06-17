@@ -1,0 +1,614 @@
+{
+  "command_line_args": {
+    "dataset_name": "wine",
+    "data_path": null,
+    "target_column": null,
+    "output_dir": "outputs\\wine",
+    "test_size": 0.2,
+    "validation_size": 0.2,
+    "scale_features": true,
+    "quantum_features": 4,
+    "optuna_trials": 40,
+    "top_k_confirmation": 5,
+    "confirmation_repeats": 3,
+    "cv_folds": 5,
+    "resource_sample_interval": 1.0,
+    "compute_label": "Proxmox_VM",
+    "positive_label": null,
+    "max_qsvm_samples": null,
+    "decision_boundary_resolution": 100
+  },
+  "dataset_summary": {
+    "dataset_path": null,
+    "dataset_name": "wine",
+    "dataset_source": "scikit-learn",
+    "original_row_count": 178,
+    "row_count_after_target_drop": 178,
+    "dropped_rows_missing_target": 0,
+    "feature_column_count": 13,
+    "target_column": "target",
+    "numeric_feature_count": 13,
+    "categorical_feature_count": 0,
+    "class_count": 3,
+    "classes": [
+      "class_0",
+      "class_1",
+      "class_2"
+    ],
+    "sklearn_loader": "load_wine"
+  },
+  "system_info": {
+    "hostname": "PC2110",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "cpu_count_logical": 28,
+    "cpu_count_physical": 20,
+    "memory_total_gb": 31.84,
+    "compute_label": "Proxmox_VM",
+    "gpu_available": true,
+    "gpu_error_message": null
+  },
+  "classical_svm": {
+    "status": "completed",
+    "best_params": {
+      "C": 1,
+      "gamma": "scale",
+      "kernel": "rbf"
+    },
+    "best_cv_score_macro_f1": 0.9900178253119429,
+    "validation_metrics": {
+      "accuracy": 0.9722222222222222,
+      "balanced_accuracy": 0.9722222222222222,
+      "macro_precision": 0.9777777777777779,
+      "macro_recall": 0.9722222222222222,
+      "macro_f1": 0.9740129935032483,
+      "weighted_precision": 0.974074074074074,
+      "weighted_recall": 0.9722222222222222,
+      "weighted_f1": 0.972097284690988
+    },
+    "test_metrics": {
+      "accuracy": 0.9722222222222222,
+      "balanced_accuracy": 0.9666666666666667,
+      "macro_precision": 0.9777777777777779,
+      "macro_recall": 0.9666666666666667,
+      "macro_f1": 0.9709618874773139,
+      "weighted_precision": 0.974074074074074,
+      "weighted_recall": 0.9722222222222222,
+      "weighted_f1": 0.9719701552732407
+    },
+    "error_analysis": {
+      "overall_metrics": {
+        "accuracy": 0.9722222222222222,
+        "balanced_accuracy": 0.9666666666666667,
+        "macro_precision": 0.9777777777777779,
+        "macro_recall": 0.9666666666666667,
+        "macro_f1": 0.9709618874773139,
+        "weighted_precision": 0.974074074074074,
+        "weighted_recall": 0.9722222222222222,
+        "weighted_f1": 0.9719701552732407
+      },
+      "per_class": {
+        "class_0": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 12.0
+        },
+        "class_1": {
+          "precision": 0.9333333333333333,
+          "recall": 1.0,
+          "f1-score": 0.9655172413793104,
+          "support": 14.0
+        },
+        "class_2": {
+          "precision": 1.0,
+          "recall": 0.9,
+          "f1-score": 0.9473684210526315,
+          "support": 10.0
+        },
+        "accuracy": 0.9722222222222222,
+        "macro avg": {
+          "precision": 0.9777777777777779,
+          "recall": 0.9666666666666667,
+          "f1-score": 0.9709618874773139,
+          "support": 36.0
+        },
+        "weighted avg": {
+          "precision": 0.974074074074074,
+          "recall": 0.9722222222222222,
+          "f1-score": 0.9719701552732407,
+          "support": 36.0
+        }
+      },
+      "false_positive_counts": {
+        "class_0": 0,
+        "class_1": 1,
+        "class_2": 0
+      },
+      "false_negative_counts": {
+        "class_0": 0,
+        "class_1": 0,
+        "class_2": 1
+      },
+      "binary_error_terms": null,
+      "most_confused_class_pairs": [
+        {
+          "actual": "class_2",
+          "predicted": "class_1",
+          "count": 1
+        }
+      ]
+    }
+  },
+  "qsvm_optuna": {
+    "status": "completed",
+    "best_params": {
+      "feature_map_type": "PauliFeatureMap",
+      "reps": 1,
+      "entanglement": "full",
+      "paulis": "[\"X\", \"Y\", \"Z\"]"
+    },
+    "successful_trial_count": 34,
+    "requested_trial_count": 40
+  },
+  "qsvm_confirmation": {
+    "config_rank": 2,
+    "feature_map_type": "PauliFeatureMap",
+    "reps": 1,
+    "entanglement": "linear",
+    "paulis": "[\"X\", \"Y\", \"Z\"]",
+    "mean_accuracy": 0.9629629629629629,
+    "mean_macro_precision": 0.9643874643874644,
+    "mean_macro_recall": 0.9650793650793651,
+    "mean_macro_f1": 0.9618288144603935,
+    "mean_weighted_f1": 0.9622647527910685,
+    "mean_fit_time_seconds": 15.745762100000624,
+    "mean_inference_time_seconds": 10.66267466666856,
+    "repeat_count": 3
+  },
+  "qsvm_final": {
+    "status": "completed",
+    "optuna_summary": {
+      "status": "completed",
+      "best_params": {
+        "feature_map_type": "PauliFeatureMap",
+        "reps": 1,
+        "entanglement": "full",
+        "paulis": "[\"X\", \"Y\", \"Z\"]"
+      },
+      "successful_trial_count": 34,
+      "requested_trial_count": 40
+    },
+    "confirmation_summary_top": {
+      "config_rank": 2,
+      "feature_map_type": "PauliFeatureMap",
+      "reps": 1,
+      "entanglement": "linear",
+      "paulis": "[\"X\", \"Y\", \"Z\"]",
+      "mean_accuracy": 0.9629629629629629,
+      "mean_macro_precision": 0.9643874643874644,
+      "mean_macro_recall": 0.9650793650793651,
+      "mean_macro_f1": 0.9618288144603935,
+      "mean_weighted_f1": 0.9622647527910685,
+      "mean_fit_time_seconds": 15.745762100000624,
+      "mean_inference_time_seconds": 10.66267466666856,
+      "repeat_count": 3
+    },
+    "best_confirmed_params": {
+      "feature_map_type": "PauliFeatureMap",
+      "reps": 1,
+      "entanglement": "linear",
+      "paulis": [
+        "X",
+        "Y",
+        "Z"
+      ]
+    },
+    "test_metrics": {
+      "accuracy": 0.9444444444444444,
+      "balanced_accuracy": 0.942857142857143,
+      "macro_precision": 0.9505494505494506,
+      "macro_recall": 0.942857142857143,
+      "macro_f1": 0.9453132832080201,
+      "weighted_precision": 0.9465811965811967,
+      "weighted_recall": 0.9444444444444444,
+      "weighted_f1": 0.944269005847953
+    },
+    "error_analysis": {
+      "overall_metrics": {
+        "accuracy": 0.9444444444444444,
+        "balanced_accuracy": 0.942857142857143,
+        "macro_precision": 0.9505494505494506,
+        "macro_recall": 0.942857142857143,
+        "macro_f1": 0.9453132832080201,
+        "weighted_precision": 0.9465811965811967,
+        "weighted_recall": 0.9444444444444444,
+        "weighted_f1": 0.944269005847953
+      },
+      "per_class": {
+        "class_0": {
+          "precision": 0.9230769230769231,
+          "recall": 1.0,
+          "f1-score": 0.96,
+          "support": 12.0
+        },
+        "class_1": {
+          "precision": 0.9285714285714286,
+          "recall": 0.9285714285714286,
+          "f1-score": 0.9285714285714286,
+          "support": 14.0
+        },
+        "class_2": {
+          "precision": 1.0,
+          "recall": 0.9,
+          "f1-score": 0.9473684210526315,
+          "support": 10.0
+        },
+        "accuracy": 0.9444444444444444,
+        "macro avg": {
+          "precision": 0.9505494505494506,
+          "recall": 0.942857142857143,
+          "f1-score": 0.9453132832080201,
+          "support": 36.0
+        },
+        "weighted avg": {
+          "precision": 0.9465811965811967,
+          "recall": 0.9444444444444444,
+          "f1-score": 0.944269005847953,
+          "support": 36.0
+        }
+      },
+      "false_positive_counts": {
+        "class_0": 1,
+        "class_1": 1,
+        "class_2": 0
+      },
+      "false_negative_counts": {
+        "class_0": 0,
+        "class_1": 1,
+        "class_2": 1
+      },
+      "binary_error_terms": null,
+      "most_confused_class_pairs": [
+        {
+          "actual": "class_1",
+          "predicted": "class_0",
+          "count": 1
+        },
+        {
+          "actual": "class_2",
+          "predicted": "class_1",
+          "count": 1
+        }
+      ]
+    }
+  },
+  "anova": {
+    "status": "completed",
+    "row_count": 15,
+    "valid_factors": [
+      "entanglement",
+      "paulis"
+    ],
+    "warnings": [
+      "Interaction ANOVA was skipped because the confirmation table was too small or lacked factor diversity."
+    ],
+    "interaction_formula": null
+  },
+  "error_analysis": {
+    "classical": {
+      "overall_metrics": {
+        "accuracy": 0.9722222222222222,
+        "balanced_accuracy": 0.9666666666666667,
+        "macro_precision": 0.9777777777777779,
+        "macro_recall": 0.9666666666666667,
+        "macro_f1": 0.9709618874773139,
+        "weighted_precision": 0.974074074074074,
+        "weighted_recall": 0.9722222222222222,
+        "weighted_f1": 0.9719701552732407
+      },
+      "per_class": {
+        "class_0": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 12.0
+        },
+        "class_1": {
+          "precision": 0.9333333333333333,
+          "recall": 1.0,
+          "f1-score": 0.9655172413793104,
+          "support": 14.0
+        },
+        "class_2": {
+          "precision": 1.0,
+          "recall": 0.9,
+          "f1-score": 0.9473684210526315,
+          "support": 10.0
+        },
+        "accuracy": 0.9722222222222222,
+        "macro avg": {
+          "precision": 0.9777777777777779,
+          "recall": 0.9666666666666667,
+          "f1-score": 0.9709618874773139,
+          "support": 36.0
+        },
+        "weighted avg": {
+          "precision": 0.974074074074074,
+          "recall": 0.9722222222222222,
+          "f1-score": 0.9719701552732407,
+          "support": 36.0
+        }
+      },
+      "false_positive_counts": {
+        "class_0": 0,
+        "class_1": 1,
+        "class_2": 0
+      },
+      "false_negative_counts": {
+        "class_0": 0,
+        "class_1": 0,
+        "class_2": 1
+      },
+      "binary_error_terms": null,
+      "most_confused_class_pairs": [
+        {
+          "actual": "class_2",
+          "predicted": "class_1",
+          "count": 1
+        }
+      ]
+    },
+    "qsvm": {
+      "overall_metrics": {
+        "accuracy": 0.9444444444444444,
+        "balanced_accuracy": 0.942857142857143,
+        "macro_precision": 0.9505494505494506,
+        "macro_recall": 0.942857142857143,
+        "macro_f1": 0.9453132832080201,
+        "weighted_precision": 0.9465811965811967,
+        "weighted_recall": 0.9444444444444444,
+        "weighted_f1": 0.944269005847953
+      },
+      "per_class": {
+        "class_0": {
+          "precision": 0.9230769230769231,
+          "recall": 1.0,
+          "f1-score": 0.96,
+          "support": 12.0
+        },
+        "class_1": {
+          "precision": 0.9285714285714286,
+          "recall": 0.9285714285714286,
+          "f1-score": 0.9285714285714286,
+          "support": 14.0
+        },
+        "class_2": {
+          "precision": 1.0,
+          "recall": 0.9,
+          "f1-score": 0.9473684210526315,
+          "support": 10.0
+        },
+        "accuracy": 0.9444444444444444,
+        "macro avg": {
+          "precision": 0.9505494505494506,
+          "recall": 0.942857142857143,
+          "f1-score": 0.9453132832080201,
+          "support": 36.0
+        },
+        "weighted avg": {
+          "precision": 0.9465811965811967,
+          "recall": 0.9444444444444444,
+          "f1-score": 0.944269005847953,
+          "support": 36.0
+        }
+      },
+      "false_positive_counts": {
+        "class_0": 1,
+        "class_1": 1,
+        "class_2": 0
+      },
+      "false_negative_counts": {
+        "class_0": 0,
+        "class_1": 1,
+        "class_2": 1
+      },
+      "binary_error_terms": null,
+      "most_confused_class_pairs": [
+        {
+          "actual": "class_1",
+          "predicted": "class_0",
+          "count": 1
+        },
+        {
+          "actual": "class_2",
+          "predicted": "class_1",
+          "count": 1
+        }
+      ]
+    }
+  },
+  "resource_usage": {
+    "gpu_available": true,
+    "gpu_error_message": null,
+    "phase_summaries": {
+      "preprocessing": {
+        "duration_seconds": 0.02084630000172183,
+        "peak_cpu_percent": 50.4,
+        "average_cpu_percent": 25.2,
+        "peak_ram_mb": 983.49609375,
+        "average_ram_mb": 981.751953125,
+        "peak_system_ram_percent": 52.6,
+        "average_system_ram_percent": 52.55,
+        "peak_gpu_memory_mb": 3112.94921875,
+        "average_gpu_utilization_percent": 11.0,
+        "sample_count": 2
+      },
+      "classical_svm_grid_search": {
+        "duration_seconds": 1.385944700003165,
+        "peak_cpu_percent": 104.5,
+        "average_cpu_percent": 67.13333333333334,
+        "peak_ram_mb": 980.015625,
+        "average_ram_mb": 970.09765625,
+        "peak_system_ram_percent": 52.5,
+        "average_system_ram_percent": 52.5,
+        "peak_gpu_memory_mb": 3112.94921875,
+        "average_gpu_utilization_percent": 20.0,
+        "sample_count": 3
+      },
+      "classical_svm_final_training": {
+        "duration_seconds": 0.002420299999357667,
+        "peak_cpu_percent": 0.0,
+        "average_cpu_percent": 0.0,
+        "peak_ram_mb": 965.52734375,
+        "average_ram_mb": 965.51171875,
+        "peak_system_ram_percent": 52.5,
+        "average_system_ram_percent": 52.5,
+        "peak_gpu_memory_mb": 3099.75390625,
+        "average_gpu_utilization_percent": 21.0,
+        "sample_count": 2
+      },
+      "final_evaluation": {
+        "duration_seconds": 14.951874800000951,
+        "peak_cpu_percent": 101.6,
+        "average_cpu_percent": 82.57222222222224,
+        "peak_ram_mb": 965.515625,
+        "average_ram_mb": 744.3637152777778,
+        "peak_system_ram_percent": 52.5,
+        "average_system_ram_percent": 51.56111111111111,
+        "peak_gpu_memory_mb": 3186.62890625,
+        "average_gpu_utilization_percent": 5.944444444444445,
+        "sample_count": 18
+      },
+      "qsvm_optuna_search": {
+        "duration_seconds": 958.0786445999984,
+        "peak_cpu_percent": 208.3,
+        "average_cpu_percent": 98.22305229455709,
+        "peak_ram_mb": 980.2265625,
+        "average_ram_mb": 754.1657800827107,
+        "peak_system_ram_percent": 53.7,
+        "average_system_ram_percent": 52.10288153681963,
+        "peak_gpu_memory_mb": 3525.67578125,
+        "average_gpu_utilization_percent": 7.5752401280683035,
+        "sample_count": 937
+      },
+      "qsvm_confirmation_phase": {
+        "duration_seconds": 369.37733070000104,
+        "peak_cpu_percent": 133.0,
+        "average_cpu_percent": 96.3096685082873,
+        "peak_ram_mb": 717.72265625,
+        "average_ram_mb": 716.7609957700276,
+        "peak_system_ram_percent": 52.7,
+        "average_system_ram_percent": 51.254972375690606,
+        "peak_gpu_memory_mb": 3748.73828125,
+        "average_gpu_utilization_percent": 10.831491712707182,
+        "sample_count": 362
+      },
+      "qsvm_final_training": {
+        "duration_seconds": 28.889832099997875,
+        "peak_cpu_percent": 101.6,
+        "average_cpu_percent": 95.85666666666665,
+        "peak_ram_mb": 716.98828125,
+        "average_ram_mb": 716.9420572916666,
+        "peak_system_ram_percent": 51.6,
+        "average_system_ram_percent": 51.37333333333334,
+        "peak_gpu_memory_mb": 3178.97265625,
+        "average_gpu_utilization_percent": 4.433333333333334,
+        "sample_count": 30
+      },
+      "decision_boundary_visualization": {
+        "duration_seconds": 411.4697898000013,
+        "peak_cpu_percent": 101.6,
+        "average_cpu_percent": 98.58292079207921,
+        "peak_ram_mb": 1071.76953125,
+        "average_ram_mb": 818.8150429300742,
+        "peak_system_ram_percent": 54.2,
+        "average_system_ram_percent": 52.80420792079208,
+        "peak_gpu_memory_mb": 3314.55078125,
+        "average_gpu_utilization_percent": 9.173267326732674,
+        "sample_count": 404
+      }
+    },
+    "warnings": [
+      "classical_svm_grid_search: CPU saturation likely occurred.",
+      "final_evaluation: CPU saturation likely occurred.",
+      "qsvm_optuna_search: CPU saturation likely occurred.",
+      "qsvm_confirmation_phase: CPU saturation likely occurred.",
+      "qsvm_final_training: CPU saturation likely occurred.",
+      "qsvm_final_training: GPU was available but mostly idle."
+    ]
+  },
+  "compute_allocation": {
+    "compute_label": "Proxmox_VM",
+    "detected_cpu_count": 28,
+    "detected_ram_gb": 31.84,
+    "detected_gpu_available": true,
+    "highest_duration_phase": "qsvm_optuna_search",
+    "cpu_saturation_phases": [
+      "classical_svm_grid_search",
+      "final_evaluation",
+      "qsvm_optuna_search",
+      "qsvm_confirmation_phase",
+      "qsvm_final_training"
+    ],
+    "memory_pressure_phases": [],
+    "gpu_used": true
+  },
+  "artifact_paths": {
+    "experiment_log": "outputs\\wine\\logs\\experiment.log",
+    "class_distribution": "outputs\\wine\\tables\\class_distribution.csv",
+    "train_validation_test_distribution": "outputs\\wine\\tables\\train_validation_test_distribution.csv",
+    "dataset_summary": "outputs\\wine\\metadata\\dataset_summary.json",
+    "quantum_feature_info": "outputs\\wine\\metadata\\quantum_feature_info.json",
+    "quantum_pca_components": "outputs\\wine\\tables\\quantum_pca_components.csv",
+    "svm_grid_results": "outputs\\wine\\tables\\svm_grid_results.csv",
+    "svm_best_params": "outputs\\wine\\metadata\\svm_best_params.json",
+    "svm_test_metrics": "outputs\\wine\\metadata\\svm_test_metrics.json",
+    "svm_classification_report": "outputs\\wine\\tables\\svm_classification_report.csv",
+    "svm_confusion_matrix": "outputs\\wine\\tables\\svm_confusion_matrix.csv",
+    "svm_error_analysis": "outputs\\wine\\metadata\\svm_error_analysis.json",
+    "svm_final_model": "outputs\\wine\\models\\svm_final_model.joblib",
+    "qsvm_optuna_trials": "outputs\\wine\\tables\\qsvm_optuna_trials.csv",
+    "qsvm_optuna_best_params": "outputs\\wine\\metadata\\qsvm_optuna_best_params.json",
+    "qsvm_optuna_study": "outputs\\wine\\models\\qsvm_optuna_study.pkl",
+    "qsvm_optuna_summary": "outputs\\wine\\metadata\\qsvm_optuna_summary.json",
+    "qsvm_confirmation_results": "outputs\\wine\\tables\\qsvm_confirmation_results.csv",
+    "qsvm_confirmation_summary": "outputs\\wine\\tables\\qsvm_confirmation_summary.csv",
+    "qsvm_best_confirmed_params": "outputs\\wine\\metadata\\qsvm_best_confirmed_params.json",
+    "qsvm_test_metrics": "outputs\\wine\\metadata\\qsvm_test_metrics.json",
+    "qsvm_classification_report": "outputs\\wine\\tables\\qsvm_classification_report.csv",
+    "qsvm_confusion_matrix": "outputs\\wine\\tables\\qsvm_confusion_matrix.csv",
+    "qsvm_error_analysis": "outputs\\wine\\metadata\\qsvm_error_analysis.json",
+    "qsvm_best_confirmed_model_info": "outputs\\wine\\metadata\\qsvm_best_confirmed_model_info.json",
+    "anova_macro_f1": "outputs\\wine\\tables\\anova_macro_f1.csv",
+    "anova_accuracy": "outputs\\wine\\tables\\anova_accuracy.csv",
+    "anova_fit_time": "outputs\\wine\\tables\\anova_fit_time.csv",
+    "anova_interpretation": "outputs\\wine\\reports\\anova_interpretation.md",
+    "anova_summary": "outputs\\wine\\metadata\\anova_summary.json",
+    "resource_log": "outputs\\wine\\tables\\resource_log.csv",
+    "resource_summary": "outputs\\wine\\metadata\\resource_summary.json",
+    "resource_summary_md": "outputs\\wine\\reports\\resource_summary.md",
+    "compute_allocation_summary": "outputs\\wine\\metadata\\compute_allocation_summary.json",
+    "compute_allocation_analysis": "outputs\\wine\\reports\\compute_allocation_analysis.md",
+    "svm_vs_qsvm_comparison": "outputs\\wine\\tables\\svm_vs_qsvm_comparison.csv",
+    "model_comparison_error_analysis": "outputs\\wine\\reports\\model_comparison_error_analysis.md",
+    "package_versions": "outputs\\wine\\metadata\\package_versions.txt",
+    "reproducibility": "outputs\\wine\\metadata\\reproducibility.json",
+    "model_metric_comparison_bar": "outputs\\wine\\plots\\model_metric_comparison_bar.png",
+    "svm_confusion_matrix_heatmap": "outputs\\wine\\plots\\svm_confusion_matrix_heatmap.png",
+    "qsvm_confusion_matrix_heatmap": "outputs\\wine\\plots\\qsvm_confusion_matrix_heatmap.png",
+    "per_class_f1_bar": "outputs\\wine\\plots\\per_class_f1_bar.png",
+    "qsvm_optuna_progress_line": "outputs\\wine\\plots\\qsvm_optuna_progress_line.png",
+    "qsvm_runtime_vs_macro_f1_scatter": "outputs\\wine\\plots\\qsvm_runtime_vs_macro_f1_scatter.png",
+    "qsvm_confirmation_macro_f1_boxplot": "outputs\\wine\\plots\\qsvm_confirmation_macro_f1_boxplot.png",
+    "resource_phase_summary_bar": "outputs\\wine\\plots\\resource_phase_summary_bar.png",
+    "pca_scatter_train_test": "outputs\\wine\\plots\\pca_scatter_train_test.png",
+    "svm_decision_boundary_pca2d": "outputs\\wine\\plots\\svm_decision_boundary_pca2d.png",
+    "qsvm_decision_boundary_pca2d": "outputs\\wine\\plots\\qsvm_decision_boundary_pca2d.png",
+    "experiment_report_md": "outputs\\wine\\reports\\experiment_report.md",
+    "experiment_report_txt": "outputs\\wine\\reports\\experiment_report.txt"
+  },
+  "warnings": [
+    "Interaction ANOVA was skipped because the confirmation table was too small or lacked factor diversity."
+  ],
+  "failures": []
+}

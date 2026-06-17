@@ -1,0 +1,53 @@
+{
+  "overall_metrics": {
+    "accuracy": 0.956140350877193,
+    "balanced_accuracy": 0.9454365079365079,
+    "macro_precision": 0.9605128205128205,
+    "macro_recall": 0.9454365079365079,
+    "macro_f1": 0.9521289997480473,
+    "weighted_precision": 0.9568690958164642,
+    "weighted_recall": 0.956140350877193,
+    "weighted_f1": 0.9557756825927252
+  },
+  "per_class": {
+    "benign": {
+      "precision": 0.9466666666666667,
+      "recall": 0.9861111111111112,
+      "f1-score": 0.9659863945578231,
+      "support": 72.0
+    },
+    "malignant": {
+      "precision": 0.9743589743589743,
+      "recall": 0.9047619047619048,
+      "f1-score": 0.9382716049382716,
+      "support": 42.0
+    },
+    "accuracy": 0.956140350877193,
+    "macro avg": {
+      "precision": 0.9605128205128205,
+      "recall": 0.9454365079365079,
+      "f1-score": 0.9521289997480473,
+      "support": 114.0
+    },
+    "weighted avg": {
+      "precision": 0.9568690958164642,
+      "recall": 0.956140350877193,
+      "f1-score": 0.9557756825927252,
+      "support": 114.0
+    }
+  },
+  "false_positive_counts": {
+    "benign": 4,
+    "malignant": 1
+  },
+  "false_negative_counts": {
+    "benign": 1,
+    "malignant": 4
+  },
+  "binary_error_terms": {
+    "positive_label": "malignant",
+    "false_positive_type_i_error": 1,
+    "false_negative_type_ii_error": 4
+  },
+  "most_confused_class_pairs": []
+}

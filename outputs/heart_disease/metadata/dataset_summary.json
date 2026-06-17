@@ -1,0 +1,23 @@
+{
+  "dataset_path": null,
+  "dataset_name": "heart_disease",
+  "dataset_source": "ucimlrepo",
+  "original_row_count": 303,
+  "row_count_after_target_drop": 303,
+  "dropped_rows_missing_target": 0,
+  "feature_column_count": 13,
+  "target_column": "num",
+  "numeric_feature_count": 13,
+  "categorical_feature_count": 0,
+  "class_count": 5,
+  "classes": [
+    "0",
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "uci_dataset_id": 45,
+  "uci_dataset_name": "Heart Disease",
+  "uci_repository_url": "https://archive.ics.uci.edu/dataset/45/heart+disease"
+}

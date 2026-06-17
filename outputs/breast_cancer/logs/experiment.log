@@ -11,3 +11,17 @@
 2026-06-17 12:07:18,628 | INFO | Starting phase: qsvm_optuna_search
 2026-06-17 12:12:25,153 | WARNING | QSVM Optuna trial 1 failed: 'NoneType' object has no attribute 'items'
 2026-06-17 12:24:42,815 | WARNING | QSVM Optuna trial 4 failed: 'NoneType' object has no attribute 'items'
+2026-06-17 13:27:51,950 | WARNING | QSVM Optuna trial 18 failed: 'NoneType' object has no attribute 'items'
+2026-06-17 13:55:59,058 | WARNING | QSVM Optuna trial 25 failed: 'NoneType' object has no attribute 'items'
+2026-06-17 14:09:18,293 | WARNING | QSVM Optuna trial 29 failed: 'NoneType' object has no attribute 'items'
+2026-06-17 14:30:05,925 | WARNING | QSVM Optuna trial 36 failed: 'NoneType' object has no attribute 'items'
+2026-06-17 14:40:31,374 | INFO | Completed phase: qsvm_optuna_search
+2026-06-17 14:40:31,397 | INFO | Starting phase: qsvm_confirmation_phase
+2026-06-17 15:29:18,834 | INFO | Completed phase: qsvm_confirmation_phase
+2026-06-17 15:29:18,846 | INFO | Starting phase: qsvm_final_training
+2026-06-17 15:32:12,385 | INFO | Completed phase: qsvm_final_training
+2026-06-17 15:32:12,385 | INFO | Starting phase: final_evaluation
+2026-06-17 15:33:35,896 | INFO | Completed phase: final_evaluation
+2026-06-17 15:33:37,019 | INFO | Starting phase: decision_boundary_visualization
+2026-06-17 15:45:21,162 | INFO | Completed phase: decision_boundary_visualization
+2026-06-17 15:45:21,166 | INFO | Experiment completed successfully.

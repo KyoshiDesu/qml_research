@@ -1,0 +1,19 @@
+{
+  "dataset_path": null,
+  "dataset_name": "wine",
+  "dataset_source": "scikit-learn",
+  "original_row_count": 178,
+  "row_count_after_target_drop": 178,
+  "dropped_rows_missing_target": 0,
+  "feature_column_count": 13,
+  "target_column": "target",
+  "numeric_feature_count": 13,
+  "categorical_feature_count": 0,
+  "class_count": 3,
+  "classes": [
+    "class_0",
+    "class_1",
+    "class_2"
+  ],
+  "sklearn_loader": "load_wine"
+}
