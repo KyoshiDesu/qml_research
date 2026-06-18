@@ -1,0 +1,17 @@
+{
+  "status": "skipped_anova_failed",
+  "row_count": 15,
+  "valid_factors": [
+    "feature_map_type",
+    "reps",
+    "entanglement",
+    "paulis"
+  ],
+  "warnings": [
+    "ANOVA skipped for macro_f1: must have at least one row in constraint matrix",
+    "ANOVA skipped for accuracy: must have at least one row in constraint matrix",
+    "ANOVA skipped for fit_time_seconds: must have at least one row in constraint matrix",
+    "Interaction ANOVA was skipped because the confirmation table was too small or lacked factor diversity."
+  ],
+  "interaction_formula": null
+}

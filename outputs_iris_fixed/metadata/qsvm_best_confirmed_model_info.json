@@ -1,0 +1,21 @@
+{
+  "status": "completed",
+  "best_confirmed_params": {
+    "feature_map_type": "ZFeatureMap",
+    "reps": 1,
+    "entanglement": "linear",
+    "paulis": null
+  },
+  "quantum_feature_count": 4,
+  "max_qsvm_samples": null,
+  "test_metrics": {
+    "accuracy": 0.9333333333333333,
+    "balanced_accuracy": 0.9333333333333332,
+    "macro_precision": 0.9333333333333332,
+    "macro_recall": 0.9333333333333332,
+    "macro_f1": 0.9333333333333332,
+    "weighted_precision": 0.9333333333333333,
+    "weighted_recall": 0.9333333333333333,
+    "weighted_f1": 0.9333333333333333
+  }
+}

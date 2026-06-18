@@ -1,0 +1,11 @@
+{
+  "status": "completed",
+  "best_params": {
+    "feature_map_type": "PauliFeatureMap",
+    "reps": 1,
+    "entanglement": "linear",
+    "paulis": "[\"X\", \"Z\"]"
+  },
+  "successful_trial_count": 33,
+  "requested_trial_count": 40
+}

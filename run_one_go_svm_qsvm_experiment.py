@@ -1232,7 +1232,8 @@ def build_feature_map(
 ) -> Any:
     if feature_map_type == "ZFeatureMap":
         return dependencies.z_feature_map_fn(
-            feature_dimension=feature_count, reps=reps, entanglement=entanglement
+            feature_dimension=feature_count,
+            reps=reps,
         )
     if feature_map_type == "ZZFeatureMap":
         return dependencies.zz_feature_map_fn(
@@ -1879,8 +1880,14 @@ def run_anova_analysis(
         formula = f"{dependent_variable} ~ " + " + ".join(
             f"C({factor})" for factor in valid_factors
         )
-        model = ols(formula, data=frame).fit()
-        table = anova_lm(model, typ=2)
+        try:
+            model = ols(formula, data=frame).fit()
+            table = anova_lm(model, typ=2)
+        except Exception as exc:
+            warnings_local.append(
+                f"ANOVA skipped for {dependent_variable}: {exc}"
+            )
+            return None, formula
         output_path = layout.tables / file_name
         table.to_csv(output_path)
         return output_path, formula
@@ -1895,10 +1902,13 @@ def run_anova_analysis(
     register_artifact(artifact_paths, "anova_accuracy", accuracy_path)
     register_artifact(artifact_paths, "anova_fit_time", fit_time_path)
 
+    completed_anova_paths = [macro_path, accuracy_path, fit_time_path]
     interaction_formula = None
-    if {"feature_map_type", "entanglement", "reps"}.issubset(valid_factors) and len(
-        frame
-    ) >= 12:
+    if (
+        any(path is not None for path in completed_anova_paths)
+        and {"feature_map_type", "entanglement", "reps"}.issubset(valid_factors)
+        and len(frame) >= 12
+    ):
         interaction_formula = (
             "macro_f1 ~ C(feature_map_type) * C(entanglement) + C(reps)"
         )
@@ -1930,6 +1940,8 @@ def run_anova_analysis(
 
     summary = {
         "status": "completed"
+        if any(path is not None for path in completed_anova_paths)
+        else "skipped_anova_failed"
         if valid_factors
         else "skipped_insufficient_factor_levels",
         "row_count": int(len(frame)),

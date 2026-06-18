@@ -1,0 +1,105 @@
+{
+  "gpu_available": true,
+  "gpu_error_message": null,
+  "phase_summaries": {
+    "preprocessing": {
+      "duration_seconds": 0.0148025999951642,
+      "peak_cpu_percent": 97.7,
+      "average_cpu_percent": 48.85,
+      "peak_ram_mb": 189.38671875,
+      "average_ram_mb": 189.21875,
+      "peak_system_ram_percent": 60.5,
+      "average_system_ram_percent": 60.5,
+      "peak_gpu_memory_mb": 1331.5546875,
+      "average_gpu_utilization_percent": 0.0,
+      "sample_count": 2
+    },
+    "classical_svm_grid_search": {
+      "duration_seconds": 1.2911212000035448,
+      "peak_cpu_percent": 100.1,
+      "average_cpu_percent": 65.16666666666667,
+      "peak_ram_mb": 191.18359375,
+      "average_ram_mb": 190.4765625,
+      "peak_system_ram_percent": 60.5,
+      "average_system_ram_percent": 60.5,
+      "peak_gpu_memory_mb": 1332.1171875,
+      "average_gpu_utilization_percent": 0.6666666666666666,
+      "sample_count": 3
+    },
+    "classical_svm_final_training": {
+      "duration_seconds": 0.0015987000078894198,
+      "peak_cpu_percent": 0.0,
+      "average_cpu_percent": 0.0,
+      "peak_ram_mb": 191.48828125,
+      "average_ram_mb": 191.48828125,
+      "peak_system_ram_percent": 60.5,
+      "average_system_ram_percent": 60.5,
+      "peak_gpu_memory_mb": 1332.1171875,
+      "average_gpu_utilization_percent": 1.0,
+      "sample_count": 2
+    },
+    "final_evaluation": {
+      "duration_seconds": 4.601585199998226,
+      "peak_cpu_percent": 103.1,
+      "average_cpu_percent": 62.1375,
+      "peak_ram_mb": 265.30078125,
+      "average_ram_mb": 245.845703125,
+      "peak_system_ram_percent": 60.5,
+      "average_system_ram_percent": 60.1125,
+      "peak_gpu_memory_mb": 1332.1171875,
+      "average_gpu_utilization_percent": 0.625,
+      "sample_count": 8
+    },
+    "qsvm_optuna_search": {
+      "duration_seconds": 609.3786685999949,
+      "peak_cpu_percent": 146.5,
+      "average_cpu_percent": 95.2820770519263,
+      "peak_ram_mb": 250.421875,
+      "average_ram_mb": 246.53675277428812,
+      "peak_system_ram_percent": 61.0,
+      "average_system_ram_percent": 60.316080402010044,
+      "peak_gpu_memory_mb": 1362.4296875,
+      "average_gpu_utilization_percent": 0.576214405360134,
+      "sample_count": 597
+    },
+    "qsvm_confirmation_phase": {
+      "duration_seconds": 211.50016049999977,
+      "peak_cpu_percent": 151.2,
+      "average_cpu_percent": 89.8048076923077,
+      "peak_ram_mb": 251.56640625,
+      "average_ram_mb": 249.93825120192307,
+      "peak_system_ram_percent": 60.2,
+      "average_system_ram_percent": 59.772115384615375,
+      "peak_gpu_memory_mb": 1344.8359375,
+      "average_gpu_utilization_percent": 0.16826923076923078,
+      "sample_count": 208
+    },
+    "qsvm_final_training": {
+      "duration_seconds": 9.176626699991175,
+      "peak_cpu_percent": 101.6,
+      "average_cpu_percent": 88.77000000000001,
+      "peak_ram_mb": 266.9140625,
+      "average_ram_mb": 256.579296875,
+      "peak_system_ram_percent": 60.1,
+      "average_system_ram_percent": 59.919999999999995,
+      "peak_gpu_memory_mb": 1262.3984375,
+      "average_gpu_utilization_percent": 0.4,
+      "sample_count": 10
+    }
+  },
+  "warnings": [
+    "preprocessing: CPU saturation likely occurred.",
+    "preprocessing: GPU was available but mostly idle.",
+    "classical_svm_grid_search: CPU saturation likely occurred.",
+    "classical_svm_grid_search: GPU was available but mostly idle.",
+    "classical_svm_final_training: GPU was available but mostly idle.",
+    "final_evaluation: CPU saturation likely occurred.",
+    "final_evaluation: GPU was available but mostly idle.",
+    "qsvm_optuna_search: CPU saturation likely occurred.",
+    "qsvm_optuna_search: GPU was available but mostly idle.",
+    "qsvm_confirmation_phase: CPU saturation likely occurred.",
+    "qsvm_confirmation_phase: GPU was available but mostly idle.",
+    "qsvm_final_training: CPU saturation likely occurred.",
+    "qsvm_final_training: GPU was available but mostly idle."
+  ]
+}
