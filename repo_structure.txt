@@ -1,0 +1,853 @@
+.
+├── __pycache__
+│   └── run_one_go_svm_qsvm_experiment.cpython-312.pyc
+├── combined_outputs
+│   ├── combined_outputs.zip
+│   ├── deliverables
+│   │   ├── artifact-build-manifest.json
+│   │   ├── assets
+│   │   │   ├── accuracy_comparison.png
+│   │   │   ├── log_findings.png
+│   │   │   └── runtime_comparison.png
+│   │   ├── build_qml_summary.py
+│   │   ├── data
+│   │   │   └── summary.json
+│   │   ├── presentation_workspace
+│   │   │   ├── layout
+│   │   │   │   ├── slide-01.layout.json
+│   │   │   │   ├── slide-02.layout.json
+│   │   │   │   ├── slide-03.layout.json
+│   │   │   │   ├── slide-04.layout.json
+│   │   │   │   ├── slide-05.layout.json
+│   │   │   │   └── slide-06.layout.json
+│   │   │   ├── package.json
+│   │   │   ├── preview
+│   │   │   │   ├── slide-01.png
+│   │   │   │   ├── slide-02.png
+│   │   │   │   ├── slide-03.png
+│   │   │   │   ├── slide-04.png
+│   │   │   │   ├── slide-05.png
+│   │   │   │   └── slide-06.png
+│   │   │   └── slides
+│   │   │       ├── slide-01.mjs
+│   │   │       ├── slide-02.mjs
+│   │   │       ├── slide-03.mjs
+│   │   │       ├── slide-04.mjs
+│   │   │       ├── slide-05.mjs
+│   │   │       └── slide-06.mjs
+│   │   ├── qml_experiment_presentation.pptx
+│   │   ├── qml_experiment_report.docx
+│   │   ├── qml_experiment_report.md
+│   │   └── tmp
+│   │       ├── _6mete3l
+│   │       ├── _8ia3hwt
+│   │       ├── _c4uqzux
+│   │       ├── _cwb3d9v
+│   │       ├── _fy88o2_
+│   │       ├── _hunzqfm
+│   │       ├── _nhslpr2
+│   │       ├── _rv3_v7k
+│   │       ├── _rx_11fr
+│   │       ├── _x_h4cu9
+│   │       ├── 000_qm4q
+│   │       ├── 0b6kofjr
+│   │       ├── 0iern_bl
+│   │       ├── 0r96nx04
+│   │       ├── 0z9s6aan
+│   │       ├── 1095xzn6
+│   │       ├── 12h5k4sn
+│   │       ├── 1882w81w
+│   │       ├── 1bgi9an6
+│   │       ├── 1ct9u43b
+│   │       ├── 1ink1dfx
+│   │       ├── 1kwdawtt
+│   │       ├── 1nx1r7m6
+│   │       ├── 1qldvp1i
+│   │       ├── 1t1evcx1
+│   │       ├── 1ymdb9qd
+│   │       ├── 1ynm8_bu
+│   │       ├── 1zv3ztil
+│   │       ├── 2c30kqaj
+│   │       ├── 2n7pl7fd
+│   │       ├── 2pcjw73d
+│   │       ├── 2u1lmkz9
+│   │       ├── 2uvebrw7
+│   │       ├── 341x997f
+│   │       ├── 36iuu8ls
+│   │       ├── 38j7z0c2
+│   │       ├── 3zyx1c4g
+│   │       ├── 4229fyw1
+│   │       ├── 489dye7g
+│   │       ├── 4bmcsvs7
+│   │       ├── 4p378f0t
+│   │       ├── 50jcbzck
+│   │       ├── 56j20onw
+│   │       ├── 5j2xeps_
+│   │       ├── 5jc51d32
+│   │       ├── 5namrotd
+│   │       ├── 6_zhke8e
+│   │       ├── 6glzmnb9
+│   │       ├── 7djzqlma
+│   │       ├── 7i6bhvq4
+│   │       ├── 7lup_b7q
+│   │       ├── 7lxl_ywf
+│   │       ├── 7om5a85r
+│   │       ├── 87awg875
+│   │       ├── 8wf5eknb
+│   │       ├── 91l_vuu8
+│   │       ├── 98ag0d_7
+│   │       ├── 9hcwlufn
+│   │       ├── 9nmks3o_
+│   │       ├── 9qbcenwc
+│   │       ├── 9sswkqjg
+│   │       ├── 9velqqg6
+│   │       ├── aph552c2
+│   │       ├── aroonl11
+│   │       ├── aty0l25z
+│   │       ├── b622tlgc
+│   │       ├── beikike4
+│   │       ├── bo5hga7p
+│   │       ├── bof7zfl3
+│   │       ├── cbj3g3yb
+│   │       ├── cc_trdk7
+│   │       ├── cj65k6rx
+│   │       ├── cmgm7j6f
+│   │       ├── cn__ho1s
+│   │       ├── cwz4tx__
+│   │       ├── czy77qpz
+│   │       ├── d5ewcho8
+│   │       ├── d75tx91f
+│   │       ├── d7im577i
+│   │       ├── ddjzt9fb
+│   │       ├── df5tfde9
+│   │       ├── dkv71qji
+│   │       ├── dpklk9sw
+│   │       ├── dq0f4_zu
+│   │       ├── dqk76_sa
+│   │       ├── drjn8nnn
+│   │       ├── drxi410x
+│   │       ├── emgl4gap
+│   │       ├── epo_vmg9
+│   │       ├── etfb6z5g
+│   │       ├── f3lw2v6r
+│   │       ├── f6a6ht28
+│   │       ├── fcffmf6y
+│   │       ├── fejs1z2e
+│   │       ├── fhcmuoub
+│   │       ├── fjbvuscc
+│   │       ├── fjuvza0r
+│   │       ├── fmedpo_l
+│   │       ├── frx7329t
+│   │       ├── g0udo65q
+│   │       ├── g9wlc6d7
+│   │       ├── ge7fmuyt
+│   │       ├── ggsix68f
+│   │       ├── gjxaw_3m
+│   │       ├── gpakpnx1
+│   │       ├── h3zu3vzq
+│   │       ├── h4azjaeq
+│   │       ├── h5e_rfam
+│   │       ├── h9anepsp
+│   │       ├── hhqf1c8h
+│   │       ├── hjvftb2i
+│   │       ├── hnd6q07l
+│   │       ├── hs_nh7wf
+│   │       ├── idgkbiqx
+│   │       ├── ie57ptrv
+│   │       ├── ihnqu9if
+│   │       ├── ixi49a_o
+│   │       ├── iyhudirh
+│   │       ├── j0ngn5w3
+│   │       ├── jj7wqv_a
+│   │       ├── jvi5nn3m
+│   │       ├── k_a6uepp
+│   │       ├── k_njbr6e
+│   │       ├── k4klb3qg
+│   │       ├── kdbqohw7
+│   │       ├── kwqt8xvt
+│   │       ├── l8yei01w
+│   │       ├── lm0f0q3y
+│   │       ├── lsmk5hw6
+│   │       ├── ltjqbx2c
+│   │       ├── lzjg8078
+│   │       ├── m0waytab
+│   │       ├── m67c19y4
+│   │       ├── m9ij4dkq
+│   │       ├── ma6q62k4
+│   │       ├── mcy714hm
+│   │       ├── mkhmpo4m
+│   │       ├── mtzujqg7
+│   │       ├── mw_ihto3
+│   │       ├── ndvh94bc
+│   │       ├── nenxnjh2
+│   │       ├── nh1pb986
+│   │       ├── nkfmnqv1
+│   │       ├── np4foq39
+│   │       ├── nt35xy95
+│   │       ├── o_xjz_zz
+│   │       ├── ofh0c6k9
+│   │       ├── oh2035ny
+│   │       ├── ov1162i9
+│   │       ├── p_hgixui
+│   │       ├── pdkjpqjf
+│   │       ├── pwv8quuw
+│   │       ├── q8a2v1xs
+│   │       ├── qd23qq97
+│   │       ├── qfgh40nn
+│   │       ├── qg3iulti
+│   │       ├── qgcul5aw
+│   │       ├── qje2p7xg
+│   │       ├── qme44dz9
+│   │       ├── qmnky6dg
+│   │       ├── qp_p8oih
+│   │       ├── qr76axey
+│   │       ├── qse_202i
+│   │       ├── qvz3nkmq
+│   │       ├── r5q36bds
+│   │       ├── rs1ulja9
+│   │       ├── ry1keim8
+│   │       ├── s2zas2th
+│   │       ├── s8zbsxz5
+│   │       ├── t0y3gdzd
+│   │       ├── t5mu0x44
+│   │       ├── tqaqvnm5
+│   │       ├── tqk7xlj8
+│   │       ├── u5s43iw1
+│   │       ├── uq3cydq8
+│   │       ├── utkbe3fv
+│   │       ├── v_ip1g6u
+│   │       ├── v1it39ca
+│   │       ├── v1pcd8pd
+│   │       ├── v9f7y3l_
+│   │       ├── va51oust
+│   │       ├── vch0yazm
+│   │       ├── vssytdk4
+│   │       ├── vtp861as
+│   │       ├── w0hvz044
+│   │       ├── w8ga5qi0
+│   │       ├── wbmgf1bm
+│   │       ├── wlwfhbtm
+│   │       ├── wmuqp2u5
+│   │       ├── wnf44wzf
+│   │       ├── wnk9bh8j
+│   │       ├── wu7k2acr
+│   │       ├── xatv91a4
+│   │       ├── xl_h8mk9
+│   │       ├── xzki62ib
+│   │       ├── ybbyat7a
+│   │       ├── yxdn6y_p
+│   │       ├── z2fdtyg2
+│   │       ├── z6e6rlb4
+│   │       └── z918qafo
+│   ├── outputs_breast
+│   │   ├── logs
+│   │   │   └── experiment.log
+│   │   ├── metadata
+│   │   │   ├── anova_summary.json
+│   │   │   ├── compute_allocation_summary.json
+│   │   │   ├── dataset_summary.json
+│   │   │   ├── package_versions.txt
+│   │   │   ├── qsvm_best_confirmed_model_info.json
+│   │   │   ├── qsvm_best_confirmed_params.json
+│   │   │   ├── qsvm_error_analysis.json
+│   │   │   ├── qsvm_optuna_best_params.json
+│   │   │   ├── qsvm_optuna_summary.json
+│   │   │   ├── qsvm_test_metrics.json
+│   │   │   ├── quantum_feature_info.json
+│   │   │   ├── reproducibility.json
+│   │   │   ├── resource_summary.json
+│   │   │   ├── svm_best_params.json
+│   │   │   ├── svm_error_analysis.json
+│   │   │   └── svm_test_metrics.json
+│   │   ├── models
+│   │   │   ├── qsvm_optuna_study.pkl
+│   │   │   └── svm_final_model.joblib
+│   │   ├── plots
+│   │   │   ├── pca_scatter_train_test.png
+│   │   │   ├── qsvm_decision_boundary_pca2d.png
+│   │   │   └── svm_decision_boundary_pca2d.png
+│   │   ├── reports
+│   │   │   ├── anova_interpretation.md
+│   │   │   ├── compute_allocation_analysis.md
+│   │   │   ├── experiment_report.json
+│   │   │   ├── experiment_report.md
+│   │   │   ├── experiment_report.txt
+│   │   │   ├── model_comparison_error_analysis.md
+│   │   │   └── resource_summary.md
+│   │   └── tables
+│   │       ├── anova_accuracy.csv
+│   │       ├── anova_fit_time.csv
+│   │       ├── anova_macro_f1.csv
+│   │       ├── class_distribution.csv
+│   │       ├── qsvm_classification_report.csv
+│   │       ├── qsvm_confirmation_results.csv
+│   │       ├── qsvm_confirmation_summary.csv
+│   │       ├── qsvm_confusion_matrix.csv
+│   │       ├── qsvm_optuna_trials.csv
+│   │       ├── quantum_pca_components.csv
+│   │       ├── resource_log.csv
+│   │       ├── svm_classification_report.csv
+│   │       ├── svm_confusion_matrix.csv
+│   │       ├── svm_grid_results.csv
+│   │       ├── svm_vs_qsvm_comparison.csv
+│   │       └── train_validation_test_distribution.csv
+│   ├── outputs_heart
+│   │   ├── logs
+│   │   │   └── experiment.log
+│   │   ├── metadata
+│   │   │   ├── anova_summary.json
+│   │   │   ├── compute_allocation_summary.json
+│   │   │   ├── dataset_summary.json
+│   │   │   ├── package_versions.txt
+│   │   │   ├── qsvm_best_confirmed_model_info.json
+│   │   │   ├── qsvm_best_confirmed_params.json
+│   │   │   ├── qsvm_error_analysis.json
+│   │   │   ├── qsvm_optuna_best_params.json
+│   │   │   ├── qsvm_optuna_summary.json
+│   │   │   ├── qsvm_test_metrics.json
+│   │   │   ├── quantum_feature_info.json
+│   │   │   ├── reproducibility.json
+│   │   │   ├── resource_summary.json
+│   │   │   ├── svm_best_params.json
+│   │   │   ├── svm_error_analysis.json
+│   │   │   └── svm_test_metrics.json
+│   │   ├── models
+│   │   │   ├── qsvm_optuna_study.pkl
+│   │   │   └── svm_final_model.joblib
+│   │   ├── plots
+│   │   │   ├── pca_scatter_train_test.png
+│   │   │   ├── qsvm_decision_boundary_pca2d.png
+│   │   │   └── svm_decision_boundary_pca2d.png
+│   │   ├── reports
+│   │   │   ├── anova_interpretation.md
+│   │   │   ├── compute_allocation_analysis.md
+│   │   │   ├── experiment_report.json
+│   │   │   ├── experiment_report.md
+│   │   │   ├── experiment_report.txt
+│   │   │   ├── model_comparison_error_analysis.md
+│   │   │   └── resource_summary.md
+│   │   └── tables
+│   │       ├── anova_accuracy.csv
+│   │       ├── anova_fit_time.csv
+│   │       ├── anova_macro_f1.csv
+│   │       ├── class_distribution.csv
+│   │       ├── qsvm_classification_report.csv
+│   │       ├── qsvm_confirmation_results.csv
+│   │       ├── qsvm_confirmation_summary.csv
+│   │       ├── qsvm_confusion_matrix.csv
+│   │       ├── qsvm_optuna_trials.csv
+│   │       ├── quantum_pca_components.csv
+│   │       ├── resource_log.csv
+│   │       ├── svm_classification_report.csv
+│   │       ├── svm_confusion_matrix.csv
+│   │       ├── svm_grid_results.csv
+│   │       ├── svm_vs_qsvm_comparison.csv
+│   │       └── train_validation_test_distribution.csv
+│   ├── outputs_iris
+│   │   ├── logs
+│   │   │   └── experiment.log
+│   │   ├── metadata
+│   │   │   ├── anova_summary.json
+│   │   │   ├── compute_allocation_summary.json
+│   │   │   ├── dataset_summary.json
+│   │   │   ├── package_versions.txt
+│   │   │   ├── qsvm_best_confirmed_model_info.json
+│   │   │   ├── qsvm_best_confirmed_params.json
+│   │   │   ├── qsvm_error_analysis.json
+│   │   │   ├── qsvm_optuna_best_params.json
+│   │   │   ├── qsvm_optuna_summary.json
+│   │   │   ├── qsvm_test_metrics.json
+│   │   │   ├── quantum_feature_info.json
+│   │   │   ├── reproducibility.json
+│   │   │   ├── resource_summary.json
+│   │   │   ├── svm_best_params.json
+│   │   │   ├── svm_error_analysis.json
+│   │   │   └── svm_test_metrics.json
+│   │   ├── models
+│   │   │   ├── qsvm_optuna_study.pkl
+│   │   │   └── svm_final_model.joblib
+│   │   ├── plots
+│   │   │   ├── pca_scatter_train_test.png
+│   │   │   ├── qsvm_decision_boundary_pca2d.png
+│   │   │   └── svm_decision_boundary_pca2d.png
+│   │   ├── reports
+│   │   │   ├── anova_interpretation.md
+│   │   │   ├── compute_allocation_analysis.md
+│   │   │   ├── experiment_report.json
+│   │   │   ├── experiment_report.md
+│   │   │   ├── experiment_report.txt
+│   │   │   ├── model_comparison_error_analysis.md
+│   │   │   └── resource_summary.md
+│   │   └── tables
+│   │       ├── anova_accuracy.csv
+│   │       ├── anova_fit_time.csv
+│   │       ├── anova_macro_f1.csv
+│   │       ├── class_distribution.csv
+│   │       ├── qsvm_classification_report.csv
+│   │       ├── qsvm_confirmation_results.csv
+│   │       ├── qsvm_confirmation_summary.csv
+│   │       ├── qsvm_confusion_matrix.csv
+│   │       ├── qsvm_optuna_trials.csv
+│   │       ├── resource_log.csv
+│   │       ├── svm_classification_report.csv
+│   │       ├── svm_confusion_matrix.csv
+│   │       ├── svm_grid_results.csv
+│   │       ├── svm_vs_qsvm_comparison.csv
+│   │       └── train_validation_test_distribution.csv
+│   └── outputs_wine
+│       ├── logs
+│       │   └── experiment.log
+│       ├── metadata
+│       │   ├── anova_summary.json
+│       │   ├── compute_allocation_summary.json
+│       │   ├── dataset_summary.json
+│       │   ├── package_versions.txt
+│       │   ├── qsvm_best_confirmed_model_info.json
+│       │   ├── qsvm_best_confirmed_params.json
+│       │   ├── qsvm_error_analysis.json
+│       │   ├── qsvm_optuna_best_params.json
+│       │   ├── qsvm_optuna_summary.json
+│       │   ├── qsvm_test_metrics.json
+│       │   ├── quantum_feature_info.json
+│       │   ├── reproducibility.json
+│       │   ├── resource_summary.json
+│       │   ├── svm_best_params.json
+│       │   ├── svm_error_analysis.json
+│       │   └── svm_test_metrics.json
+│       ├── models
+│       │   ├── qsvm_optuna_study.pkl
+│       │   └── svm_final_model.joblib
+│       ├── plots
+│       │   ├── pca_scatter_train_test.png
+│       │   ├── qsvm_decision_boundary_pca2d.png
+│       │   └── svm_decision_boundary_pca2d.png
+│       ├── reports
+│       │   ├── anova_interpretation.md
+│       │   ├── compute_allocation_analysis.md
+│       │   ├── experiment_report.json
+│       │   ├── experiment_report.md
+│       │   ├── experiment_report.txt
+│       │   ├── model_comparison_error_analysis.md
+│       │   └── resource_summary.md
+│       └── tables
+│           ├── anova_accuracy.csv
+│           ├── anova_fit_time.csv
+│           ├── anova_macro_f1.csv
+│           ├── class_distribution.csv
+│           ├── qsvm_classification_report.csv
+│           ├── qsvm_confirmation_results.csv
+│           ├── qsvm_confirmation_summary.csv
+│           ├── qsvm_confusion_matrix.csv
+│           ├── qsvm_optuna_trials.csv
+│           ├── quantum_pca_components.csv
+│           ├── resource_log.csv
+│           ├── svm_classification_report.csv
+│           ├── svm_confusion_matrix.csv
+│           ├── svm_grid_results.csv
+│           ├── svm_vs_qsvm_comparison.csv
+│           └── train_validation_test_distribution.csv
+├── configs
+│   └── default_experiment.json
+├── docker-compose.yml
+├── Dockerfile
+├── docs
+│   ├── experiment_report_svm.md
+│   ├── experiment_report.md
+│   └── laporan_analisis_SVM.docx
+├── environment.yml
+├── infra
+│   └── README.md
+├── outputs
+│   ├── breast_cancer
+│   │   ├── logs
+│   │   │   └── experiment.log
+│   │   ├── metadata
+│   │   │   ├── anova_summary.json
+│   │   │   ├── compute_allocation_summary.json
+│   │   │   ├── dataset_summary.json
+│   │   │   ├── package_versions.txt
+│   │   │   ├── qsvm_best_confirmed_model_info.json
+│   │   │   ├── qsvm_best_confirmed_params.json
+│   │   │   ├── qsvm_error_analysis.json
+│   │   │   ├── qsvm_optuna_best_params.json
+│   │   │   ├── qsvm_optuna_summary.json
+│   │   │   ├── qsvm_test_metrics.json
+│   │   │   ├── quantum_feature_info.json
+│   │   │   ├── reproducibility.json
+│   │   │   ├── resource_summary.json
+│   │   │   ├── svm_best_params.json
+│   │   │   ├── svm_error_analysis.json
+│   │   │   └── svm_test_metrics.json
+│   │   ├── models
+│   │   │   ├── qsvm_optuna_study.pkl
+│   │   │   └── svm_final_model.joblib
+│   │   ├── plots
+│   │   │   ├── model_metric_comparison_bar.png
+│   │   │   ├── pca_scatter_train_test.png
+│   │   │   ├── per_class_f1_bar.png
+│   │   │   ├── qsvm_confirmation_macro_f1_boxplot.png
+│   │   │   ├── qsvm_confusion_matrix_heatmap.png
+│   │   │   ├── qsvm_decision_boundary_pca2d.png
+│   │   │   ├── qsvm_optuna_progress_line.png
+│   │   │   ├── qsvm_runtime_vs_macro_f1_scatter.png
+│   │   │   ├── resource_phase_summary_bar.png
+│   │   │   ├── svm_confusion_matrix_heatmap.png
+│   │   │   └── svm_decision_boundary_pca2d.png
+│   │   ├── reports
+│   │   │   ├── anova_interpretation.md
+│   │   │   ├── compute_allocation_analysis.md
+│   │   │   ├── experiment_report.json
+│   │   │   ├── experiment_report.md
+│   │   │   ├── experiment_report.txt
+│   │   │   ├── model_comparison_error_analysis.md
+│   │   │   └── resource_summary.md
+│   │   └── tables
+│   │       ├── anova_accuracy.csv
+│   │       ├── anova_fit_time.csv
+│   │       ├── anova_macro_f1.csv
+│   │       ├── class_distribution.csv
+│   │       ├── qsvm_classification_report.csv
+│   │       ├── qsvm_confirmation_results.csv
+│   │       ├── qsvm_confirmation_summary.csv
+│   │       ├── qsvm_confusion_matrix.csv
+│   │       ├── qsvm_optuna_trials.csv
+│   │       ├── quantum_pca_components.csv
+│   │       ├── resource_log.csv
+│   │       ├── svm_classification_report.csv
+│   │       ├── svm_confusion_matrix.csv
+│   │       ├── svm_grid_results.csv
+│   │       ├── svm_vs_qsvm_comparison.csv
+│   │       └── train_validation_test_distribution.csv
+│   ├── heart_disease
+│   │   ├── logs
+│   │   │   └── experiment.log
+│   │   ├── metadata
+│   │   │   ├── anova_summary.json
+│   │   │   ├── compute_allocation_summary.json
+│   │   │   ├── dataset_summary.json
+│   │   │   ├── package_versions.txt
+│   │   │   ├── qsvm_best_confirmed_model_info.json
+│   │   │   ├── qsvm_best_confirmed_params.json
+│   │   │   ├── qsvm_error_analysis.json
+│   │   │   ├── qsvm_optuna_best_params.json
+│   │   │   ├── qsvm_optuna_summary.json
+│   │   │   ├── qsvm_test_metrics.json
+│   │   │   ├── quantum_feature_info.json
+│   │   │   ├── reproducibility.json
+│   │   │   ├── resource_summary.json
+│   │   │   ├── svm_best_params.json
+│   │   │   ├── svm_error_analysis.json
+│   │   │   └── svm_test_metrics.json
+│   │   ├── models
+│   │   │   ├── qsvm_optuna_study.pkl
+│   │   │   └── svm_final_model.joblib
+│   │   ├── plots
+│   │   │   ├── model_metric_comparison_bar.png
+│   │   │   ├── pca_scatter_train_test.png
+│   │   │   ├── per_class_f1_bar.png
+│   │   │   ├── qsvm_confirmation_macro_f1_boxplot.png
+│   │   │   ├── qsvm_confusion_matrix_heatmap.png
+│   │   │   ├── qsvm_decision_boundary_pca2d.png
+│   │   │   ├── qsvm_optuna_progress_line.png
+│   │   │   ├── qsvm_runtime_vs_macro_f1_scatter.png
+│   │   │   ├── resource_phase_summary_bar.png
+│   │   │   ├── svm_confusion_matrix_heatmap.png
+│   │   │   └── svm_decision_boundary_pca2d.png
+│   │   ├── reports
+│   │   │   ├── anova_interpretation.md
+│   │   │   ├── compute_allocation_analysis.md
+│   │   │   ├── experiment_report.json
+│   │   │   ├── experiment_report.md
+│   │   │   ├── experiment_report.txt
+│   │   │   ├── model_comparison_error_analysis.md
+│   │   │   └── resource_summary.md
+│   │   └── tables
+│   │       ├── anova_accuracy.csv
+│   │       ├── anova_fit_time.csv
+│   │       ├── anova_macro_f1.csv
+│   │       ├── class_distribution.csv
+│   │       ├── qsvm_classification_report.csv
+│   │       ├── qsvm_confirmation_results.csv
+│   │       ├── qsvm_confirmation_summary.csv
+│   │       ├── qsvm_confusion_matrix.csv
+│   │       ├── qsvm_optuna_trials.csv
+│   │       ├── quantum_pca_components.csv
+│   │       ├── resource_log.csv
+│   │       ├── svm_classification_report.csv
+│   │       ├── svm_confusion_matrix.csv
+│   │       ├── svm_grid_results.csv
+│   │       ├── svm_vs_qsvm_comparison.csv
+│   │       └── train_validation_test_distribution.csv
+│   ├── iris
+│   │   ├── logs
+│   │   │   └── experiment.log
+│   │   ├── metadata
+│   │   │   ├── anova_summary.json
+│   │   │   ├── compute_allocation_summary.json
+│   │   │   ├── dataset_summary.json
+│   │   │   ├── package_versions.txt
+│   │   │   ├── qsvm_best_confirmed_model_info.json
+│   │   │   ├── qsvm_best_confirmed_params.json
+│   │   │   ├── qsvm_error_analysis.json
+│   │   │   ├── qsvm_optuna_best_params.json
+│   │   │   ├── qsvm_optuna_summary.json
+│   │   │   ├── qsvm_test_metrics.json
+│   │   │   ├── quantum_feature_info.json
+│   │   │   ├── reproducibility.json
+│   │   │   ├── resource_summary.json
+│   │   │   ├── svm_best_params.json
+│   │   │   ├── svm_error_analysis.json
+│   │   │   └── svm_test_metrics.json
+│   │   ├── models
+│   │   │   ├── qsvm_optuna_study.pkl
+│   │   │   └── svm_final_model.joblib
+│   │   ├── plots
+│   │   │   ├── model_metric_comparison_bar.png
+│   │   │   ├── pca_scatter_train_test.png
+│   │   │   ├── per_class_f1_bar.png
+│   │   │   ├── qsvm_confirmation_macro_f1_boxplot.png
+│   │   │   ├── qsvm_confusion_matrix_heatmap.png
+│   │   │   ├── qsvm_decision_boundary_pca2d.png
+│   │   │   ├── qsvm_optuna_progress_line.png
+│   │   │   ├── qsvm_runtime_vs_macro_f1_scatter.png
+│   │   │   ├── resource_phase_summary_bar.png
+│   │   │   ├── svm_confusion_matrix_heatmap.png
+│   │   │   └── svm_decision_boundary_pca2d.png
+│   │   ├── reports
+│   │   │   ├── anova_interpretation.md
+│   │   │   ├── compute_allocation_analysis.md
+│   │   │   ├── experiment_report.json
+│   │   │   ├── experiment_report.md
+│   │   │   ├── experiment_report.txt
+│   │   │   ├── model_comparison_error_analysis.md
+│   │   │   └── resource_summary.md
+│   │   └── tables
+│   │       ├── anova_accuracy.csv
+│   │       ├── anova_fit_time.csv
+│   │       ├── anova_macro_f1.csv
+│   │       ├── class_distribution.csv
+│   │       ├── qsvm_classification_report.csv
+│   │       ├── qsvm_confirmation_results.csv
+│   │       ├── qsvm_confirmation_summary.csv
+│   │       ├── qsvm_confusion_matrix.csv
+│   │       ├── qsvm_optuna_trials.csv
+│   │       ├── resource_log.csv
+│   │       ├── svm_classification_report.csv
+│   │       ├── svm_confusion_matrix.csv
+│   │       ├── svm_grid_results.csv
+│   │       ├── svm_vs_qsvm_comparison.csv
+│   │       └── train_validation_test_distribution.csv
+│   ├── logs
+│   │   └── experiment.log
+│   ├── metadata
+│   │   ├── dataset_summary.json
+│   │   ├── quantum_feature_info.json
+│   │   ├── svm_best_params.json
+│   │   ├── svm_error_analysis.json
+│   │   └── svm_test_metrics.json
+│   ├── models
+│   │   └── svm_final_model.joblib
+│   ├── tables
+│   │   ├── class_distribution.csv
+│   │   ├── quantum_pca_components.csv
+│   │   ├── svm_classification_report.csv
+│   │   ├── svm_confusion_matrix.csv
+│   │   ├── svm_grid_results.csv
+│   │   └── train_validation_test_distribution.csv
+│   └── wine
+│       ├── logs
+│       │   └── experiment.log
+│       ├── metadata
+│       │   ├── anova_summary.json
+│       │   ├── compute_allocation_summary.json
+│       │   ├── dataset_summary.json
+│       │   ├── package_versions.txt
+│       │   ├── qsvm_best_confirmed_model_info.json
+│       │   ├── qsvm_best_confirmed_params.json
+│       │   ├── qsvm_error_analysis.json
+│       │   ├── qsvm_optuna_best_params.json
+│       │   ├── qsvm_optuna_summary.json
+│       │   ├── qsvm_test_metrics.json
+│       │   ├── quantum_feature_info.json
+│       │   ├── reproducibility.json
+│       │   ├── resource_summary.json
+│       │   ├── svm_best_params.json
+│       │   ├── svm_error_analysis.json
+│       │   └── svm_test_metrics.json
+│       ├── models
+│       │   ├── qsvm_optuna_study.pkl
+│       │   └── svm_final_model.joblib
+│       ├── plots
+│       │   ├── model_metric_comparison_bar.png
+│       │   ├── pca_scatter_train_test.png
+│       │   ├── per_class_f1_bar.png
+│       │   ├── qsvm_confirmation_macro_f1_boxplot.png
+│       │   ├── qsvm_confusion_matrix_heatmap.png
+│       │   ├── qsvm_decision_boundary_pca2d.png
+│       │   ├── qsvm_optuna_progress_line.png
+│       │   ├── qsvm_runtime_vs_macro_f1_scatter.png
+│       │   ├── resource_phase_summary_bar.png
+│       │   ├── svm_confusion_matrix_heatmap.png
+│       │   └── svm_decision_boundary_pca2d.png
+│       ├── reports
+│       │   ├── anova_interpretation.md
+│       │   ├── compute_allocation_analysis.md
+│       │   ├── experiment_report.json
+│       │   ├── experiment_report.md
+│       │   ├── experiment_report.txt
+│       │   ├── model_comparison_error_analysis.md
+│       │   └── resource_summary.md
+│       └── tables
+│           ├── anova_accuracy.csv
+│           ├── anova_fit_time.csv
+│           ├── anova_macro_f1.csv
+│           ├── class_distribution.csv
+│           ├── qsvm_classification_report.csv
+│           ├── qsvm_confirmation_results.csv
+│           ├── qsvm_confirmation_summary.csv
+│           ├── qsvm_confusion_matrix.csv
+│           ├── qsvm_optuna_trials.csv
+│           ├── quantum_pca_components.csv
+│           ├── resource_log.csv
+│           ├── svm_classification_report.csv
+│           ├── svm_confusion_matrix.csv
+│           ├── svm_grid_results.csv
+│           ├── svm_vs_qsvm_comparison.csv
+│           └── train_validation_test_distribution.csv
+├── outputs_heart_fixed
+│   ├── logs
+│   │   └── experiment.log
+│   ├── metadata
+│   │   ├── anova_summary.json
+│   │   ├── compute_allocation_summary.json
+│   │   ├── dataset_summary.json
+│   │   ├── package_versions.txt
+│   │   ├── qsvm_best_confirmed_model_info.json
+│   │   ├── qsvm_best_confirmed_params.json
+│   │   ├── qsvm_error_analysis.json
+│   │   ├── qsvm_optuna_best_params.json
+│   │   ├── qsvm_optuna_summary.json
+│   │   ├── qsvm_test_metrics.json
+│   │   ├── quantum_feature_info.json
+│   │   ├── reproducibility.json
+│   │   ├── resource_summary.json
+│   │   ├── svm_best_params.json
+│   │   ├── svm_error_analysis.json
+│   │   └── svm_test_metrics.json
+│   ├── models
+│   │   ├── qsvm_optuna_study.pkl
+│   │   └── svm_final_model.joblib
+│   ├── plots
+│   │   ├── model_metric_comparison_bar.png
+│   │   ├── pca_scatter_train_test.png
+│   │   ├── per_class_f1_bar.png
+│   │   ├── qsvm_confirmation_macro_f1_boxplot.png
+│   │   ├── qsvm_confusion_matrix_heatmap.png
+│   │   ├── qsvm_decision_boundary_pca2d.png
+│   │   ├── qsvm_optuna_progress_line.png
+│   │   ├── qsvm_runtime_vs_macro_f1_scatter.png
+│   │   ├── resource_phase_summary_bar.png
+│   │   ├── svm_confusion_matrix_heatmap.png
+│   │   └── svm_decision_boundary_pca2d.png
+│   ├── reports
+│   │   ├── anova_interpretation.md
+│   │   ├── compute_allocation_analysis.md
+│   │   ├── experiment_report.json
+│   │   ├── experiment_report.md
+│   │   ├── experiment_report.txt
+│   │   ├── model_comparison_error_analysis.md
+│   │   └── resource_summary.md
+│   └── tables
+│       ├── anova_accuracy.csv
+│       ├── anova_fit_time.csv
+│       ├── anova_macro_f1.csv
+│       ├── class_distribution.csv
+│       ├── qsvm_classification_report.csv
+│       ├── qsvm_confirmation_results.csv
+│       ├── qsvm_confirmation_summary.csv
+│       ├── qsvm_confusion_matrix.csv
+│       ├── qsvm_optuna_trials.csv
+│       ├── quantum_pca_components.csv
+│       ├── resource_log.csv
+│       ├── svm_classification_report.csv
+│       ├── svm_confusion_matrix.csv
+│       ├── svm_grid_results.csv
+│       ├── svm_vs_qsvm_comparison.csv
+│       └── train_validation_test_distribution.csv
+├── outputs_iris_fixed
+│   ├── logs
+│   │   └── experiment.log
+│   ├── metadata
+│   │   ├── anova_summary.json
+│   │   ├── compute_allocation_summary.json
+│   │   ├── dataset_summary.json
+│   │   ├── package_versions.txt
+│   │   ├── qsvm_best_confirmed_model_info.json
+│   │   ├── qsvm_best_confirmed_params.json
+│   │   ├── qsvm_error_analysis.json
+│   │   ├── qsvm_optuna_best_params.json
+│   │   ├── qsvm_optuna_summary.json
+│   │   ├── qsvm_test_metrics.json
+│   │   ├── quantum_feature_info.json
+│   │   ├── reproducibility.json
+│   │   ├── resource_summary.json
+│   │   ├── svm_best_params.json
+│   │   ├── svm_error_analysis.json
+│   │   └── svm_test_metrics.json
+│   ├── models
+│   │   ├── qsvm_optuna_study.pkl
+│   │   └── svm_final_model.joblib
+│   ├── plots
+│   │   ├── model_metric_comparison_bar.png
+│   │   ├── pca_scatter_train_test.png
+│   │   ├── per_class_f1_bar.png
+│   │   ├── qsvm_confirmation_macro_f1_boxplot.png
+│   │   ├── qsvm_confusion_matrix_heatmap.png
+│   │   ├── qsvm_decision_boundary_pca2d.png
+│   │   ├── qsvm_optuna_progress_line.png
+│   │   ├── qsvm_runtime_vs_macro_f1_scatter.png
+│   │   ├── resource_phase_summary_bar.png
+│   │   ├── svm_confusion_matrix_heatmap.png
+│   │   └── svm_decision_boundary_pca2d.png
+│   ├── reports
+│   │   ├── anova_interpretation.md
+│   │   ├── compute_allocation_analysis.md
+│   │   ├── experiment_report.json
+│   │   ├── experiment_report.md
+│   │   ├── experiment_report.txt
+│   │   ├── model_comparison_error_analysis.md
+│   │   └── resource_summary.md
+│   └── tables
+│       ├── class_distribution.csv
+│       ├── qsvm_classification_report.csv
+│       ├── qsvm_confirmation_results.csv
+│       ├── qsvm_confirmation_summary.csv
+│       ├── qsvm_confusion_matrix.csv
+│       ├── qsvm_optuna_trials.csv
+│       ├── resource_log.csv
+│       ├── svm_classification_report.csv
+│       ├── svm_confusion_matrix.csv
+│       ├── svm_grid_results.csv
+│       ├── svm_vs_qsvm_comparison.csv
+│       └── train_validation_test_distribution.csv
+├── pipeline.md
+├── pyproject.toml
+├── qsvm_single_file.py
+├── README.md
+├── repo_structure.txt
+├── requirements.txt
+├── results
+├── run_one_go_svm_qsvm_experiment.py
+├── scripts
+│   └── run_experiment.py
+└── src
+    └── qsvm_vm_compare
+        ├── __init__.py
+        ├── classical.py
+        ├── config.py
+        ├── data.py
+        ├── experiment.py
+        ├── metrics.py
+        └── quantum.py
+
+93 directories, 758 files
