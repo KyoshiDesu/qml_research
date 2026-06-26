@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import logging
 import math
@@ -590,6 +591,43 @@ def register_artifact(
     artifact_paths[key] = str(path)
 
 
+def serializable_config(config: ExperimentConfig) -> dict[str, Any]:
+    payload = asdict(config)
+    for key in ["data_path", "output_dir"]:
+        if payload.get(key) is not None:
+            payload[key] = str(payload[key])
+    return payload
+
+
+def sha256_json_payload(payload: Any) -> str:
+    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
+
+
+def save_run_status(
+    layout: OutputLayout,
+    artifact_paths: dict[str, str],
+    config: ExperimentConfig,
+    status: str,
+    extra: dict[str, Any] | None = None,
+) -> None:
+    payload: dict[str, Any] = {
+        "status": status,
+        "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+        "output_dir": str(layout.root),
+        "config": serializable_config(config),
+        "stale_artifact_notice": (
+            "If this status is 'running', final plots and reports in the output "
+            "directory may still be from a previous completed run."
+        ),
+    }
+    if extra:
+        payload.update(extra)
+    status_path = layout.metadata / "run_status.json"
+    save_json(payload, status_path)
+    register_artifact(artifact_paths, "run_status", status_path)
+
+
 def set_global_seeds(seed: int) -> None:
     random.seed(seed)
     np.random.seed(seed)
@@ -902,6 +940,9 @@ def split_dataset(
         ),
         "class_count": int(len(label_encoder.classes_)),
         "classes": label_encoder.classes_.tolist(),
+        "split_random_state": config.random_state,
+        "split_test_size": config.test_size,
+        "split_validation_size": config.validation_size,
     }
     raw_summary.update(source_metadata)
 
@@ -961,6 +1002,37 @@ def save_dataset_artifacts(
     pd.DataFrame(split_records).to_csv(split_distribution_path, index=False)
     register_artifact(
         artifact_paths, "train_validation_test_distribution", split_distribution_path
+    )
+
+    split_index_records = []
+    for split_name, indices in [
+        ("train", dataset.train_indices),
+        ("validation", dataset.validation_indices),
+        ("test", dataset.test_indices),
+    ]:
+        for position, row_index in enumerate(indices):
+            split_index_records.append(
+                {
+                    "split": split_name,
+                    "split_position": int(position),
+                    "row_index": int(row_index),
+                    "label": str(dataset.target_labels.iloc[row_index]),
+                }
+            )
+    split_indices_path = layout.tables / "train_validation_test_indices.csv"
+    pd.DataFrame(split_index_records).to_csv(split_indices_path, index=False)
+    register_artifact(artifact_paths, "train_validation_test_indices", split_indices_path)
+
+    split_indices_payload = {
+        "train_indices": [int(index) for index in dataset.train_indices],
+        "validation_indices": [int(index) for index in dataset.validation_indices],
+        "test_indices": [int(index) for index in dataset.test_indices],
+        "test_indices_sha256": sha256_json_payload(dataset.test_indices),
+    }
+    split_indices_json_path = layout.metadata / "train_validation_test_indices.json"
+    save_json(split_indices_payload, split_indices_json_path)
+    register_artifact(
+        artifact_paths, "train_validation_test_indices_json", split_indices_json_path
     )
 
     dataset_summary_path = layout.metadata / "dataset_summary.json"
@@ -1209,16 +1281,29 @@ def add_final_metric_uncertainty(
 ) -> None:
     sample_count = int(len(y_true))
     correct_count = int(np.sum(y_true == y_pred))
+    error_count = sample_count - correct_count
     accuracy_low, accuracy_high = wilson_score_interval(correct_count, sample_count)
     macro_low, macro_high = bootstrap_macro_f1_interval(y_true, y_pred, random_state)
+    warnings_for_metric: list[str] = []
+    if sample_count > 0 and (1.0 / sample_count) >= 0.01:
+        warnings_for_metric.append(
+            "Final-test accuracy is coarse because each individual test sample changes "
+            f"accuracy by {1.0 / sample_count:.6f}."
+        )
     metrics_payload.update(
         {
             "test_sample_count": sample_count,
             "accuracy_correct_count": correct_count,
+            "accuracy_error_count": error_count,
+            "accuracy_fraction": f"{correct_count}/{sample_count}",
+            "accuracy_single_sample_step": None
+            if sample_count == 0
+            else 1.0 / sample_count,
             "accuracy_wilson_95_low": accuracy_low,
             "accuracy_wilson_95_high": accuracy_high,
             "macro_f1_bootstrap_95_low": macro_low,
             "macro_f1_bootstrap_95_high": macro_high,
+            "metric_resolution_warnings": warnings_for_metric,
         }
     )
 
@@ -1433,6 +1518,10 @@ def save_paired_model_comparison(
         both_correct = int((svm_correct & qsvm_correct).sum())
         both_wrong = int((~svm_correct & ~qsvm_correct).sum())
         discordant_count = svm_only_correct + qsvm_only_correct
+        prediction_disagreement_count = int(
+            (paired["predicted_encoded_svm"] != paired["predicted_encoded_qsvm"]).sum()
+        )
+        identical_prediction_count = int(len(paired) - prediction_disagreement_count)
         p_value = None
         p_value_method = "not_available"
         if discordant_count == 0:
@@ -1463,9 +1552,25 @@ def save_paired_model_comparison(
             "qsvm_only_correct": qsvm_only_correct,
             "both_wrong": both_wrong,
             "discordant_count": discordant_count,
+            "identical_prediction_count": identical_prediction_count,
+            "prediction_disagreement_count": prediction_disagreement_count,
+            "identical_prediction_rate": None
+            if paired.empty
+            else identical_prediction_count / len(paired),
+            "identical_correctness_pattern": discordant_count == 0,
             "mcnemar_exact_p_value": p_value,
             "mcnemar_p_value_method": p_value_method,
         }
+        if prediction_disagreement_count == 0:
+            warnings_list.append(
+                "Classical SVM and QSVM produced identical final-test predictions; "
+                "the equal aggregate metrics are not just a rounding artifact."
+            )
+        elif discordant_count == 0:
+            warnings_list.append(
+                "Classical SVM and QSVM have the same correct/wrong pattern on the "
+                "final hold-out set, although some predicted labels differ."
+            )
 
     summary_path = layout.metadata / "paired_model_comparison.json"
     save_json(summary, summary_path)
@@ -3143,6 +3248,7 @@ def save_reproducibility_artifacts(
             "output_dir": str(config.output_dir),
             "test_size": config.test_size,
             "validation_size": config.validation_size,
+            "random_state": config.random_state,
             "scale_features": config.scale_features,
             "quantum_features": config.quantum_features,
             "optuna_trials": config.optuna_trials,
@@ -3215,9 +3321,47 @@ def save_comparison_artifacts(
         "This file compares the final SVM and QSVM outcomes, with attention to FP and FN behaviour.",
         "",
         f"- Classical SVM macro F1: {classical_result['test_metrics']['macro_f1']:.4f}",
+        f"- Classical SVM accuracy fraction: {classical_result['test_metrics'].get('accuracy_fraction', 'not_available')}",
+        f"- Classical SVM accuracy one-sample step: {classical_result['test_metrics'].get('accuracy_single_sample_step')}",
     ]
     if qsvm_result.get("status") == "completed":
-        lines.append(f"- QSVM macro F1: {qsvm_result['test_metrics']['macro_f1']:.4f}")
+        qsvm_metrics = qsvm_result["test_metrics"]
+        classical_metrics = classical_result["test_metrics"]
+        lines.extend(
+            [
+                f"- QSVM macro F1: {qsvm_metrics['macro_f1']:.4f}",
+                f"- QSVM accuracy fraction: {qsvm_metrics.get('accuracy_fraction', 'not_available')}",
+                f"- QSVM accuracy one-sample step: {qsvm_metrics.get('accuracy_single_sample_step')}",
+            ]
+        )
+        metric_keys = [
+            "accuracy",
+            "balanced_accuracy",
+            "macro_precision",
+            "macro_recall",
+            "macro_f1",
+            "weighted_f1",
+        ]
+        tied_metrics = [
+            key
+            for key in metric_keys
+            if math.isclose(
+                float(classical_metrics[key]),
+                float(qsvm_metrics[key]),
+                rel_tol=0.0,
+                abs_tol=1e-12,
+            )
+        ]
+        if tied_metrics:
+            lines.extend(
+                [
+                    "",
+                    "Exact aggregate metric ties detected:",
+                    *[f"- {key}" for key in tied_metrics],
+                    "",
+                    "Use `paired_final_test_predictions.csv` and `paired_model_comparison.json` to determine whether the models made identical predictions or only tied after aggregation.",
+                ]
+            )
     else:
         lines.append(f"- QSVM status: {qsvm_result.get('status')}")
     comparison_md_path = layout.reports / "model_comparison_error_analysis.md"
@@ -3714,6 +3858,9 @@ def build_report_markdown(
         qsvm_metrics = qsvm_result["test_metrics"]
         lines.extend(
             [
+                f"- Classical SVM accuracy fraction: {classical_metrics.get('accuracy_fraction')}",
+                f"- QSVM accuracy fraction: {qsvm_metrics.get('accuracy_fraction')}",
+                f"- Final-test accuracy one-sample step: {qsvm_metrics.get('accuracy_single_sample_step')}",
                 f"- Classical SVM accuracy 95% Wilson CI: [{classical_metrics['accuracy_wilson_95_low']:.4f}, {classical_metrics['accuracy_wilson_95_high']:.4f}]",
                 f"- QSVM accuracy 95% Wilson CI: [{qsvm_metrics['accuracy_wilson_95_low']:.4f}, {qsvm_metrics['accuracy_wilson_95_high']:.4f}]",
                 f"- Classical SVM macro F1 bootstrap 95% CI: [{classical_metrics['macro_f1_bootstrap_95_low']:.4f}, {classical_metrics['macro_f1_bootstrap_95_high']:.4f}]",
@@ -3725,6 +3872,8 @@ def build_report_markdown(
             lines.extend(
                 [
                     f"- Paired discordant count: {paired_comparison['discordant_count']}",
+                    f"- Paired prediction disagreement count: {paired_comparison['prediction_disagreement_count']}",
+                    f"- Identical prediction rate: {paired_comparison['identical_prediction_rate']:.4f}",
                     f"- McNemar exact p-value: {paired_comparison['mcnemar_exact_p_value']}",
                 ]
             )
@@ -3800,6 +3949,7 @@ def run_experiment(config: ExperimentConfig) -> dict[str, Any]:
     logger = setup_logger(layout.logs / "experiment.log")
     artifact_paths: dict[str, str] = {}
     register_artifact(artifact_paths, "experiment_log", layout.logs / "experiment.log")
+    save_run_status(layout, artifact_paths, config, status="running")
     warnings_list: list[str] = []
     failures_list: list[str] = []
 
@@ -3967,6 +4117,17 @@ def run_experiment(config: ExperimentConfig) -> dict[str, Any]:
     }
     save_json(final_report_payload, report_json_path)
     register_artifact(artifact_paths, "experiment_report_json", report_json_path)
+    save_run_status(
+        layout,
+        artifact_paths,
+        config,
+        status="completed",
+        extra={
+            "report_json_path": str(report_json_path),
+            "warnings": warnings_list,
+            "failures": failures_list,
+        },
+    )
 
     logger.info("Experiment completed successfully.")
     return {
