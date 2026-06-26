@@ -1761,9 +1761,12 @@ def apply_pennylane_zz_terms(
     values: np.ndarray,
     feature_count: int,
     entanglement: str | None,
+    inverse: bool = False,
 ) -> None:
     for left, right in pennylane_entanglement_pairs(feature_count, entanglement):
         angle = (np.pi - values[left]) * (np.pi - values[right])
+        if inverse:
+            angle = -angle
         qml.IsingZZ(angle, wires=[left, right])
 
 
@@ -1799,6 +1802,42 @@ def apply_pennylane_feature_map(
             raise ValueError(f"Unsupported PennyLane feature map: {feature_map_type}")
 
 
+def apply_pennylane_inverse_feature_map(
+    qml: Any,
+    values: np.ndarray,
+    feature_count: int,
+    params: dict[str, Any],
+) -> None:
+    feature_map_type = params["feature_map_type"]
+    reps = int(params["reps"])
+    entanglement = params.get("entanglement")
+    paulis = params.get("paulis") or ["Z"]
+    wires = list(range(feature_count))
+
+    for _ in range(reps):
+        if feature_map_type == "ZFeatureMap":
+            qml.AngleEmbedding(-values, wires=wires, rotation="Z")
+        elif feature_map_type == "ZZFeatureMap":
+            apply_pennylane_zz_terms(
+                qml, values, feature_count, entanglement, inverse=True
+            )
+            qml.AngleEmbedding(-values, wires=wires, rotation="Z")
+        elif feature_map_type == "PauliFeatureMap":
+            for pauli in reversed(paulis):
+                if pauli == "ZZ":
+                    apply_pennylane_zz_terms(
+                        qml, values, feature_count, entanglement, inverse=True
+                    )
+                elif pauli in {"X", "Y", "Z"}:
+                    qml.AngleEmbedding(-values, wires=wires, rotation=pauli)
+                else:
+                    raise ValueError(
+                        f"Unsupported PauliFeatureMap term for PennyLane backend: {pauli}"
+                    )
+        else:
+            raise ValueError(f"Unsupported PennyLane feature map: {feature_map_type}")
+
+
 def build_pennylane_kernel_function(
     qml: Any,
     feature_count: int,
@@ -1815,7 +1854,9 @@ def build_pennylane_kernel_function(
     @qml.qnode(device, diff_method=diff_method)
     def kernel_circuit(x_left: np.ndarray, x_right: np.ndarray) -> np.ndarray:
         feature_map(x_left)
-        qml.adjoint(feature_map)(x_right)
+        apply_pennylane_inverse_feature_map(
+            qml, x_right, feature_count, canonical_params
+        )
         return qml.probs(wires=list(range(feature_count)))
 
     def kernel(x_left: np.ndarray, x_right: np.ndarray) -> float:
