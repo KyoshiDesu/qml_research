@@ -9,13 +9,19 @@ psutil
 openpyxl
 joblib
 ucimlrepo
+pennylane
+pennylane-lightning-gpu
+cuquantum-cu12
+cuquantum-python-cu12
+custatevec-cu12
 qiskit
 qiskit-aer
 qiskit-machine-learning
 pynvml
 
 # Optional dependency notes:
-# - qiskit, qiskit-aer, and qiskit-machine-learning are required for the QSVM path.
+# - pennylane-lightning-gpu and NVIDIA cuQuantum CUDA 12 wheels are required for the GPU QSVM path.
+# - qiskit, qiskit-aer, and qiskit-machine-learning are retained for the optional legacy QSVM path.
 # - ucimlrepo is required for the built-in heart_disease dataset.
 # - pynvml is only required for NVIDIA GPU monitoring.
 # - statsmodels is only required for ANOVA analysis.

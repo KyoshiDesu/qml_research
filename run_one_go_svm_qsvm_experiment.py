@@ -3,15 +3,18 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import math
+import os
 import platform
 import random
 import socket
 import subprocess
 import sys
+import tempfile
 import threading
 import traceback
 from contextlib import contextmanager
-from dataclasses import dataclass, fields
+from dataclasses import asdict, dataclass, fields
 from datetime import datetime, timezone
 from importlib import metadata as importlib_metadata
 from pathlib import Path
@@ -19,6 +22,11 @@ from time import perf_counter
 from typing import Any, Callable
 
 import joblib
+from joblib import parallel_backend
+
+os.environ.setdefault(
+    "MPLCONFIGDIR", str(Path(tempfile.gettempdir()) / "qml_research_matplotlib")
+)
 import matplotlib
 
 matplotlib.use("Agg")
@@ -41,7 +49,6 @@ from sklearn.metrics import (
 )
 from sklearn.model_selection import (
     GridSearchCV,
-    ParameterGrid,
     StratifiedKFold,
     train_test_split,
 )
@@ -66,6 +73,11 @@ OPTIONAL_PACKAGES = [
     "openpyxl",
     "joblib",
     "ucimlrepo",
+    "pennylane",
+    "pennylane-lightning-gpu",
+    "cuquantum-cu12",
+    "cuquantum-python-cu12",
+    "custatevec-cu12",
     "qiskit",
     "qiskit-aer",
     "qiskit-machine-learning",
@@ -104,6 +116,11 @@ class ExperimentConfig:
     positive_label: str | None
     max_qsvm_samples: int | None
     decision_boundary_resolution: int
+    quantum_backend: str
+    pennylane_device: str
+    pennylane_diff_method: str
+    quantum_kernel_batch_size: int
+    classical_n_jobs: int
 
     def validate(self) -> None:
         if self.data_path is None and self.dataset_name is None:
@@ -136,6 +153,18 @@ class ExperimentConfig:
             raise ValueError("max_qsvm_samples must be greater than 1 when provided.")
         if self.decision_boundary_resolution <= 10:
             raise ValueError("decision_boundary_resolution must be greater than 10.")
+        if self.quantum_backend not in {"pennylane_gpu", "qiskit"}:
+            raise ValueError("quantum_backend must be either 'pennylane_gpu' or 'qiskit'.")
+        if not self.pennylane_device:
+            raise ValueError("pennylane_device must be non-empty.")
+        if self.pennylane_diff_method != "adjoint":
+            raise ValueError(
+                "pennylane_diff_method must be 'adjoint' so QNode differentiation stays on GPU."
+            )
+        if self.quantum_kernel_batch_size <= 0:
+            raise ValueError("quantum_kernel_batch_size must be greater than 0.")
+        if self.classical_n_jobs == 0:
+            raise ValueError("classical_n_jobs cannot be 0.")
 
 
 @dataclass(slots=True)
@@ -185,6 +214,21 @@ class QiskitDependencies:
     z_feature_map_fn: Any
     zz_feature_map_fn: Any
     pauli_feature_map_fn: Any
+
+
+KernelFunction = Callable[[np.ndarray, np.ndarray], float]
+
+
+@dataclass(slots=True)
+class PennyLaneBackendMetadata:
+    device_name: str
+    diff_method: str
+    pennylane_version: str
+    lightning_gpu_version: str
+    cuquantum_version: str
+    cuquantum_python_version: str
+    custatevec_version: str
+    smoke_test_probability_zero: float
 
 
 class GPUMonitor:
@@ -447,6 +491,15 @@ def parse_args() -> ExperimentConfig:
     parser.add_argument("--positive_label", default=None)
     parser.add_argument("--max_qsvm_samples", type=int, default=None)
     parser.add_argument("--decision_boundary_resolution", type=int, default=100)
+    parser.add_argument(
+        "--quantum_backend",
+        choices=["pennylane_gpu", "qiskit"],
+        default="pennylane_gpu",
+    )
+    parser.add_argument("--pennylane_device", default="lightning.gpu")
+    parser.add_argument("--pennylane_diff_method", default="adjoint")
+    parser.add_argument("--quantum_kernel_batch_size", type=int, default=512)
+    parser.add_argument("--classical_n_jobs", type=int, default=-1)
     args = parser.parse_args()
 
     config = ExperimentConfig(
@@ -468,6 +521,11 @@ def parse_args() -> ExperimentConfig:
         positive_label=args.positive_label,
         max_qsvm_samples=args.max_qsvm_samples,
         decision_boundary_resolution=args.decision_boundary_resolution,
+        quantum_backend=args.quantum_backend,
+        pennylane_device=args.pennylane_device,
+        pennylane_diff_method=args.pennylane_diff_method,
+        quantum_kernel_batch_size=args.quantum_kernel_batch_size,
+        classical_n_jobs=args.classical_n_jobs,
     )
     try:
         config.validate()
@@ -500,7 +558,7 @@ def setup_logger(log_file: Path) -> logging.Logger:
 
     formatter = logging.Formatter("%(asctime)s | %(levelname)s | %(message)s")
 
-    file_handler = logging.FileHandler(log_file, encoding="utf-8")
+    file_handler = logging.FileHandler(log_file, mode="w", encoding="utf-8")
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
 
@@ -570,6 +628,56 @@ def load_qiskit_dependencies() -> QiskitDependencies:
         zz_feature_map_fn=zz_feature_map,
         pauli_feature_map_fn=pauli_feature_map,
     )
+
+
+def package_version_or_missing(package_name: str) -> str:
+    try:
+        return importlib_metadata.version(package_name)
+    except importlib_metadata.PackageNotFoundError:
+        return "not_installed"
+
+
+def verify_pennylane_gpu_backend(
+    device_name: str,
+    diff_method: str,
+    logger: logging.Logger,
+) -> tuple[Any, PennyLaneBackendMetadata]:
+    import pennylane as qml
+
+    try:
+        device = qml.device(device_name, wires=1)
+
+        @qml.qnode(device, diff_method=diff_method)
+        def smoke_circuit(value: float) -> np.ndarray:
+            qml.RX(value, wires=0)
+            return qml.probs(wires=[0])
+
+        smoke_result = np.asarray(smoke_circuit(0.123), dtype=np.float64)
+    except Exception as exc:
+        raise RuntimeError(
+            "PennyLane GPU backend is unavailable. Install requirements.txt with "
+            "pennylane-lightning-gpu and NVIDIA cuQuantum CUDA 12 wheels, then run "
+            f"with --pennylane_device {device_name!r}. Original error: {exc}"
+        ) from exc
+
+    metadata = PennyLaneBackendMetadata(
+        device_name=device_name,
+        diff_method=diff_method,
+        pennylane_version=package_version_or_missing("pennylane"),
+        lightning_gpu_version=package_version_or_missing("pennylane-lightning-gpu"),
+        cuquantum_version=package_version_or_missing("cuquantum-cu12"),
+        cuquantum_python_version=package_version_or_missing("cuquantum-python-cu12"),
+        custatevec_version=package_version_or_missing("custatevec-cu12"),
+        smoke_test_probability_zero=float(smoke_result[0]),
+    )
+    logger.info(
+        "Verified PennyLane backend: device=%s diff_method=%s pennylane=%s lightning_gpu=%s",
+        metadata.device_name,
+        metadata.diff_method,
+        metadata.pennylane_version,
+        metadata.lightning_gpu_version,
+    )
+    return qml, metadata
 
 
 def load_optional_optuna() -> Any:
@@ -966,6 +1074,21 @@ def classical_param_grid() -> list[dict[str, Any]]:
     ]
 
 
+def classical_pipeline_param_grid() -> list[dict[str, Any]]:
+    return [
+        {f"svc__{key}": value for key, value in params.items()}
+        for params in classical_param_grid()
+    ]
+
+
+def unprefix_svc_params(params: dict[str, Any]) -> dict[str, Any]:
+    return {
+        key.removeprefix("svc__"): value
+        for key, value in params.items()
+        if key.startswith("svc__")
+    }
+
+
 def build_svc_from_params(params: dict[str, Any]) -> SVC:
     safe_params = dict(params)
     if safe_params.get("kernel") == "linear":
@@ -1001,6 +1124,72 @@ def calculate_metrics(y_true: np.ndarray, y_pred: np.ndarray) -> dict[str, float
         "weighted_recall": float(weighted_recall),
         "weighted_f1": float(weighted_f1),
     }
+
+
+def wilson_score_interval(
+    success_count: int,
+    sample_count: int,
+    z_score: float = 1.959963984540054,
+) -> tuple[float | None, float | None]:
+    if sample_count <= 0:
+        return None, None
+    proportion = success_count / sample_count
+    denominator = 1.0 + (z_score**2 / sample_count)
+    center = (proportion + (z_score**2 / (2 * sample_count))) / denominator
+    half_width = (
+        z_score
+        * math.sqrt(
+            (proportion * (1.0 - proportion) / sample_count)
+            + (z_score**2 / (4 * sample_count**2))
+        )
+        / denominator
+    )
+    return max(0.0, center - half_width), min(1.0, center + half_width)
+
+
+def bootstrap_macro_f1_interval(
+    y_true: np.ndarray,
+    y_pred: np.ndarray,
+    random_state: int,
+    resample_count: int = 1000,
+) -> tuple[float | None, float | None]:
+    if len(y_true) == 0:
+        return None, None
+    rng = np.random.default_rng(random_state)
+    labels = np.unique(y_true)
+    scores = np.empty(resample_count, dtype=np.float64)
+    for index in range(resample_count):
+        sampled_indices = rng.integers(0, len(y_true), size=len(y_true))
+        scores[index] = f1_score(
+            y_true[sampled_indices],
+            y_pred[sampled_indices],
+            labels=labels,
+            average="macro",
+            zero_division=0,
+        )
+    return float(np.percentile(scores, 2.5)), float(np.percentile(scores, 97.5))
+
+
+def add_final_metric_uncertainty(
+    metrics_payload: dict[str, Any],
+    y_true: np.ndarray,
+    y_pred: np.ndarray,
+    random_state: int,
+) -> None:
+    sample_count = int(len(y_true))
+    correct_count = int(np.sum(y_true == y_pred))
+    accuracy_low, accuracy_high = wilson_score_interval(correct_count, sample_count)
+    macro_low, macro_high = bootstrap_macro_f1_interval(y_true, y_pred, random_state)
+    metrics_payload.update(
+        {
+            "test_sample_count": sample_count,
+            "accuracy_correct_count": correct_count,
+            "accuracy_wilson_95_low": accuracy_low,
+            "accuracy_wilson_95_high": accuracy_high,
+            "macro_f1_bootstrap_95_low": macro_low,
+            "macro_f1_bootstrap_95_high": macro_high,
+        }
+    )
 
 
 def classification_report_frame(
@@ -1122,6 +1311,137 @@ def save_model_artifacts(
     register_artifact(artifact_paths, f"{prefix}_error_analysis", error_path)
 
 
+def build_prediction_frame(
+    row_indices: list[int],
+    y_true: np.ndarray,
+    y_pred: np.ndarray,
+    label_encoder: LabelEncoder,
+) -> pd.DataFrame:
+    y_true_int = np.asarray(y_true, dtype=int)
+    y_pred_int = np.asarray(y_pred, dtype=int)
+    return pd.DataFrame(
+        {
+            "split": "test",
+            "row_index": [int(index) for index in row_indices],
+            "true_encoded": y_true_int,
+            "predicted_encoded": y_pred_int,
+            "true_label": label_encoder.inverse_transform(y_true_int),
+            "predicted_label": label_encoder.inverse_transform(y_pred_int),
+            "correct": y_true_int == y_pred_int,
+        }
+    )
+
+
+def save_prediction_artifact(
+    prefix: str,
+    row_indices: list[int],
+    y_true: np.ndarray,
+    y_pred: np.ndarray,
+    label_encoder: LabelEncoder,
+    layout: OutputLayout,
+    artifact_paths: dict[str, str],
+) -> pd.DataFrame:
+    frame = build_prediction_frame(row_indices, y_true, y_pred, label_encoder)
+    predictions_path = layout.tables / f"{prefix}_final_test_predictions.csv"
+    frame.to_csv(predictions_path, index=False)
+    register_artifact(
+        artifact_paths, f"{prefix}_final_test_predictions", predictions_path
+    )
+    return frame
+
+
+def _series_as_bool(series: pd.Series) -> pd.Series:
+    if series.dtype == bool:
+        return series
+    return series.astype(str).str.lower().isin({"1", "true", "yes"})
+
+
+def save_paired_model_comparison(
+    layout: OutputLayout,
+    artifact_paths: dict[str, str],
+    warnings_list: list[str],
+) -> dict[str, Any]:
+    svm_path = artifact_paths.get("svm_final_test_predictions")
+    qsvm_path = artifact_paths.get("qsvm_final_test_predictions")
+    if not svm_path or not qsvm_path:
+        summary = {"status": "skipped_missing_prediction_artifacts"}
+        summary_path = layout.metadata / "paired_model_comparison.json"
+        save_json(summary, summary_path)
+        register_artifact(artifact_paths, "paired_model_comparison", summary_path)
+        return summary
+
+    svm_frame = pd.read_csv(svm_path)
+    qsvm_frame = pd.read_csv(qsvm_path)
+    paired = svm_frame.merge(
+        qsvm_frame,
+        on="row_index",
+        suffixes=("_svm", "_qsvm"),
+        how="inner",
+    ).sort_values("row_index")
+
+    paired_path = layout.tables / "paired_final_test_predictions.csv"
+    paired.to_csv(paired_path, index=False)
+    register_artifact(
+        artifact_paths, "paired_final_test_predictions", paired_path
+    )
+
+    if paired.empty:
+        summary = {"status": "skipped_no_overlapping_predictions"}
+    else:
+        true_label_mismatch = int(
+            (paired["true_label_svm"] != paired["true_label_qsvm"]).sum()
+        )
+        if true_label_mismatch:
+            warnings_list.append(
+                "Paired comparison found mismatched true labels after merging predictions."
+            )
+        svm_correct = _series_as_bool(paired["correct_svm"])
+        qsvm_correct = _series_as_bool(paired["correct_qsvm"])
+        svm_only_correct = int((svm_correct & ~qsvm_correct).sum())
+        qsvm_only_correct = int((~svm_correct & qsvm_correct).sum())
+        both_correct = int((svm_correct & qsvm_correct).sum())
+        both_wrong = int((~svm_correct & ~qsvm_correct).sum())
+        discordant_count = svm_only_correct + qsvm_only_correct
+        p_value = None
+        p_value_method = "not_available"
+        if discordant_count == 0:
+            p_value = 1.0
+            p_value_method = "exact_binomial_mcnemar_no_discordant_pairs"
+        else:
+            try:
+                from scipy.stats import binomtest
+
+                p_value = float(
+                    binomtest(
+                        min(svm_only_correct, qsvm_only_correct),
+                        discordant_count,
+                        p=0.5,
+                        alternative="two-sided",
+                    ).pvalue
+                )
+                p_value_method = "exact_binomial_mcnemar"
+            except Exception as exc:
+                warnings_list.append(f"McNemar exact p-value unavailable: {exc}")
+
+        summary = {
+            "status": "completed",
+            "paired_sample_count": int(len(paired)),
+            "true_label_mismatch_count": true_label_mismatch,
+            "both_correct": both_correct,
+            "svm_only_correct": svm_only_correct,
+            "qsvm_only_correct": qsvm_only_correct,
+            "both_wrong": both_wrong,
+            "discordant_count": discordant_count,
+            "mcnemar_exact_p_value": p_value,
+            "mcnemar_p_value_method": p_value_method,
+        }
+
+    summary_path = layout.metadata / "paired_model_comparison.json"
+    save_json(summary, summary_path)
+    register_artifact(artifact_paths, "paired_model_comparison", summary_path)
+    return summary
+
+
 def run_classical_pipeline(
     config: ExperimentConfig,
     dataset: DatasetBundle,
@@ -1138,40 +1458,70 @@ def run_classical_pipeline(
     scoring = "f1_macro"
 
     with resource_monitor.phase("classical_svm_grid_search"):
+        selection_model = Pipeline(
+            [
+                (
+                    "preprocessor",
+                    build_preprocessor(
+                        dataset.x_train, scale_features=config.scale_features
+                    ),
+                ),
+                ("svc", SVC()),
+            ]
+        )
         grid_search = GridSearchCV(
-            estimator=SVC(),
-            param_grid=classical_param_grid(),
+            estimator=selection_model,
+            param_grid=classical_pipeline_param_grid(),
             scoring=scoring,
             refit=scoring,
             cv=cv,
-            n_jobs=1,
+            n_jobs=config.classical_n_jobs,
             verbose=0,
             return_train_score=True,
         )
-        grid_search.fit(selection_preprocessing.transformed["train"], dataset.y_train)
+        with parallel_backend("threading", n_jobs=config.classical_n_jobs):
+            grid_search.fit(dataset.x_train, dataset.y_train)
 
     grid_results_path = layout.tables / "svm_grid_results.csv"
     pd.DataFrame(grid_search.cv_results_).to_csv(grid_results_path, index=False)
     register_artifact(artifact_paths, "svm_grid_results", grid_results_path)
 
-    best_params = grid_search.best_params_
+    best_params = unprefix_svc_params(grid_search.best_params_)
     best_params_path = layout.metadata / "svm_best_params.json"
     save_json({key: value for key, value in best_params.items()}, best_params_path)
     register_artifact(artifact_paths, "svm_best_params", best_params_path)
 
     with resource_monitor.phase("classical_svm_final_training"):
-        final_model = build_svc_from_params(best_params)
-        final_model.fit(
-            final_preprocessing.transformed["train_validation"],
-            dataset.target_encoded[dataset.train_indices + dataset.validation_indices],
+        train_validation_features = pd.concat(
+            [dataset.x_train, dataset.x_validation], axis=0
+        ).reset_index(drop=True)
+        train_validation_targets = np.concatenate(
+            [dataset.y_train, dataset.y_validation]
         )
+        final_model = Pipeline(
+            [
+                (
+                    "preprocessor",
+                    build_preprocessor(
+                        train_validation_features,
+                        scale_features=config.scale_features,
+                    ),
+                ),
+                ("svc", build_svc_from_params(best_params)),
+            ]
+        )
+        final_model.fit(train_validation_features, train_validation_targets)
 
     with resource_monitor.phase("final_evaluation"):
-        classical_predictions = final_model.predict(
-            final_preprocessing.transformed["test"]
-        )
+        classical_predictions = final_model.predict(dataset.x_test)
 
     metrics_payload = calculate_metrics(dataset.y_test, classical_predictions)
+    add_final_metric_uncertainty(
+        metrics_payload,
+        dataset.y_test,
+        classical_predictions,
+        random_state=config.random_state + 10,
+    )
     report_frame = classification_report_frame(
         dataset.y_test, classical_predictions, dataset.label_encoder
     )
@@ -1193,11 +1543,20 @@ def run_classical_pipeline(
         layout,
         artifact_paths,
     )
+    save_prediction_artifact(
+        "svm",
+        dataset.test_indices,
+        dataset.y_test,
+        classical_predictions,
+        dataset.label_encoder,
+        layout,
+        artifact_paths,
+    )
 
     model_path = layout.models / "svm_final_model.joblib"
     joblib.dump(
         {
-            "preprocessor": final_preprocessing.preprocessor,
+            "preprocessor": final_model.named_steps["preprocessor"],
             "model": final_model,
             "label_encoder": dataset.label_encoder,
             "best_params": best_params,
@@ -1207,7 +1566,7 @@ def run_classical_pipeline(
     register_artifact(artifact_paths, "svm_final_model", model_path)
 
     validation_predictions = grid_search.best_estimator_.predict(
-        selection_preprocessing.transformed["validation"]
+        dataset.x_validation
     )
     validation_metrics = calculate_metrics(dataset.y_validation, validation_predictions)
     logger.info("Classical SVM best params: %s", best_params)
@@ -1276,12 +1635,87 @@ def sanitize_quantum_params(feature_count: int, params: dict[str, Any]) -> dict[
     return safe_params
 
 
+def canonicalize_quantum_params(
+    feature_count: int, params: dict[str, Any]
+) -> dict[str, Any]:
+    safe_params = sanitize_quantum_params(feature_count, params)
+    feature_map_type = safe_params["feature_map_type"]
+    canonical_params = {
+        "feature_map_type": feature_map_type,
+        "reps": int(safe_params["reps"]),
+        "entanglement": safe_params.get("entanglement"),
+        "paulis": None,
+    }
+    if feature_map_type == "ZFeatureMap":
+        canonical_params["entanglement"] = None
+        canonical_params["paulis"] = None
+    elif feature_map_type == "ZZFeatureMap":
+        canonical_params["paulis"] = None
+    elif feature_map_type == "PauliFeatureMap":
+        canonical_params["paulis"] = safe_params.get("paulis") or ["Z"]
+    return canonical_params
+
+
+def serialize_optional_json(value: Any) -> str:
+    if value is None:
+        return ""
+    return json.dumps(value)
+
+
+def parse_optional_json(value: Any) -> Any:
+    if value is None:
+        return None
+    if isinstance(value, (list, dict)):
+        return value
+    if pd.isna(value):
+        return None
+    text = str(value)
+    if not text:
+        return None
+    return json.loads(text)
+
+
+def serialize_optional_string(value: Any) -> str:
+    if value is None:
+        return ""
+    if pd.isna(value):
+        return ""
+    return str(value)
+
+
+def parse_optional_string(value: Any) -> str | None:
+    if value is None:
+        return None
+    if pd.isna(value):
+        return None
+    text = str(value)
+    return text if text else None
+
+
+def quantum_params_to_record(params: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "feature_map_type": params["feature_map_type"],
+        "reps": int(params["reps"]),
+        "entanglement": serialize_optional_string(params.get("entanglement")),
+        "paulis": serialize_optional_json(params.get("paulis")),
+    }
+
+
+def quantum_params_from_record(row: pd.Series) -> dict[str, Any]:
+    return {
+        "feature_map_type": row["feature_map_type"],
+        "reps": int(row["reps"]),
+        "entanglement": parse_optional_string(row.get("entanglement")),
+        "paulis": parse_optional_json(row.get("paulis")),
+    }
+
+
 def make_qsvc_model(
     dependencies: QiskitDependencies,
     feature_count: int,
     params: dict[str, Any],
 ) -> Any:
-    safe_params = sanitize_quantum_params(feature_count, params)
+    safe_params = canonicalize_quantum_params(feature_count, params)
     feature_map = build_feature_map(
         dependencies=dependencies,
         feature_map_type=safe_params["feature_map_type"],
@@ -1292,6 +1726,216 @@ def make_qsvc_model(
     )
     kernel = dependencies.fidelity_kernel_cls(feature_map=feature_map)
     return dependencies.qsvc_cls(quantum_kernel=kernel)
+
+
+def pennylane_entanglement_pairs(
+    feature_count: int,
+    entanglement: str | None,
+) -> list[tuple[int, int]]:
+    if feature_count <= 1 or entanglement is None:
+        return []
+    if entanglement == "linear":
+        return [(index, index + 1) for index in range(feature_count - 1)]
+    if entanglement == "circular":
+        pairs = [(index, index + 1) for index in range(feature_count - 1)]
+        pairs.append((feature_count - 1, 0))
+        return pairs
+    if entanglement == "full":
+        return [
+            (left, right)
+            for left in range(feature_count)
+            for right in range(left + 1, feature_count)
+        ]
+    raise ValueError(f"Unsupported PennyLane entanglement pattern: {entanglement}")
+
+
+def apply_pennylane_zz_terms(
+    qml: Any,
+    values: np.ndarray,
+    feature_count: int,
+    entanglement: str | None,
+) -> None:
+    for left, right in pennylane_entanglement_pairs(feature_count, entanglement):
+        angle = (np.pi - values[left]) * (np.pi - values[right])
+        qml.IsingZZ(angle, wires=[left, right])
+
+
+def apply_pennylane_feature_map(
+    qml: Any,
+    values: np.ndarray,
+    feature_count: int,
+    params: dict[str, Any],
+) -> None:
+    feature_map_type = params["feature_map_type"]
+    reps = int(params["reps"])
+    entanglement = params.get("entanglement")
+    paulis = params.get("paulis") or ["Z"]
+    wires = list(range(feature_count))
+
+    for _ in range(reps):
+        if feature_map_type == "ZFeatureMap":
+            qml.AngleEmbedding(values, wires=wires, rotation="Z")
+        elif feature_map_type == "ZZFeatureMap":
+            qml.AngleEmbedding(values, wires=wires, rotation="Z")
+            apply_pennylane_zz_terms(qml, values, feature_count, entanglement)
+        elif feature_map_type == "PauliFeatureMap":
+            for pauli in paulis:
+                if pauli in {"X", "Y", "Z"}:
+                    qml.AngleEmbedding(values, wires=wires, rotation=pauli)
+                elif pauli == "ZZ":
+                    apply_pennylane_zz_terms(qml, values, feature_count, entanglement)
+                else:
+                    raise ValueError(
+                        f"Unsupported PauliFeatureMap term for PennyLane backend: {pauli}"
+                    )
+        else:
+            raise ValueError(f"Unsupported PennyLane feature map: {feature_map_type}")
+
+
+def build_pennylane_kernel_function(
+    qml: Any,
+    feature_count: int,
+    params: dict[str, Any],
+    device_name: str,
+    diff_method: str,
+) -> KernelFunction:
+    canonical_params = canonicalize_quantum_params(feature_count, params)
+    device = qml.device(device_name, wires=feature_count)
+
+    def feature_map(values: np.ndarray) -> None:
+        apply_pennylane_feature_map(qml, values, feature_count, canonical_params)
+
+    @qml.qnode(device, diff_method=diff_method)
+    def kernel_circuit(x_left: np.ndarray, x_right: np.ndarray) -> np.ndarray:
+        feature_map(x_left)
+        qml.adjoint(feature_map)(x_right)
+        return qml.probs(wires=list(range(feature_count)))
+
+    def kernel(x_left: np.ndarray, x_right: np.ndarray) -> float:
+        return float(np.asarray(kernel_circuit(x_left, x_right))[0])
+
+    return kernel
+
+
+def compute_pennylane_kernel_matrix(
+    left: np.ndarray,
+    right: np.ndarray,
+    kernel: KernelFunction,
+    symmetric: bool,
+    batch_size: int,
+) -> np.ndarray:
+    matrix = np.zeros((len(left), len(right)), dtype=np.float64)
+    effective_batch_size = max(1, int(batch_size))
+    if symmetric:
+        pending_pairs: list[tuple[int, int]] = []
+        for row_index in range(len(left)):
+            for column_index in range(row_index, len(right)):
+                pending_pairs.append((row_index, column_index))
+                if len(pending_pairs) < effective_batch_size:
+                    continue
+                for pending_row, pending_column in pending_pairs:
+                    value = kernel(left[pending_row], right[pending_column])
+                    matrix[pending_row, pending_column] = value
+                    matrix[pending_column, pending_row] = value
+                pending_pairs.clear()
+        for pending_row, pending_column in pending_pairs:
+            value = kernel(left[pending_row], right[pending_column])
+            matrix[pending_row, pending_column] = value
+            matrix[pending_column, pending_row] = value
+        return matrix
+
+    pending_pairs = []
+    for row_index in range(len(left)):
+        for column_index in range(len(right)):
+            pending_pairs.append((row_index, column_index))
+            if len(pending_pairs) < effective_batch_size:
+                continue
+            for pending_row, pending_column in pending_pairs:
+                matrix[pending_row, pending_column] = kernel(
+                    left[pending_row], right[pending_column]
+                )
+            pending_pairs.clear()
+    for pending_row, pending_column in pending_pairs:
+        matrix[pending_row, pending_column] = kernel(
+            left[pending_row], right[pending_column]
+        )
+    return matrix
+
+class PennyLaneKernelSVC:
+    def __init__(
+        self,
+        qml_module: Any,
+        feature_count: int,
+        params: dict[str, Any],
+        device_name: str,
+        diff_method: str,
+        kernel_batch_size: int,
+        svc_cache_size_mb: float = 4096.0,
+    ) -> None:
+        self.qml_module = qml_module
+        self.feature_count = int(feature_count)
+        self.params = canonicalize_quantum_params(self.feature_count, params)
+        self.device_name = device_name
+        self.diff_method = diff_method
+        self.kernel_batch_size = int(kernel_batch_size)
+        self.svc_cache_size_mb = float(svc_cache_size_mb)
+        self.x_train_: np.ndarray | None = None
+        self.model_: SVC | None = None
+        self._kernel_function: KernelFunction | None = None
+
+    def _kernel(self) -> KernelFunction:
+        if self.qml_module is None:
+            import pennylane as qml
+
+            self.qml_module = qml
+        if self._kernel_function is None:
+            self._kernel_function = build_pennylane_kernel_function(
+                qml=self.qml_module,
+                feature_count=self.feature_count,
+                params=self.params,
+                device_name=self.device_name,
+                diff_method=self.diff_method,
+            )
+        return self._kernel_function
+
+    def fit(self, x_train: np.ndarray, y_train: np.ndarray) -> "PennyLaneKernelSVC":
+        self.x_train_ = np.asarray(x_train, dtype=np.float64)
+        train_kernel = compute_pennylane_kernel_matrix(
+            self.x_train_,
+            self.x_train_,
+            self._kernel(),
+            symmetric=True,
+            batch_size=self.kernel_batch_size,
+        )
+        self.model_ = SVC(
+            kernel="precomputed",
+            C=float(self.params.get("C", 1.0)),
+            cache_size=self.svc_cache_size_mb,
+        )
+        self.model_.fit(train_kernel, y_train)
+        return self
+
+    def predict(self, x_predict: np.ndarray) -> np.ndarray:
+        if self.x_train_ is None or self.model_ is None:
+            raise RuntimeError("PennyLaneKernelSVC must be fitted before prediction.")
+        predict_kernel = compute_pennylane_kernel_matrix(
+            np.asarray(x_predict, dtype=np.float64),
+            self.x_train_,
+            self._kernel(),
+            symmetric=False,
+            batch_size=self.kernel_batch_size,
+        )
+        return self.model_.predict(predict_kernel)
+
+    def __getstate__(self) -> dict[str, Any]:
+        state = self.__dict__.copy()
+        state["qml_module"] = None
+        state["_kernel_function"] = None
+        return state
+
+    def __setstate__(self, state: dict[str, Any]) -> None:
+        self.__dict__.update(state)
+        self._kernel_function = None
 
 
 def maybe_limit_qsvm_samples(
@@ -1313,7 +1957,8 @@ def maybe_limit_qsvm_samples(
 
 
 def run_qsvm_trial(
-    dependencies: QiskitDependencies,
+    dependencies: QiskitDependencies | None,
+    qml_module: Any | None,
     feature_count: int,
     params: dict[str, Any],
     x_train: np.ndarray,
@@ -1321,8 +1966,24 @@ def run_qsvm_trial(
     x_validation: np.ndarray,
     y_validation: np.ndarray,
     resource_monitor: ResourceMonitor,
+    config: ExperimentConfig,
 ) -> dict[str, Any]:
-    trial_model = make_qsvc_model(dependencies, feature_count, params)
+    if config.quantum_backend == "pennylane_gpu":
+        if qml_module is None:
+            raise RuntimeError("PennyLane module was not loaded for GPU QSVM backend.")
+        trial_model = PennyLaneKernelSVC(
+            qml_module=qml_module,
+            feature_count=feature_count,
+            params=params,
+            device_name=config.pennylane_device,
+            diff_method=config.pennylane_diff_method,
+            kernel_batch_size=config.quantum_kernel_batch_size,
+        )
+    else:
+        if dependencies is None:
+            raise RuntimeError("Qiskit dependencies were not loaded for QSVM backend.")
+        trial_model = make_qsvc_model(dependencies, feature_count, params)
+
     fit_start = perf_counter()
     _, fit_resources = resource_monitor.measure_callable(
         "qsvm_trial_fit", trial_model.fit, x_train, y_train
@@ -1358,14 +2019,38 @@ def run_qsvm_pipeline(
     warnings_list: list[str],
     failures_list: list[str],
 ) -> dict[str, Any]:
+    dependencies: QiskitDependencies | None = None
+    qml_module: Any | None = None
+    backend_metadata: dict[str, Any]
     try:
-        dependencies = load_qiskit_dependencies()
         optuna = load_optional_optuna()
+        if config.quantum_backend == "pennylane_gpu":
+            qml_module, metadata = verify_pennylane_gpu_backend(
+                device_name=config.pennylane_device,
+                diff_method=config.pennylane_diff_method,
+                logger=logger,
+            )
+            backend_metadata = {
+                "backend": config.quantum_backend,
+                **asdict(metadata),
+                "kernel_batch_size": config.quantum_kernel_batch_size,
+                "gpu_required": True,
+                "fallback_used": False,
+            }
+        else:
+            dependencies = load_qiskit_dependencies()
+            backend_metadata = {
+                "backend": config.quantum_backend,
+                "gpu_required": False,
+                "fallback_used": False,
+            }
     except Exception as exc:
         message = f"QSVM dependencies missing or broken: {exc}"
         logger.warning(message)
         warnings_list.append(message)
         failures_list.append("failed_dependency_missing")
+        if config.quantum_backend == "pennylane_gpu":
+            raise RuntimeError(message) from exc
         summary = {
             "status": "failed_dependency_missing",
             "error_message": str(exc),
@@ -1374,6 +2059,13 @@ def run_qsvm_pipeline(
         save_json(summary, summary_path)
         register_artifact(artifact_paths, "qsvm_optuna_summary", summary_path)
         return summary
+
+    backend_metadata_path = layout.metadata / "quantum_backend_metadata.json"
+    save_json(backend_metadata, backend_metadata_path)
+    register_artifact(
+        artifact_paths, "quantum_backend_metadata", backend_metadata_path
+    )
+    logger.info("QSVM backend metadata: %s", json.dumps(backend_metadata, sort_keys=True))
 
     x_train_q = selection_preprocessing.quantum_transformed["train"]
     y_train_q = dataset.y_train
@@ -1389,6 +2081,7 @@ def run_qsvm_pipeline(
     sampler = optuna.samplers.TPESampler(seed=config.random_state)
     study = optuna.create_study(direction="maximize", sampler=sampler)
     trial_records: list[dict[str, Any]] = []
+    trial_cache: dict[str, dict[str, Any]] = {}
 
     def objective(trial: Any) -> float:
         feature_map_type = trial.suggest_categorical(
@@ -1411,32 +2104,44 @@ def run_qsvm_pipeline(
             paulis = trial.suggest_categorical("paulis", pauli_options)
         paulis_list = json.loads(paulis) if paulis is not None else None
 
-        params = {
+        suggested_params = {
             "feature_map_type": feature_map_type,
             "reps": reps,
             "entanglement": entanglement,
             "paulis": paulis_list,
         }
+        params = canonicalize_quantum_params(x_train_q.shape[1], suggested_params)
         record = {
             "trial_number": int(trial.number),
-            "feature_map_type": feature_map_type,
-            "reps": int(reps),
-            "entanglement": entanglement,
-            "paulis": paulis or "",
+            "suggested_feature_map_type": feature_map_type,
+            "suggested_reps": int(reps),
+            "suggested_entanglement": entanglement,
+            "suggested_paulis": paulis or "",
+            **quantum_params_to_record(params),
+            "cache_hit": False,
             "status": "completed",
             "error_message": "",
         }
         try:
-            outcome = run_qsvm_trial(
-                dependencies=dependencies,
-                feature_count=x_train_q.shape[1],
-                params=params,
-                x_train=x_train_q,
-                y_train=y_train_q,
-                x_validation=x_validation_q,
-                y_validation=y_validation_q,
-                resource_monitor=resource_monitor,
-            )
+            cache_key = json.dumps(params, sort_keys=True)
+            if cache_key in trial_cache:
+                outcome = trial_cache[cache_key]
+                record["cache_hit"] = True
+                logger.info("QSVM Optuna trial %s reused cached kernel result.", trial.number)
+            else:
+                outcome = run_qsvm_trial(
+                    dependencies=dependencies,
+                    qml_module=qml_module,
+                    feature_count=x_train_q.shape[1],
+                    params=params,
+                    x_train=x_train_q,
+                    y_train=y_train_q,
+                    x_validation=x_validation_q,
+                    y_validation=y_validation_q,
+                    resource_monitor=resource_monitor,
+                    config=config,
+                )
+                trial_cache[cache_key] = outcome
             metrics = outcome["metrics"]
             record.update(
                 {
@@ -1474,6 +2179,9 @@ def run_qsvm_pipeline(
                 }
             )
             trial.set_user_attr("macro_f1", metrics["macro_f1"])
+            trial.set_user_attr(
+                "canonical_params", json.dumps(params, sort_keys=True)
+            )
             trial_records.append(record)
             return float(metrics["macro_f1"])
         except Exception as exc:
@@ -1526,12 +2234,6 @@ def run_qsvm_pipeline(
     optuna_df.to_csv(optuna_trials_path, index=False)
     register_artifact(artifact_paths, "qsvm_optuna_trials", optuna_trials_path)
 
-    best_optuna_params_path = layout.metadata / "qsvm_optuna_best_params.json"
-    save_json(study.best_params, best_optuna_params_path)
-    register_artifact(
-        artifact_paths, "qsvm_optuna_best_params", best_optuna_params_path
-    )
-
     study_path = layout.models / "qsvm_optuna_study.pkl"
     try:
         joblib.dump(study, study_path)
@@ -1548,10 +2250,37 @@ def run_qsvm_pipeline(
         "status": "completed"
         if not successful_trials.empty
         else "failed_no_successful_trials",
-        "best_params": study.best_params if not successful_trials.empty else {},
+        "best_params": quantum_params_from_record(successful_trials.iloc[0])
+        if not successful_trials.empty
+        else {},
+        "raw_study_best_params": study.best_params if not successful_trials.empty else {},
         "successful_trial_count": int(len(successful_trials)),
         "requested_trial_count": int(config.optuna_trials),
+        "unique_effective_trial_count": int(len(trial_cache)),
+        "cached_trial_reuse_count": int(
+            successful_trials["cache_hit"].fillna(False).astype(bool).sum()
+        )
+        if "cache_hit" in successful_trials.columns
+        else 0,
+        "quantum_backend": config.quantum_backend,
+        "pennylane_device": config.pennylane_device
+        if config.quantum_backend == "pennylane_gpu"
+        else None,
+        "pennylane_diff_method": config.pennylane_diff_method
+        if config.quantum_backend == "pennylane_gpu"
+        else None,
     }
+    best_optuna_params_path = layout.metadata / "qsvm_optuna_best_params.json"
+    save_json(
+        {
+            "canonical_best_params": optuna_summary["best_params"],
+            "raw_study_best_params": optuna_summary["raw_study_best_params"],
+        },
+        best_optuna_params_path,
+    )
+    register_artifact(
+        artifact_paths, "qsvm_optuna_best_params", best_optuna_params_path
+    )
     optuna_summary_path = layout.metadata / "qsvm_optuna_summary.json"
     save_json(optuna_summary, optuna_summary_path)
     register_artifact(artifact_paths, "qsvm_optuna_summary", optuna_summary_path)
@@ -1564,33 +2293,35 @@ def run_qsvm_pipeline(
         subset=["feature_map_type", "reps", "entanglement", "paulis"]
     ).head(config.top_k_confirmation)
 
-    confirmation_base_x = final_preprocessing.quantum_transformed["train_validation"]
-    confirmation_base_y = dataset.target_encoded[
-        dataset.train_indices + dataset.validation_indices
-    ]
-    confirmation_base_x, confirmation_base_y = maybe_limit_qsvm_samples(
-        confirmation_base_x,
-        confirmation_base_y,
-        config.max_qsvm_samples,
-        config.random_state + 999,
-    )
+    confirmation_base_features = pd.concat(
+        [dataset.x_train, dataset.x_validation], axis=0
+    ).reset_index(drop=True)
+    confirmation_base_y = np.concatenate([dataset.y_train, dataset.y_validation])
+    if (
+        config.max_qsvm_samples is not None
+        and len(confirmation_base_features) > config.max_qsvm_samples
+    ):
+        limited_indices, _ = train_test_split(
+            np.arange(len(confirmation_base_features)),
+            train_size=config.max_qsvm_samples,
+            stratify=confirmation_base_y,
+            random_state=config.random_state + 999,
+        )
+        confirmation_base_features = confirmation_base_features.iloc[
+            limited_indices
+        ].reset_index(drop=True)
+        confirmation_base_y = confirmation_base_y[limited_indices]
 
     confirmation_records: list[dict[str, Any]] = []
     confirmation_validation_ratio = config.validation_size / (1 - config.test_size)
 
     with resource_monitor.phase("qsvm_confirmation_phase"):
         for rank, (_, row) in enumerate(top_configs.iterrows(), start=1):
-            base_params = {
-                "feature_map_type": row["feature_map_type"],
-                "reps": int(row["reps"]),
-                "entanglement": row["entanglement"],
-                "paulis": json.loads(row["paulis"])
-                if isinstance(row["paulis"], str) and row["paulis"]
-                else None,
-            }
+            base_params = quantum_params_from_record(row)
+            base_record = quantum_params_to_record(base_params)
             for repeat_id in range(config.confirmation_repeats):
                 split_seed = config.random_state + repeat_id + (rank * 100)
-                indices = np.arange(len(confirmation_base_x))
+                indices = np.arange(len(confirmation_base_features))
                 train_indices, val_indices = train_test_split(
                     indices,
                     test_size=confirmation_validation_ratio,
@@ -1598,26 +2329,43 @@ def run_qsvm_pipeline(
                     random_state=split_seed,
                 )
                 try:
+                    split_train_features = confirmation_base_features.iloc[
+                        train_indices
+                    ].reset_index(drop=True)
+                    split_validation_features = confirmation_base_features.iloc[
+                        val_indices
+                    ].reset_index(drop=True)
+                    split_preprocessing = fit_preprocessing_bundle(
+                        fit_features=split_train_features,
+                        fit_targets=confirmation_base_y[train_indices],
+                        dataset_map={
+                            "fit": split_train_features,
+                            "train": split_train_features,
+                            "validation": split_validation_features,
+                        },
+                        config=config,
+                    )
                     outcome = run_qsvm_trial(
                         dependencies=dependencies,
-                        feature_count=confirmation_base_x.shape[1],
+                        qml_module=qml_module,
+                        feature_count=split_preprocessing.quantum_transformed[
+                            "train"
+                        ].shape[1],
                         params=base_params,
-                        x_train=confirmation_base_x[train_indices],
+                        x_train=split_preprocessing.quantum_transformed["train"],
                         y_train=confirmation_base_y[train_indices],
-                        x_validation=confirmation_base_x[val_indices],
+                        x_validation=split_preprocessing.quantum_transformed[
+                            "validation"
+                        ],
                         y_validation=confirmation_base_y[val_indices],
                         resource_monitor=resource_monitor,
+                        config=config,
                     )
                     metrics = outcome["metrics"]
                     confirmation_records.append(
                         {
                             "config_rank": rank,
-                            "feature_map_type": base_params["feature_map_type"],
-                            "reps": base_params["reps"],
-                            "entanglement": base_params["entanglement"],
-                            "paulis": json.dumps(base_params["paulis"])
-                            if base_params["paulis"] is not None
-                            else "",
+                            **base_record,
                             "repeat_id": repeat_id,
                             "accuracy": metrics["accuracy"],
                             "macro_precision": metrics["macro_precision"],
@@ -1668,12 +2416,7 @@ def run_qsvm_pipeline(
                     confirmation_records.append(
                         {
                             "config_rank": rank,
-                            "feature_map_type": base_params["feature_map_type"],
-                            "reps": base_params["reps"],
-                            "entanglement": base_params["entanglement"],
-                            "paulis": json.dumps(base_params["paulis"])
-                            if base_params["paulis"] is not None
-                            else "",
+                            **base_record,
                             "repeat_id": repeat_id,
                             "accuracy": np.nan,
                             "macro_precision": np.nan,
@@ -1732,14 +2475,7 @@ def run_qsvm_pipeline(
         }
 
     best_confirmed = confirmation_summary.iloc[0].to_dict()
-    best_confirmed_params = {
-        "feature_map_type": best_confirmed["feature_map_type"],
-        "reps": int(best_confirmed["reps"]),
-        "entanglement": best_confirmed["entanglement"],
-        "paulis": json.loads(best_confirmed["paulis"])
-        if isinstance(best_confirmed["paulis"], str) and best_confirmed["paulis"]
-        else None,
-    }
+    best_confirmed_params = quantum_params_from_record(pd.Series(best_confirmed))
     best_confirmed_path = layout.metadata / "qsvm_best_confirmed_params.json"
     save_json(best_confirmed_params, best_confirmed_path)
     register_artifact(artifact_paths, "qsvm_best_confirmed_params", best_confirmed_path)
@@ -1756,11 +2492,29 @@ def run_qsvm_pipeline(
                 config.max_qsvm_samples,
                 config.random_state + 1234,
             )
-            final_qsvc = make_qsvc_model(
-                dependencies=dependencies,
-                feature_count=x_train_val_q.shape[1],
-                params=best_confirmed_params,
-            )
+            if config.quantum_backend == "pennylane_gpu":
+                if qml_module is None:
+                    raise RuntimeError(
+                        "PennyLane module was not loaded for GPU QSVM backend."
+                    )
+                final_qsvc = PennyLaneKernelSVC(
+                    qml_module=qml_module,
+                    feature_count=x_train_val_q.shape[1],
+                    params=best_confirmed_params,
+                    device_name=config.pennylane_device,
+                    diff_method=config.pennylane_diff_method,
+                    kernel_batch_size=config.quantum_kernel_batch_size,
+                )
+            else:
+                if dependencies is None:
+                    raise RuntimeError(
+                        "Qiskit dependencies were not loaded for QSVM backend."
+                    )
+                final_qsvc = make_qsvc_model(
+                    dependencies=dependencies,
+                    feature_count=x_train_val_q.shape[1],
+                    params=best_confirmed_params,
+                )
             final_qsvc.fit(x_train_val_q, y_train_val_q)
 
         with resource_monitor.phase("final_evaluation"):
@@ -1780,6 +2534,12 @@ def run_qsvm_pipeline(
         }
 
     metrics_payload = calculate_metrics(dataset.y_test, qsvm_predictions)
+    add_final_metric_uncertainty(
+        metrics_payload,
+        dataset.y_test,
+        qsvm_predictions,
+        random_state=config.random_state + 20,
+    )
     report_frame = classification_report_frame(
         dataset.y_test, qsvm_predictions, dataset.label_encoder
     )
@@ -1798,6 +2558,33 @@ def run_qsvm_pipeline(
         layout,
         artifact_paths,
     )
+    save_prediction_artifact(
+        "qsvm",
+        dataset.test_indices,
+        dataset.y_test,
+        qsvm_predictions,
+        dataset.label_encoder,
+        layout,
+        artifact_paths,
+    )
+
+    qsvm_model_path = layout.models / "qsvm_final_model.joblib"
+    try:
+        joblib.dump(
+            {
+                "preprocessor": final_preprocessing.preprocessor,
+                "quantum_reducer": final_preprocessing.quantum_reducer,
+                "quantum_scaler": final_preprocessing.quantum_scaler,
+                "model": final_qsvc,
+                "label_encoder": dataset.label_encoder,
+                "best_confirmed_params": best_confirmed_params,
+                "quantum_backend_metadata": backend_metadata,
+            },
+            qsvm_model_path,
+        )
+        register_artifact(artifact_paths, "qsvm_final_model", qsvm_model_path)
+    except Exception as exc:
+        warnings_list.append(f"Could not serialize final QSVM model: {exc}")
 
     model_info = {
         "status": "completed",
@@ -1805,6 +2592,7 @@ def run_qsvm_pipeline(
         "quantum_feature_count": int(
             final_preprocessing.quantum_transformed["train_validation"].shape[1]
         ),
+        "quantum_backend_metadata": backend_metadata,
         "max_qsvm_samples": config.max_qsvm_samples,
         "test_metrics": metrics_payload,
     }
@@ -2208,11 +2996,23 @@ def generate_decision_boundary_plots(
 
         if qsvm_result.get("status") == "completed":
             try:
-                dependencies = load_qiskit_dependencies()
                 quantum_scaler = MinMaxScaler(feature_range=(0.0, np.pi))
                 train_val_q2d = quantum_scaler.fit_transform(train_val_2d)
                 params = qsvm_result["best_confirmed_params"]
-                qsvc_model = make_qsvc_model(dependencies, 2, params)
+                if config.quantum_backend == "pennylane_gpu":
+                    import pennylane as qml
+
+                    qsvc_model = PennyLaneKernelSVC(
+                        qml_module=qml,
+                        feature_count=2,
+                        params=params,
+                        device_name=config.pennylane_device,
+                        diff_method=config.pennylane_diff_method,
+                        kernel_batch_size=config.quantum_kernel_batch_size,
+                    )
+                else:
+                    dependencies = load_qiskit_dependencies()
+                    qsvc_model = make_qsvc_model(dependencies, 2, params)
                 qsvc_model.fit(train_val_q2d, train_val_targets)
                 mesh_resolution = min(config.decision_boundary_resolution, 45)
 
@@ -2281,6 +3081,11 @@ def save_reproducibility_artifacts(
             "positive_label": config.positive_label,
             "max_qsvm_samples": config.max_qsvm_samples,
             "decision_boundary_resolution": config.decision_boundary_resolution,
+            "quantum_backend": config.quantum_backend,
+            "pennylane_device": config.pennylane_device,
+            "pennylane_diff_method": config.pennylane_diff_method,
+            "quantum_kernel_batch_size": config.quantum_kernel_batch_size,
+            "classical_n_jobs": config.classical_n_jobs,
         },
         "git_commit": get_git_commit(Path.cwd()),
         "package_versions": versions,
@@ -2390,7 +3195,29 @@ def plot_model_metric_comparison(
     for row_index, (model_name, metrics) in enumerate(rows):
         offset = (row_index - (len(rows) - 1) / 2) * bar_width
         values = [metrics[key] for key in metric_keys]
-        ax.bar(x_positions + offset, values, width=bar_width, label=model_name)
+        yerr_lower: list[float] = []
+        yerr_upper: list[float] = []
+        for key, value in zip(metric_keys, values):
+            if key == "accuracy":
+                low = metrics.get("accuracy_wilson_95_low")
+                high = metrics.get("accuracy_wilson_95_high")
+            elif key == "macro_f1":
+                low = metrics.get("macro_f1_bootstrap_95_low")
+                high = metrics.get("macro_f1_bootstrap_95_high")
+            else:
+                low = None
+                high = None
+            yerr_lower.append(0.0 if low is None else max(0.0, value - low))
+            yerr_upper.append(0.0 if high is None else max(0.0, high - value))
+        yerr = [yerr_lower, yerr_upper] if any(yerr_lower + yerr_upper) else None
+        ax.bar(
+            x_positions + offset,
+            values,
+            width=bar_width,
+            label=model_name,
+            yerr=yerr,
+            capsize=4 if yerr is not None else 0,
+        )
     ax.set_title("Final Test Metric Comparison")
     ax.set_ylabel("Score")
     ax.set_ylim(0, 1.08)
@@ -2625,7 +3452,10 @@ def plot_qsvm_confirmation_distribution(
 
     plt.figure(figsize=(10, 6))
     ax = plt.gca()
-    ax.boxplot(grouped, labels=labels, showmeans=True)
+    try:
+        ax.boxplot(grouped, tick_labels=labels, showmeans=True)
+    except TypeError:
+        ax.boxplot(grouped, labels=labels, showmeans=True)
     ax.set_title("QSVM Confirmation Repeat Distribution")
     ax.set_xlabel("Candidate configuration")
     ax.set_ylabel("Validation macro F1")
@@ -2709,6 +3539,7 @@ def build_report_markdown(
     system_info: dict[str, Any],
     classical_result: dict[str, Any],
     qsvm_result: dict[str, Any],
+    paired_comparison: dict[str, Any],
     anova_summary: dict[str, Any],
     resource_summary: dict[str, Any],
     compute_summary: dict[str, Any],
@@ -2723,6 +3554,10 @@ def build_report_markdown(
         "## 1. Experiment Overview",
         "",
         f"This one-run pipeline compares a classical SVM and a QSVM inside the compute context labeled `{config.compute_label}`.",
+        f"The experiment log is written to `{artifact_paths.get('experiment_log', 'not registered')}`.",
+        f"Quantum backend: `{config.quantum_backend}`",
+        f"PennyLane device: `{config.pennylane_device}`",
+        f"PennyLane diff method: `{config.pennylane_diff_method}`",
         "",
         "## 2. Dataset Summary",
         "",
@@ -2799,6 +3634,30 @@ def build_report_markdown(
             "",
             f"- Classical SVM macro F1: {classical_result['test_metrics']['macro_f1']:.4f}",
             f"- QSVM status: {qsvm_status}",
+        ]
+    )
+    if qsvm_status == "completed":
+        classical_metrics = classical_result["test_metrics"]
+        qsvm_metrics = qsvm_result["test_metrics"]
+        lines.extend(
+            [
+                f"- Classical SVM accuracy 95% Wilson CI: [{classical_metrics['accuracy_wilson_95_low']:.4f}, {classical_metrics['accuracy_wilson_95_high']:.4f}]",
+                f"- QSVM accuracy 95% Wilson CI: [{qsvm_metrics['accuracy_wilson_95_low']:.4f}, {qsvm_metrics['accuracy_wilson_95_high']:.4f}]",
+                f"- Classical SVM macro F1 bootstrap 95% CI: [{classical_metrics['macro_f1_bootstrap_95_low']:.4f}, {classical_metrics['macro_f1_bootstrap_95_high']:.4f}]",
+                f"- QSVM macro F1 bootstrap 95% CI: [{qsvm_metrics['macro_f1_bootstrap_95_low']:.4f}, {qsvm_metrics['macro_f1_bootstrap_95_high']:.4f}]",
+                f"- Paired comparison status: {paired_comparison.get('status')}",
+            ]
+        )
+        if paired_comparison.get("status") == "completed":
+            lines.extend(
+                [
+                    f"- Paired discordant count: {paired_comparison['discordant_count']}",
+                    f"- McNemar exact p-value: {paired_comparison['mcnemar_exact_p_value']}",
+                ]
+            )
+
+    lines.extend(
+        [
             "",
             "## 10. FP/FN Error Analysis",
             "",
@@ -2807,7 +3666,7 @@ def build_report_markdown(
             "## 11. ANOVA Analysis of Quantum Circuit Factors",
             "",
             f"- ANOVA status: {anova_summary['status']}",
-            "ANOVA was run on the automated confirmation phase rather than only the adaptive Optuna search results. This improves interpretability, although the analysis remains exploratory unless the confirmation design is fully balanced.",
+            "ANOVA uses the effective QSVM configuration fields from the confirmation phase. Treat it as exploratory unless the confirmation design is balanced and sufficiently powered.",
             "",
             "## 12. Resource Usage Analysis",
             "",
@@ -2829,6 +3688,7 @@ def build_report_markdown(
             "## 15. Limitations",
             "",
             "- QSVM execution depends on Qiskit Machine Learning and related simulator dependencies.",
+            "- Single hold-out metrics can be coarse on small datasets; use the saved confidence intervals and paired prediction artifacts when interpreting final-test differences.",
             "- ANOVA remains exploratory unless the confirmation design is balanced and sufficiently powered.",
             "- PCA-based boundary plots are for interpretation only and do not replace final high-dimensional evaluation.",
             "- Diagnostic plots summarize available artifacts; QSVM-specific plots are skipped when QSVM dependencies or trials fail.",
@@ -2874,6 +3734,14 @@ def run_experiment(config: ExperimentConfig) -> dict[str, Any]:
     resource_monitor = ResourceMonitor(config.resource_sample_interval, logger)
 
     logger.info("Starting one-run SVM versus QSVM experiment.")
+    logger.info(
+        "Experiment quantum backend: backend=%s pennylane_device=%s diff_method=%s kernel_batch_size=%s classical_n_jobs=%s",
+        config.quantum_backend,
+        config.pennylane_device,
+        config.pennylane_diff_method,
+        config.quantum_kernel_batch_size,
+        config.classical_n_jobs,
+    )
     dataset_frame, resolved_target_column, source_metadata = load_dataset_source(config)
     dataset = split_dataset(
         dataset_frame, resolved_target_column, config, logger, source_metadata
@@ -2957,6 +3825,9 @@ def run_experiment(config: ExperimentConfig) -> dict[str, Any]:
     )
 
     save_comparison_artifacts(classical_result, qsvm_result, layout, artifact_paths)
+    paired_comparison = save_paired_model_comparison(
+        layout, artifact_paths, warnings_list
+    )
     reproducibility = save_reproducibility_artifacts(config, layout, artifact_paths)
     generate_experiment_diagnostic_plots(
         classical_result=classical_result,
@@ -2985,6 +3856,7 @@ def run_experiment(config: ExperimentConfig) -> dict[str, Any]:
         system_info=system_info,
         classical_result=classical_result,
         qsvm_result=qsvm_result,
+        paired_comparison=paired_comparison,
         anova_summary=anova_summary,
         resource_summary=resource_summary,
         compute_summary=compute_summary,
@@ -3008,6 +3880,7 @@ def run_experiment(config: ExperimentConfig) -> dict[str, Any]:
         "qsvm_optuna": qsvm_result.get("optuna_summary", qsvm_result),
         "qsvm_confirmation": qsvm_result.get("confirmation_summary_top", {}),
         "qsvm_final": qsvm_result if qsvm_result.get("status") == "completed" else {},
+        "paired_model_comparison": paired_comparison,
         "anova": anova_summary,
         "error_analysis": {
             "classical": classical_result["error_analysis"],

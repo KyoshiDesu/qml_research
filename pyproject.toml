@@ -7,12 +7,16 @@ name = "qsvm-vm-compare"
 version = "0.1.0"
 description = "Benchmark quantum kernel SVM versus traditional SVM in a VM-friendly research scaffold."
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 dependencies = [
-  "numpy>=1.26,<2.0",
+  "numpy>=1.26",
   "psutil>=5.9,<6.0",
-  "scikit-learn>=1.4,<1.5",
-  "pennylane>=0.43,<0.45",
+  "scikit-learn>=1.4",
+  "pennylane>=0.45,<0.46",
+  "pennylane-lightning-gpu>=0.45,<0.46",
+  "cuquantum-cu12",
+  "cuquantum-python-cu12",
+  "custatevec-cu12",
 ]
 
 [tool.setuptools]
@@ -20,4 +24,3 @@ package-dir = {"" = "src"}
 
 [tool.setuptools.packages.find]
 where = ["src"]
-
