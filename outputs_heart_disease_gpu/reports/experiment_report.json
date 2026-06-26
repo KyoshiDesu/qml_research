@@ -1,0 +1,632 @@
+{
+  "command_line_args": {
+    "dataset_name": "heart_disease",
+    "data_path": null,
+    "target_column": null,
+    "output_dir": "outputs_heart_disease_gpu",
+    "test_size": 0.2,
+    "validation_size": 0.2,
+    "scale_features": true,
+    "quantum_features": 4,
+    "optuna_trials": 40,
+    "top_k_confirmation": 5,
+    "confirmation_repeats": 3,
+    "cv_folds": 5,
+    "resource_sample_interval": 1.0,
+    "compute_label": "Proxmox_VM",
+    "positive_label": null,
+    "max_qsvm_samples": null,
+    "decision_boundary_resolution": 100,
+    "quantum_backend": "pennylane_gpu",
+    "pennylane_device": "lightning.gpu",
+    "pennylane_diff_method": "adjoint",
+    "quantum_kernel_batch_size": 512,
+    "classical_n_jobs": -1
+  },
+  "dataset_summary": {
+    "dataset_path": null,
+    "dataset_name": "heart_disease",
+    "dataset_source": "ucimlrepo",
+    "original_row_count": 303,
+    "row_count_after_target_drop": 303,
+    "dropped_rows_missing_target": 0,
+    "feature_column_count": 13,
+    "target_column": "target",
+    "numeric_feature_count": 13,
+    "categorical_feature_count": 0,
+    "class_count": 2,
+    "classes": [
+      "0.0",
+      "1.0"
+    ],
+    "uci_dataset_id": 45,
+    "uci_dataset_name": "Heart Disease",
+    "uci_repository_url": "https://archive.ics.uci.edu/dataset/45/heart+disease",
+    "uci_original_target_column": "num",
+    "target_transform": "binary_presence: 0 -> 0.0, 1-4 -> 1.0"
+  },
+  "system_info": {
+    "hostname": "PC2110",
+    "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "cpu_count_logical": 28,
+    "cpu_count_physical": 14,
+    "memory_total_gb": 15.53,
+    "compute_label": "Proxmox_VM",
+    "gpu_available": true,
+    "gpu_error_message": null
+  },
+  "classical_svm": {
+    "status": "completed",
+    "best_params": {
+      "C": 100,
+      "gamma": 0.01,
+      "kernel": "sigmoid"
+    },
+    "best_cv_score_macro_f1": 0.826457591822462,
+    "validation_metrics": {
+      "accuracy": 0.8524590163934426,
+      "balanced_accuracy": 0.8474025974025974,
+      "macro_precision": 0.8566666666666667,
+      "macro_recall": 0.8474025974025974,
+      "macro_f1": 0.8498769483182937,
+      "weighted_precision": 0.8547540983606557,
+      "weighted_recall": 0.8524590163934426,
+      "weighted_f1": 0.8514907408652618
+    },
+    "test_metrics": {
+      "accuracy": 0.8524590163934426,
+      "balanced_accuracy": 0.8555194805194806,
+      "macro_precision": 0.853225806451613,
+      "macro_recall": 0.8555194805194806,
+      "macro_f1": 0.8523002421307506,
+      "weighted_precision": 0.8570597567424643,
+      "weighted_recall": 0.8524590163934426,
+      "weighted_f1": 0.8526971777874807,
+      "test_sample_count": 61,
+      "accuracy_correct_count": 52,
+      "accuracy_wilson_95_low": 0.742767647052789,
+      "accuracy_wilson_95_high": 0.9203883149206723,
+      "macro_f1_bootstrap_95_low": 0.7538337368845843,
+      "macro_f1_bootstrap_95_high": 0.9342672413793103
+    },
+    "error_analysis": {
+      "overall_metrics": {
+        "accuracy": 0.8524590163934426,
+        "balanced_accuracy": 0.8555194805194806,
+        "macro_precision": 0.853225806451613,
+        "macro_recall": 0.8555194805194806,
+        "macro_f1": 0.8523002421307506,
+        "weighted_precision": 0.8570597567424643,
+        "weighted_recall": 0.8524590163934426,
+        "weighted_f1": 0.8526971777874807
+      },
+      "per_class": {
+        "0.0": {
+          "precision": 0.9,
+          "recall": 0.8181818181818182,
+          "f1-score": 0.8571428571428571,
+          "support": 33.0
+        },
+        "1.0": {
+          "precision": 0.8064516129032258,
+          "recall": 0.8928571428571429,
+          "f1-score": 0.847457627118644,
+          "support": 28.0
+        },
+        "accuracy": 0.8524590163934426,
+        "macro avg": {
+          "precision": 0.853225806451613,
+          "recall": 0.8555194805194806,
+          "f1-score": 0.8523002421307506,
+          "support": 61.0
+        },
+        "weighted avg": {
+          "precision": 0.8570597567424643,
+          "recall": 0.8524590163934426,
+          "f1-score": 0.8526971777874807,
+          "support": 61.0
+        }
+      },
+      "false_positive_counts": {
+        "0.0": 3,
+        "1.0": 6
+      },
+      "false_negative_counts": {
+        "0.0": 6,
+        "1.0": 3
+      },
+      "binary_error_terms": {
+        "positive_label": "1.0",
+        "false_positive_type_i_error": 6,
+        "false_negative_type_ii_error": 3
+      },
+      "most_confused_class_pairs": []
+    }
+  },
+  "qsvm_optuna": {
+    "status": "completed",
+    "best_params": {
+      "feature_map_type": "PauliFeatureMap",
+      "reps": 1,
+      "entanglement": "linear",
+      "paulis": [
+        "X",
+        "Z"
+      ]
+    },
+    "raw_study_best_params": {
+      "feature_map_type": "PauliFeatureMap",
+      "reps": 1,
+      "entanglement": "linear",
+      "paulis": "[\"X\", \"Z\"]"
+    },
+    "successful_trial_count": 40,
+    "requested_trial_count": 40,
+    "unique_effective_trial_count": 20,
+    "cached_trial_reuse_count": 20,
+    "quantum_backend": "pennylane_gpu",
+    "pennylane_device": "lightning.gpu",
+    "pennylane_diff_method": "adjoint"
+  },
+  "qsvm_confirmation": {
+    "config_rank": 1,
+    "feature_map_type": "PauliFeatureMap",
+    "reps": 1,
+    "entanglement": "linear",
+    "paulis": "[\"X\", \"Z\"]",
+    "mean_accuracy": 0.8469945355191256,
+    "mean_macro_precision": 0.848252177972428,
+    "mean_macro_recall": 0.8441558441558441,
+    "mean_macro_f1": 0.8448301196926492,
+    "mean_weighted_f1": 0.8462776302962774,
+    "mean_fit_time_seconds": 41.12933810966448,
+    "mean_inference_time_seconds": 27.41130445766612,
+    "repeat_count": 3
+  },
+  "qsvm_final": {
+    "status": "completed",
+    "optuna_summary": {
+      "status": "completed",
+      "best_params": {
+        "feature_map_type": "PauliFeatureMap",
+        "reps": 1,
+        "entanglement": "linear",
+        "paulis": [
+          "X",
+          "Z"
+        ]
+      },
+      "raw_study_best_params": {
+        "feature_map_type": "PauliFeatureMap",
+        "reps": 1,
+        "entanglement": "linear",
+        "paulis": "[\"X\", \"Z\"]"
+      },
+      "successful_trial_count": 40,
+      "requested_trial_count": 40,
+      "unique_effective_trial_count": 20,
+      "cached_trial_reuse_count": 20,
+      "quantum_backend": "pennylane_gpu",
+      "pennylane_device": "lightning.gpu",
+      "pennylane_diff_method": "adjoint"
+    },
+    "confirmation_summary_top": {
+      "config_rank": 1,
+      "feature_map_type": "PauliFeatureMap",
+      "reps": 1,
+      "entanglement": "linear",
+      "paulis": "[\"X\", \"Z\"]",
+      "mean_accuracy": 0.8469945355191256,
+      "mean_macro_precision": 0.848252177972428,
+      "mean_macro_recall": 0.8441558441558441,
+      "mean_macro_f1": 0.8448301196926492,
+      "mean_weighted_f1": 0.8462776302962774,
+      "mean_fit_time_seconds": 41.12933810966448,
+      "mean_inference_time_seconds": 27.41130445766612,
+      "repeat_count": 3
+    },
+    "best_confirmed_params": {
+      "feature_map_type": "PauliFeatureMap",
+      "reps": 1,
+      "entanglement": "linear",
+      "paulis": [
+        "X",
+        "Z"
+      ]
+    },
+    "test_metrics": {
+      "accuracy": 0.8688524590163934,
+      "balanced_accuracy": 0.8706709956709957,
+      "macro_precision": 0.8682795698924731,
+      "macro_recall": 0.8706709956709957,
+      "macro_f1": 0.8685344827586207,
+      "weighted_precision": 0.8711440155120748,
+      "weighted_recall": 0.8688524590163934,
+      "weighted_f1": 0.8690644431882419,
+      "test_sample_count": 61,
+      "accuracy_correct_count": 53,
+      "accuracy_wilson_95_low": 0.7619811980700654,
+      "accuracy_wilson_95_high": 0.932019227250999,
+      "macro_f1_bootstrap_95_low": 0.7687853535353535,
+      "macro_f1_bootstrap_95_high": 0.9494739124317879
+    },
+    "error_analysis": {
+      "overall_metrics": {
+        "accuracy": 0.8688524590163934,
+        "balanced_accuracy": 0.8706709956709957,
+        "macro_precision": 0.8682795698924731,
+        "macro_recall": 0.8706709956709957,
+        "macro_f1": 0.8685344827586207,
+        "weighted_precision": 0.8711440155120748,
+        "weighted_recall": 0.8688524590163934,
+        "weighted_f1": 0.8690644431882419
+      },
+      "per_class": {
+        "0.0": {
+          "precision": 0.9032258064516129,
+          "recall": 0.8484848484848485,
+          "f1-score": 0.875,
+          "support": 33.0
+        },
+        "1.0": {
+          "precision": 0.8333333333333334,
+          "recall": 0.8928571428571429,
+          "f1-score": 0.8620689655172413,
+          "support": 28.0
+        },
+        "accuracy": 0.8688524590163934,
+        "macro avg": {
+          "precision": 0.8682795698924731,
+          "recall": 0.8706709956709957,
+          "f1-score": 0.8685344827586207,
+          "support": 61.0
+        },
+        "weighted avg": {
+          "precision": 0.8711440155120748,
+          "recall": 0.8688524590163934,
+          "f1-score": 0.8690644431882419,
+          "support": 61.0
+        }
+      },
+      "false_positive_counts": {
+        "0.0": 3,
+        "1.0": 5
+      },
+      "false_negative_counts": {
+        "0.0": 5,
+        "1.0": 3
+      },
+      "binary_error_terms": {
+        "positive_label": "1.0",
+        "false_positive_type_i_error": 5,
+        "false_negative_type_ii_error": 3
+      },
+      "most_confused_class_pairs": []
+    }
+  },
+  "paired_model_comparison": {
+    "status": "completed",
+    "paired_sample_count": 61,
+    "true_label_mismatch_count": 0,
+    "both_correct": 51,
+    "svm_only_correct": 1,
+    "qsvm_only_correct": 2,
+    "both_wrong": 7,
+    "discordant_count": 3,
+    "mcnemar_exact_p_value": 1.0,
+    "mcnemar_p_value_method": "exact_binomial_mcnemar"
+  },
+  "anova": {
+    "status": "completed",
+    "row_count": 15,
+    "valid_factors": [
+      "reps",
+      "entanglement",
+      "paulis"
+    ],
+    "warnings": [
+      "Interaction ANOVA was skipped because the confirmation table was too small or lacked factor diversity."
+    ],
+    "interaction_formula": null
+  },
+  "error_analysis": {
+    "classical": {
+      "overall_metrics": {
+        "accuracy": 0.8524590163934426,
+        "balanced_accuracy": 0.8555194805194806,
+        "macro_precision": 0.853225806451613,
+        "macro_recall": 0.8555194805194806,
+        "macro_f1": 0.8523002421307506,
+        "weighted_precision": 0.8570597567424643,
+        "weighted_recall": 0.8524590163934426,
+        "weighted_f1": 0.8526971777874807
+      },
+      "per_class": {
+        "0.0": {
+          "precision": 0.9,
+          "recall": 0.8181818181818182,
+          "f1-score": 0.8571428571428571,
+          "support": 33.0
+        },
+        "1.0": {
+          "precision": 0.8064516129032258,
+          "recall": 0.8928571428571429,
+          "f1-score": 0.847457627118644,
+          "support": 28.0
+        },
+        "accuracy": 0.8524590163934426,
+        "macro avg": {
+          "precision": 0.853225806451613,
+          "recall": 0.8555194805194806,
+          "f1-score": 0.8523002421307506,
+          "support": 61.0
+        },
+        "weighted avg": {
+          "precision": 0.8570597567424643,
+          "recall": 0.8524590163934426,
+          "f1-score": 0.8526971777874807,
+          "support": 61.0
+        }
+      },
+      "false_positive_counts": {
+        "0.0": 3,
+        "1.0": 6
+      },
+      "false_negative_counts": {
+        "0.0": 6,
+        "1.0": 3
+      },
+      "binary_error_terms": {
+        "positive_label": "1.0",
+        "false_positive_type_i_error": 6,
+        "false_negative_type_ii_error": 3
+      },
+      "most_confused_class_pairs": []
+    },
+    "qsvm": {
+      "overall_metrics": {
+        "accuracy": 0.8688524590163934,
+        "balanced_accuracy": 0.8706709956709957,
+        "macro_precision": 0.8682795698924731,
+        "macro_recall": 0.8706709956709957,
+        "macro_f1": 0.8685344827586207,
+        "weighted_precision": 0.8711440155120748,
+        "weighted_recall": 0.8688524590163934,
+        "weighted_f1": 0.8690644431882419
+      },
+      "per_class": {
+        "0.0": {
+          "precision": 0.9032258064516129,
+          "recall": 0.8484848484848485,
+          "f1-score": 0.875,
+          "support": 33.0
+        },
+        "1.0": {
+          "precision": 0.8333333333333334,
+          "recall": 0.8928571428571429,
+          "f1-score": 0.8620689655172413,
+          "support": 28.0
+        },
+        "accuracy": 0.8688524590163934,
+        "macro avg": {
+          "precision": 0.8682795698924731,
+          "recall": 0.8706709956709957,
+          "f1-score": 0.8685344827586207,
+          "support": 61.0
+        },
+        "weighted avg": {
+          "precision": 0.8711440155120748,
+          "recall": 0.8688524590163934,
+          "f1-score": 0.8690644431882419,
+          "support": 61.0
+        }
+      },
+      "false_positive_counts": {
+        "0.0": 3,
+        "1.0": 5
+      },
+      "false_negative_counts": {
+        "0.0": 5,
+        "1.0": 3
+      },
+      "binary_error_terms": {
+        "positive_label": "1.0",
+        "false_positive_type_i_error": 5,
+        "false_negative_type_ii_error": 3
+      },
+      "most_confused_class_pairs": []
+    }
+  },
+  "resource_usage": {
+    "gpu_available": true,
+    "gpu_error_message": null,
+    "phase_summaries": {
+      "preprocessing": {
+        "duration_seconds": 0.01790654400247149,
+        "peak_cpu_percent": 60.2,
+        "average_cpu_percent": 30.1,
+        "peak_ram_mb": 214.30859375,
+        "average_ram_mb": 213.43359375,
+        "peak_system_ram_percent": 16.6,
+        "average_system_ram_percent": 16.6,
+        "peak_gpu_memory_mb": 2535.65234375,
+        "average_gpu_utilization_percent": 2.0,
+        "sample_count": 2
+      },
+      "classical_svm_grid_search": {
+        "duration_seconds": 6.243581159993482,
+        "peak_cpu_percent": 159.5,
+        "average_cpu_percent": 106.37142857142855,
+        "peak_ram_mb": 225.02734375,
+        "average_ram_mb": 222.65234375,
+        "peak_system_ram_percent": 16.7,
+        "average_system_ram_percent": 16.685714285714287,
+        "peak_gpu_memory_mb": 2535.65234375,
+        "average_gpu_utilization_percent": 2.5714285714285716,
+        "sample_count": 7
+      },
+      "classical_svm_final_training": {
+        "duration_seconds": 0.007441946996550541,
+        "peak_cpu_percent": 0.0,
+        "average_cpu_percent": 0.0,
+        "peak_ram_mb": 225.24609375,
+        "average_ram_mb": 225.24609375,
+        "peak_system_ram_percent": 16.7,
+        "average_system_ram_percent": 16.7,
+        "peak_gpu_memory_mb": 2535.65234375,
+        "average_gpu_utilization_percent": 4.0,
+        "sample_count": 2
+      },
+      "final_evaluation": {
+        "duration_seconds": 32.870656623992545,
+        "peak_cpu_percent": 101.5,
+        "average_cpu_percent": 91.21176470588235,
+        "peak_ram_mb": 557.92578125,
+        "average_ram_mb": 538.3563878676471,
+        "peak_system_ram_percent": 18.2,
+        "average_system_ram_percent": 18.091176470588238,
+        "peak_gpu_memory_mb": 2535.65234375,
+        "average_gpu_utilization_percent": 16.970588235294116,
+        "sample_count": 34
+      },
+      "qsvm_optuna_search": {
+        "duration_seconds": 1756.2479139650022,
+        "peak_cpu_percent": 281.6,
+        "average_cpu_percent": 100.86533986527863,
+        "peak_ram_mb": 556.17578125,
+        "average_ram_mb": 555.0469348017452,
+        "peak_system_ram_percent": 18.3,
+        "average_system_ram_percent": 18.128658909981628,
+        "peak_gpu_memory_mb": 2739.0703125,
+        "average_gpu_utilization_percent": 22.16533986527863,
+        "sample_count": 1633
+      },
+      "qsvm_confirmation_phase": {
+        "duration_seconds": 1697.0607481659972,
+        "peak_cpu_percent": 290.2,
+        "average_cpu_percent": 101.16281725888325,
+        "peak_ram_mb": 557.26953125,
+        "average_ram_mb": 557.1094939720812,
+        "peak_system_ram_percent": 18.2,
+        "average_system_ram_percent": 18.164086294416236,
+        "peak_gpu_memory_mb": 2713.60546875,
+        "average_gpu_utilization_percent": 25.6002538071066,
+        "sample_count": 1576
+      },
+      "qsvm_final_training": {
+        "duration_seconds": 67.92045988200698,
+        "peak_cpu_percent": 102.5,
+        "average_cpu_percent": 98.37846153846155,
+        "peak_ram_mb": 557.92578125,
+        "average_ram_mb": 557.9224158653847,
+        "peak_system_ram_percent": 18.2,
+        "average_system_ram_percent": 18.147692307692306,
+        "peak_gpu_memory_mb": 2491.828125,
+        "average_gpu_utilization_percent": 17.6,
+        "sample_count": 65
+      },
+      "decision_boundary_visualization": {
+        "duration_seconds": 821.8406275050002,
+        "peak_cpu_percent": 102.6,
+        "average_cpu_percent": 99.89934895833335,
+        "peak_ram_mb": 606.73046875,
+        "average_ram_mb": 606.270751953125,
+        "peak_system_ram_percent": 18.5,
+        "average_system_ram_percent": 18.449869791666668,
+        "peak_gpu_memory_mb": 2529.515625,
+        "average_gpu_utilization_percent": 13.463541666666666,
+        "sample_count": 768
+      }
+    },
+    "warnings": [
+      "preprocessing: GPU was available but mostly idle.",
+      "classical_svm_grid_search: CPU saturation likely occurred.",
+      "classical_svm_grid_search: GPU was available but mostly idle.",
+      "classical_svm_final_training: GPU was available but mostly idle.",
+      "final_evaluation: CPU saturation likely occurred.",
+      "qsvm_optuna_search: CPU saturation likely occurred.",
+      "qsvm_confirmation_phase: CPU saturation likely occurred.",
+      "qsvm_final_training: CPU saturation likely occurred."
+    ]
+  },
+  "compute_allocation": {
+    "compute_label": "Proxmox_VM",
+    "detected_cpu_count": 28,
+    "detected_ram_gb": 15.53,
+    "detected_gpu_available": true,
+    "highest_duration_phase": "qsvm_optuna_search",
+    "cpu_saturation_phases": [
+      "classical_svm_grid_search",
+      "final_evaluation",
+      "qsvm_optuna_search",
+      "qsvm_confirmation_phase",
+      "qsvm_final_training"
+    ],
+    "memory_pressure_phases": [],
+    "gpu_used": true
+  },
+  "artifact_paths": {
+    "experiment_log": "outputs_heart_disease_gpu/logs/experiment.log",
+    "class_distribution": "outputs_heart_disease_gpu/tables/class_distribution.csv",
+    "train_validation_test_distribution": "outputs_heart_disease_gpu/tables/train_validation_test_distribution.csv",
+    "dataset_summary": "outputs_heart_disease_gpu/metadata/dataset_summary.json",
+    "quantum_feature_info": "outputs_heart_disease_gpu/metadata/quantum_feature_info.json",
+    "quantum_pca_components": "outputs_heart_disease_gpu/tables/quantum_pca_components.csv",
+    "svm_grid_results": "outputs_heart_disease_gpu/tables/svm_grid_results.csv",
+    "svm_best_params": "outputs_heart_disease_gpu/metadata/svm_best_params.json",
+    "svm_test_metrics": "outputs_heart_disease_gpu/metadata/svm_test_metrics.json",
+    "svm_classification_report": "outputs_heart_disease_gpu/tables/svm_classification_report.csv",
+    "svm_confusion_matrix": "outputs_heart_disease_gpu/tables/svm_confusion_matrix.csv",
+    "svm_error_analysis": "outputs_heart_disease_gpu/metadata/svm_error_analysis.json",
+    "svm_final_test_predictions": "outputs_heart_disease_gpu/tables/svm_final_test_predictions.csv",
+    "svm_final_model": "outputs_heart_disease_gpu/models/svm_final_model.joblib",
+    "quantum_backend_metadata": "outputs_heart_disease_gpu/metadata/quantum_backend_metadata.json",
+    "qsvm_optuna_trials": "outputs_heart_disease_gpu/tables/qsvm_optuna_trials.csv",
+    "qsvm_optuna_study": "outputs_heart_disease_gpu/models/qsvm_optuna_study.pkl",
+    "qsvm_optuna_best_params": "outputs_heart_disease_gpu/metadata/qsvm_optuna_best_params.json",
+    "qsvm_optuna_summary": "outputs_heart_disease_gpu/metadata/qsvm_optuna_summary.json",
+    "qsvm_confirmation_results": "outputs_heart_disease_gpu/tables/qsvm_confirmation_results.csv",
+    "qsvm_confirmation_summary": "outputs_heart_disease_gpu/tables/qsvm_confirmation_summary.csv",
+    "qsvm_best_confirmed_params": "outputs_heart_disease_gpu/metadata/qsvm_best_confirmed_params.json",
+    "qsvm_test_metrics": "outputs_heart_disease_gpu/metadata/qsvm_test_metrics.json",
+    "qsvm_classification_report": "outputs_heart_disease_gpu/tables/qsvm_classification_report.csv",
+    "qsvm_confusion_matrix": "outputs_heart_disease_gpu/tables/qsvm_confusion_matrix.csv",
+    "qsvm_error_analysis": "outputs_heart_disease_gpu/metadata/qsvm_error_analysis.json",
+    "qsvm_final_test_predictions": "outputs_heart_disease_gpu/tables/qsvm_final_test_predictions.csv",
+    "qsvm_final_model": "outputs_heart_disease_gpu/models/qsvm_final_model.joblib",
+    "qsvm_best_confirmed_model_info": "outputs_heart_disease_gpu/metadata/qsvm_best_confirmed_model_info.json",
+    "anova_macro_f1": "outputs_heart_disease_gpu/tables/anova_macro_f1.csv",
+    "anova_accuracy": "outputs_heart_disease_gpu/tables/anova_accuracy.csv",
+    "anova_fit_time": "outputs_heart_disease_gpu/tables/anova_fit_time.csv",
+    "anova_interpretation": "outputs_heart_disease_gpu/reports/anova_interpretation.md",
+    "anova_summary": "outputs_heart_disease_gpu/metadata/anova_summary.json",
+    "resource_log": "outputs_heart_disease_gpu/tables/resource_log.csv",
+    "resource_summary": "outputs_heart_disease_gpu/metadata/resource_summary.json",
+    "resource_summary_md": "outputs_heart_disease_gpu/reports/resource_summary.md",
+    "compute_allocation_summary": "outputs_heart_disease_gpu/metadata/compute_allocation_summary.json",
+    "compute_allocation_analysis": "outputs_heart_disease_gpu/reports/compute_allocation_analysis.md",
+    "svm_vs_qsvm_comparison": "outputs_heart_disease_gpu/tables/svm_vs_qsvm_comparison.csv",
+    "model_comparison_error_analysis": "outputs_heart_disease_gpu/reports/model_comparison_error_analysis.md",
+    "paired_final_test_predictions": "outputs_heart_disease_gpu/tables/paired_final_test_predictions.csv",
+    "paired_model_comparison": "outputs_heart_disease_gpu/metadata/paired_model_comparison.json",
+    "package_versions": "outputs_heart_disease_gpu/metadata/package_versions.txt",
+    "reproducibility": "outputs_heart_disease_gpu/metadata/reproducibility.json",
+    "model_metric_comparison_bar": "outputs_heart_disease_gpu/plots/model_metric_comparison_bar.png",
+    "svm_confusion_matrix_heatmap": "outputs_heart_disease_gpu/plots/svm_confusion_matrix_heatmap.png",
+    "qsvm_confusion_matrix_heatmap": "outputs_heart_disease_gpu/plots/qsvm_confusion_matrix_heatmap.png",
+    "per_class_f1_bar": "outputs_heart_disease_gpu/plots/per_class_f1_bar.png",
+    "qsvm_optuna_progress_line": "outputs_heart_disease_gpu/plots/qsvm_optuna_progress_line.png",
+    "qsvm_runtime_vs_macro_f1_scatter": "outputs_heart_disease_gpu/plots/qsvm_runtime_vs_macro_f1_scatter.png",
+    "qsvm_confirmation_macro_f1_boxplot": "outputs_heart_disease_gpu/plots/qsvm_confirmation_macro_f1_boxplot.png",
+    "resource_phase_summary_bar": "outputs_heart_disease_gpu/plots/resource_phase_summary_bar.png",
+    "pca_scatter_train_test": "outputs_heart_disease_gpu/plots/pca_scatter_train_test.png",
+    "svm_decision_boundary_pca2d": "outputs_heart_disease_gpu/plots/svm_decision_boundary_pca2d.png",
+    "qsvm_decision_boundary_pca2d": "outputs_heart_disease_gpu/plots/qsvm_decision_boundary_pca2d.png",
+    "experiment_report_md": "outputs_heart_disease_gpu/reports/experiment_report.md",
+    "experiment_report_txt": "outputs_heart_disease_gpu/reports/experiment_report.txt"
+  },
+  "warnings": [
+    "Interaction ANOVA was skipped because the confirmation table was too small or lacked factor diversity."
+  ],
+  "failures": []
+}

@@ -1,0 +1,44 @@
+{
+  "status": "completed",
+  "best_confirmed_params": {
+    "feature_map_type": "PauliFeatureMap",
+    "reps": 2,
+    "entanglement": "full",
+    "paulis": [
+      "Y",
+      "Z"
+    ]
+  },
+  "quantum_feature_count": 4,
+  "quantum_backend_metadata": {
+    "backend": "pennylane_gpu",
+    "device_name": "lightning.gpu",
+    "diff_method": "adjoint",
+    "pennylane_version": "0.45.0",
+    "lightning_gpu_version": "0.45.0",
+    "cuquantum_version": "26.3.2",
+    "cuquantum_python_version": "26.3.2",
+    "custatevec_version": "1.13.1",
+    "smoke_test_probability_zero": 0.9962225160675967,
+    "kernel_batch_size": 512,
+    "gpu_required": true,
+    "fallback_used": false
+  },
+  "max_qsvm_samples": null,
+  "test_metrics": {
+    "accuracy": 0.9444444444444444,
+    "balanced_accuracy": 0.942857142857143,
+    "macro_precision": 0.9505494505494506,
+    "macro_recall": 0.942857142857143,
+    "macro_f1": 0.9453132832080201,
+    "weighted_precision": 0.9465811965811967,
+    "weighted_recall": 0.9444444444444444,
+    "weighted_f1": 0.944269005847953,
+    "test_sample_count": 36,
+    "accuracy_correct_count": 34,
+    "accuracy_wilson_95_low": 0.8185534279135275,
+    "accuracy_wilson_95_high": 0.9846300133358382,
+    "macro_f1_bootstrap_95_low": 0.8558137665474621,
+    "macro_f1_bootstrap_95_high": 1.0
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "status": "completed",
+  "row_count": 15,
+  "valid_factors": [
+    "reps",
+    "entanglement",
+    "paulis"
+  ],
+  "warnings": [
+    "Interaction ANOVA was skipped because the confirmation table was too small or lacked factor diversity."
+  ],
+  "interaction_formula": null
+}

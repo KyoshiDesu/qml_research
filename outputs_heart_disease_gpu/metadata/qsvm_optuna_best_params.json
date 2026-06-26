@@ -1,0 +1,17 @@
+{
+  "canonical_best_params": {
+    "feature_map_type": "PauliFeatureMap",
+    "reps": 1,
+    "entanglement": "linear",
+    "paulis": [
+      "X",
+      "Z"
+    ]
+  },
+  "raw_study_best_params": {
+    "feature_map_type": "PauliFeatureMap",
+    "reps": 1,
+    "entanglement": "linear",
+    "paulis": "[\"X\", \"Z\"]"
+  }
+}

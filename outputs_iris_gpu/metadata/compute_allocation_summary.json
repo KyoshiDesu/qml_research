@@ -1,0 +1,18 @@
+{
+  "compute_label": "Proxmox_VM",
+  "detected_cpu_count": 28,
+  "detected_ram_gb": 15.53,
+  "detected_gpu_available": true,
+  "highest_duration_phase": "qsvm_optuna_search",
+  "cpu_saturation_phases": [
+    "preprocessing",
+    "classical_svm_grid_search",
+    "classical_svm_final_training",
+    "final_evaluation",
+    "qsvm_optuna_search",
+    "qsvm_confirmation_phase",
+    "qsvm_final_training"
+  ],
+  "memory_pressure_phases": [],
+  "gpu_used": true
+}

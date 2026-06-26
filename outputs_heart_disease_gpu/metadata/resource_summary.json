@@ -1,0 +1,100 @@
+{
+  "gpu_available": true,
+  "gpu_error_message": null,
+  "phase_summaries": {
+    "preprocessing": {
+      "duration_seconds": 0.01790654400247149,
+      "peak_cpu_percent": 60.2,
+      "average_cpu_percent": 30.1,
+      "peak_ram_mb": 214.30859375,
+      "average_ram_mb": 213.43359375,
+      "peak_system_ram_percent": 16.6,
+      "average_system_ram_percent": 16.6,
+      "peak_gpu_memory_mb": 2535.65234375,
+      "average_gpu_utilization_percent": 2.0,
+      "sample_count": 2
+    },
+    "classical_svm_grid_search": {
+      "duration_seconds": 6.243581159993482,
+      "peak_cpu_percent": 159.5,
+      "average_cpu_percent": 106.37142857142855,
+      "peak_ram_mb": 225.02734375,
+      "average_ram_mb": 222.65234375,
+      "peak_system_ram_percent": 16.7,
+      "average_system_ram_percent": 16.685714285714287,
+      "peak_gpu_memory_mb": 2535.65234375,
+      "average_gpu_utilization_percent": 2.5714285714285716,
+      "sample_count": 7
+    },
+    "classical_svm_final_training": {
+      "duration_seconds": 0.007441946996550541,
+      "peak_cpu_percent": 0.0,
+      "average_cpu_percent": 0.0,
+      "peak_ram_mb": 225.24609375,
+      "average_ram_mb": 225.24609375,
+      "peak_system_ram_percent": 16.7,
+      "average_system_ram_percent": 16.7,
+      "peak_gpu_memory_mb": 2535.65234375,
+      "average_gpu_utilization_percent": 4.0,
+      "sample_count": 2
+    },
+    "final_evaluation": {
+      "duration_seconds": 32.870656623992545,
+      "peak_cpu_percent": 101.5,
+      "average_cpu_percent": 91.21176470588235,
+      "peak_ram_mb": 557.92578125,
+      "average_ram_mb": 538.3563878676471,
+      "peak_system_ram_percent": 18.2,
+      "average_system_ram_percent": 18.091176470588238,
+      "peak_gpu_memory_mb": 2535.65234375,
+      "average_gpu_utilization_percent": 16.970588235294116,
+      "sample_count": 34
+    },
+    "qsvm_optuna_search": {
+      "duration_seconds": 1756.2479139650022,
+      "peak_cpu_percent": 281.6,
+      "average_cpu_percent": 100.86533986527863,
+      "peak_ram_mb": 556.17578125,
+      "average_ram_mb": 555.0469348017452,
+      "peak_system_ram_percent": 18.3,
+      "average_system_ram_percent": 18.128658909981628,
+      "peak_gpu_memory_mb": 2739.0703125,
+      "average_gpu_utilization_percent": 22.16533986527863,
+      "sample_count": 1633
+    },
+    "qsvm_confirmation_phase": {
+      "duration_seconds": 1697.0607481659972,
+      "peak_cpu_percent": 290.2,
+      "average_cpu_percent": 101.16281725888325,
+      "peak_ram_mb": 557.26953125,
+      "average_ram_mb": 557.1094939720812,
+      "peak_system_ram_percent": 18.2,
+      "average_system_ram_percent": 18.164086294416236,
+      "peak_gpu_memory_mb": 2713.60546875,
+      "average_gpu_utilization_percent": 25.6002538071066,
+      "sample_count": 1576
+    },
+    "qsvm_final_training": {
+      "duration_seconds": 67.92045988200698,
+      "peak_cpu_percent": 102.5,
+      "average_cpu_percent": 98.37846153846155,
+      "peak_ram_mb": 557.92578125,
+      "average_ram_mb": 557.9224158653847,
+      "peak_system_ram_percent": 18.2,
+      "average_system_ram_percent": 18.147692307692306,
+      "peak_gpu_memory_mb": 2491.828125,
+      "average_gpu_utilization_percent": 17.6,
+      "sample_count": 65
+    }
+  },
+  "warnings": [
+    "preprocessing: GPU was available but mostly idle.",
+    "classical_svm_grid_search: CPU saturation likely occurred.",
+    "classical_svm_grid_search: GPU was available but mostly idle.",
+    "classical_svm_final_training: GPU was available but mostly idle.",
+    "final_evaluation: CPU saturation likely occurred.",
+    "qsvm_optuna_search: CPU saturation likely occurred.",
+    "qsvm_confirmation_phase: CPU saturation likely occurred.",
+    "qsvm_final_training: CPU saturation likely occurred."
+  ]
+}

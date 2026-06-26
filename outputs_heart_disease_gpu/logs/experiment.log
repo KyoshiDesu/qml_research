@@ -1,0 +1,44 @@
+2026-06-27 00:23:50,239 | INFO | Starting one-run SVM versus QSVM experiment.
+2026-06-27 00:23:50,239 | INFO | Experiment quantum backend: backend=pennylane_gpu pennylane_device=lightning.gpu diff_method=adjoint kernel_batch_size=512 classical_n_jobs=-1
+2026-06-27 00:23:53,109 | INFO | Starting phase: preprocessing
+2026-06-27 00:23:53,128 | INFO | Completed phase: preprocessing
+2026-06-27 00:23:53,129 | INFO | Starting phase: classical_svm_grid_search
+2026-06-27 00:23:59,373 | INFO | Completed phase: classical_svm_grid_search
+2026-06-27 00:23:59,376 | INFO | Starting phase: classical_svm_final_training
+2026-06-27 00:23:59,384 | INFO | Completed phase: classical_svm_final_training
+2026-06-27 00:23:59,384 | INFO | Starting phase: final_evaluation
+2026-06-27 00:23:59,389 | INFO | Completed phase: final_evaluation
+2026-06-27 00:24:00,024 | INFO | Classical SVM best params: {'C': 100, 'gamma': 0.01, 'kernel': 'sigmoid'}
+2026-06-27 00:24:00,534 | INFO | Verified PennyLane backend: device=lightning.gpu diff_method=adjoint pennylane=0.45.0 lightning_gpu=0.45.0
+2026-06-27 00:24:00,534 | INFO | QSVM backend metadata: {"backend": "pennylane_gpu", "cuquantum_python_version": "26.3.2", "cuquantum_version": "26.3.2", "custatevec_version": "1.13.1", "device_name": "lightning.gpu", "diff_method": "adjoint", "fallback_used": false, "gpu_required": true, "kernel_batch_size": 512, "lightning_gpu_version": "0.45.0", "pennylane_version": "0.45.0", "smoke_test_probability_zero": 0.9962225160675967}
+2026-06-27 00:24:00,535 | INFO | Starting phase: qsvm_optuna_search
+2026-06-27 00:30:16,548 | INFO | QSVM Optuna trial 4 reused cached kernel result.
+2026-06-27 00:32:37,158 | INFO | QSVM Optuna trial 7 reused cached kernel result.
+2026-06-27 00:37:39,972 | INFO | QSVM Optuna trial 11 reused cached kernel result.
+2026-06-27 00:37:39,974 | INFO | QSVM Optuna trial 12 reused cached kernel result.
+2026-06-27 00:39:53,780 | INFO | QSVM Optuna trial 15 reused cached kernel result.
+2026-06-27 00:42:07,354 | INFO | QSVM Optuna trial 17 reused cached kernel result.
+2026-06-27 00:43:17,800 | INFO | QSVM Optuna trial 19 reused cached kernel result.
+2026-06-27 00:45:09,518 | INFO | QSVM Optuna trial 21 reused cached kernel result.
+2026-06-27 00:45:09,520 | INFO | QSVM Optuna trial 22 reused cached kernel result.
+2026-06-27 00:45:09,521 | INFO | QSVM Optuna trial 23 reused cached kernel result.
+2026-06-27 00:45:09,523 | INFO | QSVM Optuna trial 24 reused cached kernel result.
+2026-06-27 00:45:09,524 | INFO | QSVM Optuna trial 25 reused cached kernel result.
+2026-06-27 00:45:09,526 | INFO | QSVM Optuna trial 26 reused cached kernel result.
+2026-06-27 00:48:23,039 | INFO | QSVM Optuna trial 29 reused cached kernel result.
+2026-06-27 00:49:34,910 | INFO | QSVM Optuna trial 31 reused cached kernel result.
+2026-06-27 00:49:34,912 | INFO | QSVM Optuna trial 32 reused cached kernel result.
+2026-06-27 00:49:34,913 | INFO | QSVM Optuna trial 33 reused cached kernel result.
+2026-06-27 00:51:11,164 | INFO | QSVM Optuna trial 35 reused cached kernel result.
+2026-06-27 00:51:11,166 | INFO | QSVM Optuna trial 36 reused cached kernel result.
+2026-06-27 00:51:11,168 | INFO | QSVM Optuna trial 37 reused cached kernel result.
+2026-06-27 00:53:16,777 | INFO | Completed phase: qsvm_optuna_search
+2026-06-27 00:53:16,787 | INFO | Starting phase: qsvm_confirmation_phase
+2026-06-27 01:21:33,911 | INFO | Completed phase: qsvm_confirmation_phase
+2026-06-27 01:21:33,917 | INFO | Starting phase: qsvm_final_training
+2026-06-27 01:22:41,848 | INFO | Completed phase: qsvm_final_training
+2026-06-27 01:22:41,848 | INFO | Starting phase: final_evaluation
+2026-06-27 01:23:14,713 | INFO | Completed phase: final_evaluation
+2026-06-27 01:23:16,430 | INFO | Starting phase: decision_boundary_visualization
+2026-06-27 01:36:58,352 | INFO | Completed phase: decision_boundary_visualization
+2026-06-27 01:36:58,354 | INFO | Experiment completed successfully.

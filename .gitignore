@@ -1,3 +1,4 @@
+.git/
 .venv/
 __pycache__/
 *.pyc
@@ -14,4 +15,4 @@ dist/
 .DS_Store
 results/*.json
 !results/.gitkeep
-
+ml/
