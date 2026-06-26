@@ -13,6 +13,7 @@ import sys
 import tempfile
 import threading
 import traceback
+import warnings
 from contextlib import contextmanager
 from dataclasses import asdict, dataclass, fields
 from datetime import datetime, timezone
@@ -238,7 +239,9 @@ class GPUMonitor:
         self.total_memory_mb = None
         self.error_message = None
         try:
-            import pynvml  # type: ignore
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore", FutureWarning)
+                import pynvml  # type: ignore
 
             pynvml.nvmlInit()
             self.pynvml = pynvml
@@ -637,6 +640,26 @@ def package_version_or_missing(package_name: str) -> str:
         return "not_installed"
 
 
+def build_zero_projector_observable(qml: Any, feature_count: int) -> Any:
+    coefficient = 1.0 / float(2**feature_count)
+    coefficients = []
+    observables = []
+    for mask in range(2**feature_count):
+        factors = [
+            qml.PauliZ(wire)
+            for wire in range(feature_count)
+            if mask & (1 << wire)
+        ]
+        coefficients.append(coefficient)
+        if not factors:
+            observables.append(qml.Identity(0))
+        elif len(factors) == 1:
+            observables.append(factors[0])
+        else:
+            observables.append(qml.prod(*factors))
+    return qml.Hamiltonian(coefficients, observables)
+
+
 def verify_pennylane_gpu_backend(
     device_name: str,
     diff_method: str,
@@ -646,13 +669,14 @@ def verify_pennylane_gpu_backend(
 
     try:
         device = qml.device(device_name, wires=1)
+        zero_projector_observable = build_zero_projector_observable(qml, 1)
 
         @qml.qnode(device, diff_method=diff_method)
-        def smoke_circuit(value: float) -> np.ndarray:
+        def smoke_circuit(value: float) -> float:
             qml.RX(value, wires=0)
-            return qml.probs(wires=[0])
+            return qml.expval(zero_projector_observable)
 
-        smoke_result = np.asarray(smoke_circuit(0.123), dtype=np.float64)
+        smoke_result = float(smoke_circuit(0.123))
     except Exception as exc:
         platform_hint = (
             " Native Windows is not supported by the Linux-only cuStateVec/cuQuantum "
@@ -675,7 +699,7 @@ def verify_pennylane_gpu_backend(
         cuquantum_version=package_version_or_missing("cuquantum-cu12"),
         cuquantum_python_version=package_version_or_missing("cuquantum-python-cu12"),
         custatevec_version=package_version_or_missing("custatevec-cu12"),
-        smoke_test_probability_zero=float(smoke_result[0]),
+        smoke_test_probability_zero=smoke_result,
     )
     logger.info(
         "Verified PennyLane backend: device=%s diff_method=%s pennylane=%s lightning_gpu=%s",
@@ -1847,20 +1871,21 @@ def build_pennylane_kernel_function(
 ) -> KernelFunction:
     canonical_params = canonicalize_quantum_params(feature_count, params)
     device = qml.device(device_name, wires=feature_count)
+    zero_projector_observable = build_zero_projector_observable(qml, feature_count)
 
     def feature_map(values: np.ndarray) -> None:
         apply_pennylane_feature_map(qml, values, feature_count, canonical_params)
 
     @qml.qnode(device, diff_method=diff_method)
-    def kernel_circuit(x_left: np.ndarray, x_right: np.ndarray) -> np.ndarray:
+    def kernel_circuit(x_left: np.ndarray, x_right: np.ndarray) -> float:
         feature_map(x_left)
         apply_pennylane_inverse_feature_map(
             qml, x_right, feature_count, canonical_params
         )
-        return qml.probs(wires=list(range(feature_count)))
+        return qml.expval(zero_projector_observable)
 
     def kernel(x_left: np.ndarray, x_right: np.ndarray) -> float:
-        return float(np.asarray(kernel_circuit(x_left, x_right))[0])
+        return float(kernel_circuit(x_left, x_right))
 
     return kernel
 
