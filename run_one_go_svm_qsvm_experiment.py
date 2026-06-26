@@ -654,10 +654,17 @@ def verify_pennylane_gpu_backend(
 
         smoke_result = np.asarray(smoke_circuit(0.123), dtype=np.float64)
     except Exception as exc:
+        platform_hint = (
+            " Native Windows is not supported by the Linux-only cuStateVec/cuQuantum "
+            "wheels used by pennylane-lightning-gpu; run this backend inside WSL2 "
+            "Ubuntu or on Linux with the NVIDIA driver and CUDA 12 runtime."
+            if platform.system() == "Windows"
+            else ""
+        )
         raise RuntimeError(
             "PennyLane GPU backend is unavailable. Install requirements.txt with "
             "pennylane-lightning-gpu and NVIDIA cuQuantum CUDA 12 wheels, then run "
-            f"with --pennylane_device {device_name!r}. Original error: {exc}"
+            f"with --pennylane_device {device_name!r}.{platform_hint} Original error: {exc}"
         ) from exc
 
     metadata = PennyLaneBackendMetadata(

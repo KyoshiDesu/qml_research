@@ -10,10 +10,10 @@ openpyxl
 joblib
 ucimlrepo
 pennylane
-pennylane-lightning-gpu
-cuquantum-cu12
-cuquantum-python-cu12
-custatevec-cu12
+pennylane-lightning-gpu; platform_system == "Linux"
+cuquantum-cu12; platform_system == "Linux"
+cuquantum-python-cu12; platform_system == "Linux"
+custatevec-cu12; platform_system == "Linux"
 qiskit
 qiskit-aer
 qiskit-machine-learning
@@ -21,6 +21,7 @@ pynvml
 
 # Optional dependency notes:
 # - pennylane-lightning-gpu and NVIDIA cuQuantum CUDA 12 wheels are required for the GPU QSVM path.
+# - These GPU wheels are Linux-only; use WSL2/Linux for GPU runs on a Windows host.
 # - qiskit, qiskit-aer, and qiskit-machine-learning are retained for the optional legacy QSVM path.
 # - ucimlrepo is required for the built-in heart_disease dataset.
 # - pynvml is only required for NVIDIA GPU monitoring.

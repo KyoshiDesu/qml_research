@@ -13,10 +13,10 @@ dependencies = [
   "psutil>=5.9,<6.0",
   "scikit-learn>=1.4",
   "pennylane>=0.45,<0.46",
-  "pennylane-lightning-gpu>=0.45,<0.46",
-  "cuquantum-cu12",
-  "cuquantum-python-cu12",
-  "custatevec-cu12",
+  "pennylane-lightning-gpu>=0.45,<0.46; platform_system == 'Linux'",
+  "cuquantum-cu12; platform_system == 'Linux'",
+  "cuquantum-python-cu12; platform_system == 'Linux'",
+  "custatevec-cu12; platform_system == 'Linux'",
 ]
 
 [tool.setuptools]
