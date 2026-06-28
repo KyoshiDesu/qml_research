@@ -1,4 +1,0 @@
-{
-  "reduction_method": "SelectKBest_passthrough",
-  "quantum_feature_count": 4
-}
