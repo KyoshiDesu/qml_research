@@ -1,7 +1,0 @@
-split,label,count
-train,0.0,98
-train,1.0,83
-validation,0.0,33
-validation,1.0,28
-test,0.0,33
-test,1.0,28
