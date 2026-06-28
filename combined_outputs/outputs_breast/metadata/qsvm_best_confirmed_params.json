@@ -1,8 +1,0 @@
-{
-  "feature_map_type": "PauliFeatureMap",
-  "reps": 1,
-  "entanglement": "linear",
-  "paulis": [
-    "Z"
-  ]
-}
