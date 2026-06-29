@@ -1,0 +1,200 @@
+{
+  "report_type": "application_inference_report",
+  "generated_at_utc": "2026-06-29T05:08:12.882100+00:00",
+  "dataset": "iris",
+  "input_row_count": 3,
+  "target_column": "target",
+  "models": {
+    "svm": {
+      "artifact": "output_gpu/outputs_iris_gpu/models/svm_final_model.joblib",
+      "model_type": "svm",
+      "execution_device": "CPU",
+      "elapsed_seconds": 0.006148480002593715,
+      "parameters": {
+        "C": 0.1,
+        "kernel": "linear"
+      },
+      "historical_test_metrics": {
+        "accuracy": 0.9333333333333333,
+        "balanced_accuracy": 0.9333333333333332,
+        "macro_precision": 0.9333333333333332,
+        "macro_recall": 0.9333333333333332,
+        "macro_f1": 0.9333333333333332,
+        "weighted_precision": 0.9333333333333333,
+        "weighted_recall": 0.9333333333333333,
+        "weighted_f1": 0.9333333333333333,
+        "test_sample_count": 30,
+        "accuracy_correct_count": 28,
+        "accuracy_wilson_95_low": 0.7867654163738308,
+        "accuracy_wilson_95_high": 0.9815229762087295,
+        "macro_f1_bootstrap_95_low": 0.8257386363636364,
+        "macro_f1_bootstrap_95_high": 1.0
+      }
+    },
+    "qsvm": {
+      "artifact": "output_gpu/outputs_iris_gpu/models/qsvm_final_model.joblib",
+      "model_type": "qsvm",
+      "execution_device": "default.qubit",
+      "elapsed_seconds": 0.8116206440026872,
+      "parameters": {
+        "feature_map_type": "PauliFeatureMap",
+        "reps": 2,
+        "entanglement": "full",
+        "paulis": [
+          "Y",
+          "Z"
+        ]
+      },
+      "historical_test_metrics": {
+        "accuracy": 0.9333333333333333,
+        "balanced_accuracy": 0.9333333333333332,
+        "macro_precision": 0.9333333333333332,
+        "macro_recall": 0.9333333333333332,
+        "macro_f1": 0.9333333333333332,
+        "weighted_precision": 0.9333333333333333,
+        "weighted_recall": 0.9333333333333333,
+        "weighted_f1": 0.9333333333333333,
+        "test_sample_count": 30,
+        "accuracy_correct_count": 28,
+        "accuracy_wilson_95_low": 0.7867654163738308,
+        "accuracy_wilson_95_high": 0.9815229762087295,
+        "macro_f1_bootstrap_95_low": 0.8222222222222223,
+        "macro_f1_bootstrap_95_high": 1.0
+      }
+    }
+  },
+  "application_evaluation": {
+    "svm": {
+      "sample_count": 3,
+      "accuracy": 1.0,
+      "balanced_accuracy": 1.0,
+      "macro_f1": 1.0,
+      "classification_report": {
+        "setosa": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 1.0
+        },
+        "versicolor": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 1.0
+        },
+        "virginica": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 1.0
+        },
+        "accuracy": 1.0,
+        "macro avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 3.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 3.0
+        }
+      },
+      "confusion_matrix": {
+        "labels": [
+          "setosa",
+          "versicolor",
+          "virginica"
+        ],
+        "values": [
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ]
+      }
+    },
+    "qsvm": {
+      "sample_count": 3,
+      "accuracy": 1.0,
+      "balanced_accuracy": 1.0,
+      "macro_f1": 1.0,
+      "classification_report": {
+        "setosa": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 1.0
+        },
+        "versicolor": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 1.0
+        },
+        "virginica": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 1.0
+        },
+        "accuracy": 1.0,
+        "macro avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 3.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 3.0
+        }
+      },
+      "confusion_matrix": {
+        "labels": [
+          "setosa",
+          "versicolor",
+          "virginica"
+        ],
+        "values": [
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ]
+      }
+    }
+  },
+  "limitations": [
+    "Application metrics are valid only when uploaded target labels are correct.",
+    "Uploaded data should come from the same feature definition and population as training data.",
+    "Saved training-test metrics are historical and do not guarantee future performance.",
+    "QSVM simulation latency grows with both input rows and saved training samples."
+  ]
+}
