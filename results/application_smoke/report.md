@@ -1,6 +1,6 @@
 # Application Inference Report
 
-- Generated (UTC): `2026-06-29T05:08:12.882100+00:00`
+- Generated (UTC): `2026-06-29T16:04:13.539900+00:00`
 - Dataset schema: `iris`
 - Input rows: `3`
 - Ground-truth target: `target`
@@ -9,13 +9,13 @@
 
 ### svm
 
-- Prediction time: `0.0061` seconds
+- Prediction time: `0.0354` seconds
 - Historical accuracy: `0.9333333333333333`
 - Historical macro F1: `0.9333333333333332`
 
 ### qsvm
 
-- Prediction time: `0.8116` seconds
+- Prediction time: `18.2668` seconds
 - Historical accuracy: `0.9333333333333333`
 - Historical macro F1: `0.9333333333333332`
 

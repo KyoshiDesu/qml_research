@@ -1,6 +1,6 @@
 {
   "report_type": "application_inference_report",
-  "generated_at_utc": "2026-06-29T05:08:12.882100+00:00",
+  "generated_at_utc": "2026-06-29T16:04:13.539900+00:00",
   "dataset": "iris",
   "input_row_count": 3,
   "target_column": "target",
@@ -9,7 +9,7 @@
       "artifact": "output_gpu/outputs_iris_gpu/models/svm_final_model.joblib",
       "model_type": "svm",
       "execution_device": "CPU",
-      "elapsed_seconds": 0.006148480002593715,
+      "elapsed_seconds": 0.035359667032025754,
       "parameters": {
         "C": 0.1,
         "kernel": "linear"
@@ -35,7 +35,7 @@
       "artifact": "output_gpu/outputs_iris_gpu/models/qsvm_final_model.joblib",
       "model_type": "qsvm",
       "execution_device": "default.qubit",
-      "elapsed_seconds": 0.8116206440026872,
+      "elapsed_seconds": 18.266753209056333,
       "parameters": {
         "feature_map_type": "PauliFeatureMap",
         "reps": 2,

@@ -1,0 +1,24 @@
+{
+  "created_at_utc": "2026-06-29T16:07:34.411563+00:00",
+  "dataset": "iris",
+  "batch_sizes": [
+    1,
+    2,
+    4,
+    8,
+    16,
+    32,
+    64
+  ],
+  "repeats": 3,
+  "quantum_device": "default.qubit",
+  "measurement_scope": "loaded-model inference only; excludes joblib deserialization and training; includes preprocessing and label decoding",
+  "warmup": "one untimed prediction for each model before repeat timing",
+  "input_source": "sklearn.datasets.load_iris(as_frame=True), repeated deterministically when batch_size exceeds source row count",
+  "artifacts": {
+    "svm": "output_gpu/outputs_iris_gpu/models/svm_final_model.joblib",
+    "qsvm": "output_gpu/outputs_iris_gpu/models/qsvm_final_model.joblib"
+  },
+  "python": "3.14.2",
+  "platform": "macOS-26.5.1-arm64-arm-64bit-Mach-O"
+}
