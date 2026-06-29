@@ -16,6 +16,11 @@ The main entry point is:
 the trained artifacts in `output_gpu/`. It discovers the classical SVM and
 quantum-kernel SVM bundles for iris, wine, breast cancer, and heart disease.
 
+See
+[`docs/web_app_architecture_and_evaluation.md`](docs/web_app_architecture_and_evaluation.md)
+for the architecture rationale, model integration walkthrough, technology
+stack, sample application output, test evidence, and improvement assessment.
+
 The application supports:
 
 - one-row prediction using raw feature values
