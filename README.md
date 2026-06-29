@@ -10,6 +10,54 @@ The main entry point is:
 
 - [run_one_go_svm_qsvm_experiment.py](/E:/Documents/Vscode/codex/qml_research/run_one_go_svm_qsvm_experiment.py)
 
+## Model web application
+
+`streamlit_app.py` is an interactive inference and evaluation application for
+the trained artifacts in `output_gpu/`. It discovers the classical SVM and
+quantum-kernel SVM bundles for iris, wine, breast cancer, and heart disease.
+
+The application supports:
+
+- one-row prediction using raw feature values
+- CSV batch prediction on new data
+- optional evaluation when the CSV contains ground-truth labels
+- side-by-side SVM/QSVM predictions and agreement checks
+- downloadable predictions and Markdown/JSON application reports
+- historical held-out metrics and a concise model explanation
+
+Install the portable application dependencies and launch it:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements-app.txt
+python -m pip install -e . --no-deps
+streamlit run streamlit_app.py
+```
+
+The default QSVM device in the application is PennyLane's CPU simulator. Select
+`lightning.gpu` only in the CUDA environment used by the experiment. Quantum
+kernel prediction is much slower than classical prediction because each input
+row is compared with the saved training observations using circuit simulation.
+
+To test the inference/report path without opening a browser:
+
+```bash
+python scripts/test_application.py \
+  --dataset iris \
+  --input sample_data/iris_new_data.csv \
+  --target-column target \
+  --models svm
+```
+
+This writes `predictions.csv`, `report.md`, and `report.json` under
+`results/application_smoke/`. The bundled CSV contains constructed demonstration
+observations; it verifies application behavior but is not an independent
+scientific validation dataset.
+
+Only load the model artifacts committed with this repository. Joblib model
+files are Python pickles and must not be accepted from untrusted users.
+
 ## What the script does
 
 One command will:
